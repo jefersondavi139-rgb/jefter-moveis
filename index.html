@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jefter Móveis - Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #2c3e50; --accent: #d4af37; --light: #f8f9fa; --dark: #1a1a1a; }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--light); color: var(--dark); }
+        header { background: white; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; }
+        nav a, .btn-adm { margin-left: 20px; text-decoration: none; color: var(--primary); font-weight: 600; cursor: pointer; border: none; background: none; font-size: 16px; }
+        .hero { height: 50vh; background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1350&q=80'); background-size: cover; background-position: center; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center; }
+        .admin-panel { display: none; background: #fff; padding: 25px; border: 2px solid var(--accent); margin: 20px 5%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .admin-panel input { padding: 12px; margin: 5px; border: 1px solid #ddd; border-radius: 6px; width: 220px; }
+        .btn-postar { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn-postar:hover { background: var(--accent); }
+        .container { padding: 4rem 5%; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .product-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08); transition: 0.3s; }
+        .product-card:hover { transform: translateY(-5px); }
+        .product-image { width: 100%; height: 250px; object-fit: cover; background: #eee; }
+        .product-info { padding: 1.5rem; }
+        .product-category { color: var(--accent); font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }
+        .product-price { font-size: 1.3rem; font-weight: 600; color: var(--primary); margin-top: 8px; }
+        footer { background: var(--primary); color: white; text-align: center; padding: 3rem 0; margin-top: 4rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Jefter Móveis</div>
+        <nav>
+            <a href="#">Início</a>
+            <button class="btn-adm" id="btn-login" onclick="login()">Login ADM</button>
+            <button class="btn-adm" id="btn-sair" style="display:none;" onclick="logout()">Sair</button>
+        </nav>
+    </header>
+
+    <div id="painel-adm" class="admin-panel">
+        <h3 style="margin:0; color:var(--primary)">Painel Administrativo</h3>
+        <input type="text" id="p-nome" placeholder="Nome do Móvel">
+        <input type="text" id="p-preco" placeholder="Preço (R$)">
+        <input type="text" id="p-cat" placeholder="Categoria">
+        <input type="text" id="p-img" placeholder="URL da Imagem">
+        <button class="btn-postar" onclick="salvarProduto()">Postar Produto</button>
+    </div>
+
+    <section class="hero">
+        <h1 style="font-family:'Playfair Display', serif; font-size: 3.5rem; margin:0;">Jefter Móveis</h1>
+        <p style="font-size: 1.2rem;">Qualidade e elegância para o seu lar.</p>
+    </section>
+
+    <div class="container">
+        <div class="product-grid" id="vitrine"></div>
+    </div>
+
+    <footer><p>&copy; 2026 Jefter Móveis - Loja Premium</p></footer>
+
+    <script>
+        const USER_ADM = "JEFFG";
+        const PASS_ADM = "rrJEFTER.ADMrr";
+
+        function login() {
+            const user = prompt("Usuário:");
+            const pass = prompt("Senha:");
+            if (user === USER_ADM && pass === PASS_ADM) {
+                localStorage.setItem("jefter_auth", "true");
+                verificarAcesso();
+            } else { alert("Acesso negado!"); }
+        }
+
+        function logout() {
+            localStorage.removeItem("jefter_auth");
+            location.reload();
+        }
+
+        function verificarAcesso() {
+            const logado = localStorage.getItem("jefter_auth");
+            document.getElementById("painel-adm").style.display = logado === "true" ? "block" : "none";
+            document.getElementById("btn-login").style.display = logado === "true" ? "none" : "inline";
+            document.getElementById("btn-sair").style.display = logado === "true" ? "inline" : "none";
+        }
+
+        function salvarProduto() {
+            const nome = document.getElementById("p-nome").value;
+            const preco = document.getElementById("p-preco").value;
+            const cat = document.getElementById("p-cat").value;
+            const img = document.getElementById("p-img").value;
+
+            if (!nome || !preco) return alert("Preencha os dados!");
+
+            let banco = JSON.parse(localStorage.getItem("estoque_moveis")) || [];
+            banco.push({ nome, preco, cat, img });
+            localStorage.setItem("estoque_moveis", JSON.stringify(banco));
+            
+            alert("Postado!");
+            document.getElementById("p-nome").value = "";
+            document.getElementById("p-preco").value = "";
+            carregarVitrine();
+        }
+
+        function carregarVitrine() {
+            const vitrine = document.getElementById("vitrine");
+            const estoque = JSON.parse(localStorage.getItem("estoque_moveis")) || [];
+            vitrine.innerHTML = estoque.map(item => `
+                <div class="product-card">
+                    <img src="${item.img || 'https://via.placeholder.com/400x300'}" class="product-image">
+                    <div class="product-info">
+                        <span class="product-category">${item.cat}</span>
+                        <h3>${item.nome}</h3>
+                        <div class="product-price">${item.preco}</div>
+                    </div>
+                </div>`).join('');
+        }
+
+        window.onload = () => { verificarAcesso(); carregarVitrine(); };
+    </script>
+</body>
+</html>

@@ -1,15 +1,17 @@
-[00:17, 05/04/2026] Davi Jeff: <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jefter Móveis - Loja Premium</title>
+    <title>Jefter Móveis - Premium</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --bg: #03060f;
             --card: #0d162d;
             --neon-blue: #00d2ff;
+            --neon-purple: #9d4eff;
             --text: #ffffff;
         }
 
@@ -18,186 +20,195 @@
             font-family: 'Poppins', sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            display: flex; flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px 0;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; overflow-x: hidden;
         }
 
         .container {
             width: 90%; max-width: 380px;
             background: var(--card);
-            padding: 30px;
-            border-radius: 25px;
+            padding: 35px 25px;
+            border-radius: 30px;
             text-align: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.8);
             border: 1px solid rgba(255,255,255,0.05);
-            margin-bottom: 20px;
+            display: none; /* Escondido inicial */
         }
 
-        .logo-box {
+        .logo-container {
             width: 80px; height: 80px;
-            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
             border-radius: 20px;
             margin: 0 auto 20px;
             display: flex; justify-content: center; align-items: center;
             font-size: 40px;
-            box-shadow: 0 0 20px rgba(0,168,255,0.4);
-        }
-
-        h1 { font-size: 24px; margin: 0 0 10px 0; }
-        .subtitle { font-size: 14px; opacity: 0.7; margin-bottom: 25px; }
-
-        .stats {
-            background: rgba(255,255,255,0.05);
-            padding: 10px; border-radius: 12px;
-            margin-bottom: 25px; font-size: 13px;
+            box-shadow: 0 0 20px rgba(0,210,255,0.4);
         }
 
         .btn {
-            display: block; width: 100%;
-            padding: 15px; margin-bottom: 12px;
-            border: none; border-radius: 15px;
-            font-size: 16px; font-weight: 600;
+            display: flex; align-items: center; justify-content: center;
+            width: 100%; padding: 16px; margin-bottom: 15px;
+            border: none; border-radius: 18px;
+            font-size: 14px; font-weight: 600;
             cursor: pointer; transition: 0.3s;
-            color: white; text-decoration: none;
-            box-sizing: border-box;
+            color: white; text-transform: uppercase;
         }
 
-        .btn-client { background: linear-gradient(to right, #00a8ff, #0066ff); }
-        .btn-admin { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
-        .btn:hover { transform: scale(1.02); }
+        .btn-client { background: linear-gradient(to right, #00c6ff, #0072ff); }
+        .btn-admin { background: rgba(157, 78, 255, 0.1); border: 1px solid var(--neon-purple); }
 
-        /* Painel ADM */
-        #panel-adm {
-            display: none;
-            margin-top: 20px; background: rgba(0,0,0,0.3);
-            padding: 20px; border-radius: 15px;
-            border: 1px dashed var(--neon-blue);
+        /* Loading Screen */
+        #loading-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 2000;
         }
 
-        input {
-            width: 100%; padding: 12px; margin-bottom: 10px;
-            border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);
-            background: #050a18; color: white; box-sizing: border-box;
+        .loader-bar {
+            width: 200px; height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px; margin-top: 20px; overflow: hidden;
         }
 
-        /* Vitrine de Produtos */
-        .vitrine {
-            width: 90%; max-width: 380px;
-            display: grid; grid-template-columns: 1fr; gap: 15px;
+        .loader-fill {
+            height: 100%; width: 0%;
+            background: var(--neon-blue);
+            transition: width 0.1s linear;
         }
 
-        .card-produto {
-            background: var(--card);
-            border-radius: 20px; padding: 15px;
-            border: 1px solid rgba(255,255,255,0.05);
-            text-align: left;
+        /* Inputs de Login */
+        .input-box {
+            width: 100%; padding: 15px; margin-bottom: 10px;
+            border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.2); color: white; box-sizing: border-box;
         }
 
-        .card-produto img {
-            width: 100%; border-radius: 15px;
-            height: 200px; object-fit: cover; margin-bottom: 10px;
-        }
-
-        .card-produto h3 { margin: 0; font-size: 18px; }
-        .card-produto p { color: var(--neon-blue); font-weight: bold; margin: 5px 0 0 0; }
-
-        .footer {
-            margin-top: 40px; text-align: center;
-            font-size: 12px; opacity: 0.5; padding-bottom: 20px;
-        }
+        #vitrine { width: 90%; max-width: 380px; display: none; margin-top: 20px; }
+        .card { background: var(--card); padding: 15px; border-radius: 20px; margin-bottom: 15px; }
+        .card img { width: 100%; border-radius: 15px; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="logo-box">🛋️</div>
+    <div id="loading-screen" style="display:none;">
+        <div class="logo-container">🛋️</div>
+        <h2 id="load-txt">Entrando... 🚀</h2>
+        <div class="loader-bar"><div class="loader-fill" id="fill"></div></div>
+    </div>
+
+    <div class="container" id="tela-home" style="display:block;">
+        <div class="logo-container">🛋️</div>
         <h1>JEFTER MÓVEIS</h1>
-        <p class="subtitle">Móveis de alta qualidade para sua casa.</p>
-
-        <div class="stats">
-            👥 <span>2</span> clientes já entraram
-        </div>
-
-        <button class="btn btn-client" onclick="document.getElementById('vitrine-area').scrollIntoView({behavior: 'smooth'})">🛒 Ver Catálogo</button>
-        <button class="btn btn-admin" id="btn-login" onclick="fazerLogin()">🔐 Acesso Administrativo</button>
-        <button class="btn btn-admin" id="btn-sair" style="display:none;" onclick="fazerLogout()">🚪 Sair da Conta</button>
-
-        <div id="panel-adm">
-            <h3 style="margin-top:0;">Postar Móvel</h3>
-            <input type="text" id="p-nome" placeholder="Nome do Móvel">
-            <input type="text" id="p-preco" placeholder="Preço (Ex: R$ 500)">
-            <input type="text" id="p-img" placeholder="Link da Foto">
-            <button class="btn btn-client" onclick="salvarProduto()">Postar Agora</button>
-        </div>
+        <p style="opacity:0.6; margin-bottom:30px;">Qualidade Premium para seu lar</p>
+        
+        <button class="btn btn-client" onclick="irPara('tela-cliente')">🛒 Fazer Login como Cliente</button>
+        <button class="btn btn-admin" onclick="irPara('tela-admin')">🔐 Acesso Administrativo</button>
     </div>
 
-    <div class="vitrine" id="vitrine-area">
-        </div>
-
-    <div class="footer">
-        <p>Suporte: (99) 9205-7452</p>
-        <p>Jefter Móveis © 2026</p>
+    <div class="container" id="tela-cliente">
+        <h2>Área do Cliente</h2>
+        <input type="text" class="input-box" placeholder="Seu Nome">
+        <button class="btn btn-client" onclick="entrar('cliente')">Entrar Agora</button>
+        <p onclick="irPara('tela-home')" style="cursor:pointer; font-size:12px; opacity:0.5;">← Voltar</p>
     </div>
+
+    <div class="container" id="tela-admin">
+        <h2>Acesso ADM</h2>
+        <input type="text" id="user" class="input-box" placeholder="Usuário">
+        <input type="password" id="pass" class="input-box" placeholder="Senha">
+        <button class="btn btn-admin" onclick="entrar('admin')">Entrar no Painel</button>
+        <p onclick="irPara('tela-home')" style="cursor:pointer; font-size:12px; opacity:0.5;">← Voltar</p>
+    </div>
+
+    <div class="container" id="painel-post">
+        <h3>Postar Novo Móvel</h3>
+        <input type="text" id="p-nome" class="input-box" placeholder="Nome">
+        <input type="text" id="p-preco" class="input-box" placeholder="Preço">
+        <input type="text" id="p-img" class="input-box" placeholder="Link da Imagem">
+        <button class="btn btn-client" onclick="postar()">Postar Produto</button>
+        <button class="btn" style="background:red; font-size:10px;" onclick="localStorage.clear(); location.reload();">Sair</button>
+    </div>
+
+    <div id="vitrine"></div>
 
     <script>
-        const ADM_USER = "JEFFG";
-        const ADM_PASS = "rrJEFTER.ADMrr";
+        const ADM_U = "JEFFG";
+        const ADM_P = "rrJEFTER.ADMrr";
 
-        function inicializar() {
-            if (localStorage.getItem("logado") === "true") {
-                document.getElementById("panel-adm").style.display = "block";
-                document.getElementById("btn-login").style.display = "none";
-                document.getElementById("btn-sair").style.display = "block";
+        function irPara(id) {
+            document.querySelectorAll('.container').forEach(c => c.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+        }
+
+        function entrar(tipo) {
+            if(tipo === 'admin') {
+                const u = document.getElementById('user').value;
+                const p = document.getElementById('pass').value;
+                if(u !== ADM_U || p !== ADM_P) return alert("Erro: Senha errada! ❌");
             }
-            renderizarVitrine();
+
+            // Inicia Loading de 2.5s
+            document.querySelectorAll('.container').forEach(c => c.style.display = 'none');
+            const screen = document.getElementById('loading-screen');
+            const fill = document.getElementById('fill');
+            const txt = document.getElementById('load-txt');
+            screen.style.display = 'flex';
+
+            let width = 0;
+            const msg = ["Entrando... 🚀", "Quase lá... 🛠️", "Validando... ✅", "Pronto! ✨"];
+            
+            const interval = setInterval(() => {
+                width += 4;
+                fill.style.width = width + '%';
+                if(width == 20) txt.innerText = msg[1];
+                if(width == 60) txt.innerText = msg[2];
+                if(width == 90) txt.innerText = msg[3];
+
+                if(width >= 100) {
+                    clearInterval(interval);
+                    screen.style.display = 'none';
+                    if(tipo === 'admin') {
+                        localStorage.setItem("adm", "true");
+                        irPara('painel-post');
+                    } else {
+                        document.getElementById('vitrine').style.display = 'block';
+                        render();
+                    }
+                }
+            }, 100);
         }
 
-        function fazerLogin() {
-            const u = prompt("Usuário:");
-            const s = prompt("Senha:");
-            if (u === ADM_USER && s === ADM_PASS) {
-                localStorage.setItem("logado", "true");
-                location.reload();
-            } else {
-                alert("Login ou Senha incorretos!");
+        function postar() {
+            const n = document.getElementById('p-nome').value;
+            const p = document.getElementById('p-preco').value;
+            const i = document.getElementById('p-img').value;
+            let db = JSON.parse(localStorage.getItem("db")) || [];
+            db.push({n, p, i});
+            localStorage.setItem("db", JSON.stringify(db));
+            alert("Postado! 🛋️");
+            render();
+        }
+
+        function render() {
+            const v = document.getElementById('vitrine');
+            const db = JSON.parse(localStorage.getItem("db")) || [];
+            v.innerHTML = db.map(item => `
+                <div class="card">
+                    <img src="${item.i}">
+                    <h3>${item.n}</h3>
+                    <p style="color:var(--neon-blue); font-weight:bold;">${item.p}</p>
+                </div>
+            `).join('');
+        }
+
+        window.onload = () => {
+            if(localStorage.getItem("adm") === "true") {
+                irPara('painel-post');
+                document.getElementById('vitrine').style.display = 'block';
+                render();
             }
-        }
-
-        function fazerLogout() {
-            localStorage.removeItem("logado");
-            location.reload();
-        }
-
-        function salvarProduto() {
-            const nome = document.getElementById("p-nome").value;
-            const preco = document.getElementById("p-preco").value;
-            const img = document.getElementById("p-img").value;
-
-            if(!nome || !preco || !img) return alert("Preencha todos os campos!");
-
-            let estoque = JSON.parse(localStorage.
-[00:24, 05/04/2026] Davi Jeff: <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jefter Móveis - Oficial</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #03060f;
-            --card: #0d162d;
-            --neon-blue: #00d2ff;
-            --text: #ffffff;
-        }
-
-        body {
-            margin: 0; padding: 0;
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            min-height: 100v…
+        };
+    </script>
+</body>
+</html>

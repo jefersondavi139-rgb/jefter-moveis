@@ -3,226 +3,263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JEFTER MÓVEIS</title>
+    <title>JEFTER MÓVEIS | OFFICIAL</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --bg-dark: #0a0e14;
-            --card-bg: #111821;
-            --accent-blue: #0095ff;
-            --accent-purple: #6a11cb;
-            --text-gray: #a0a0a0;
+            --bg: #0a0e14;
+            --card: #111821;
+            --blue: #0095ff;
+            --gold: #ffd700;
+            --red: #ff4757;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body { background: var(--bg); color: white; overflow: hidden; height: 100vh; }
 
-        body { background-color: var(--bg-dark); color: white; overflow-x: hidden; }
+        /* --- ANIMAÇÕES AVANÇADAS --- */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        @keyframes pulse-gold { 0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(255, 215, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); } }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
 
-        /* --- ANIMAÇÕES --- */
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-        /* --- TELA INICIAL (FOTO 1) --- */
-        .screen { display: none; min-height: 100vh; width: 100%; flex-direction: column; align-items: center; justify-content: center; padding: 20px; animation: fadeIn 0.5s ease; }
+        /* --- TELAS --- */
+        .screen { display: none; height: 100vh; width: 100%; flex-direction: column; animation: fadeIn 0.5s ease forwards; }
         .active { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; filter: blur(10px); } to { opacity: 1; filter: blur(0); } }
 
-        .main-card { background: var(--card-bg); width: 100%; max-width: 380px; padding: 40px 20px; border-radius: 25px; border: 1px solid #1c2530; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        /* --- LOGIN & CARDS --- */
+        .glass-card { background: var(--card); padding: 35px; border-radius: 30px; border: 1px solid #1c2530; width: 90%; max-width: 380px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.6); position: relative; }
+        .error-login { border: 2px solid var(--red) !important; animation: shake 0.4s ease; }
         
-        .app-icon { width: 80px; height: 80px; background: linear-gradient(135deg, #0095ff, #0055ff); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 40px; box-shadow: 0 0 20px rgba(0,149,255,0.4); }
+        .input-box { width: 100%; margin-bottom: 15px; background: #f1f2f6; border-radius: 15px; display: flex; align-items: center; padding: 0 15px; }
+        .input-box i { color: var(--blue); }
+        .input-box input { width: 100%; padding: 15px; border: none; background: transparent; outline: none; font-weight: 600; color: #2f3542; }
 
-        h1 { color: #0095ff; font-size: 24px; font-weight: 800; margin-bottom: 10px; }
-        .subtitle { color: var(--text-gray); font-size: 13px; margin-bottom: 25px; line-height: 1.5; }
+        /* --- BARRA DE CARREGAMENTO (3 SEGUNDOS) --- */
+        .loader-content { text-align: center; animation: float 3s infinite ease-in-out; }
+        .bar-container { width: 250px; height: 8px; background: #1c2530; border-radius: 10px; margin: 20px auto; overflow: hidden; border: 1px solid #333; }
+        .bar-fill { width: 0%; height: 100%; background: linear-gradient(to right, var(--blue), #00d4ff); border-radius: 10px; transition: 0.1s linear; }
 
-        .stat-badge { background: #16202a; padding: 12px; border-radius: 15px; margin-bottom: 25px; font-size: 14px; color: #64b5f6; }
-
-        .btn { width: 100%; padding: 15px; border-radius: 15px; border: none; font-weight: bold; cursor: pointer; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; font-size: 15px; }
-        .btn-client { background: linear-gradient(to right, #0095ff, #00d4ff); color: white; box-shadow: 0 5px 15px rgba(0,149,255,0.3); }
-        .btn-admin { background: #1d1b31; color: #b388ff; border: 1px solid #312d4d; }
-
-        /* --- TELA DE CARREGAMENTO (FOTO 4) --- */
-        .loader-container { text-align: center; }
-        .progress-bar { width: 250px; height: 6px; background: #1c2530; border-radius: 10px; margin: 20px auto; overflow: hidden; }
-        .progress-fill { width: 0%; height: 100%; background: #0095ff; transition: 0.1s; }
-
-        /* --- INTERFACE LOGADO (FOTO 5/6) --- */
-        .top-nav { width: 100%; padding: 15px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--bg-dark); z-index: 10; }
-        .user-circle { width: 40px; height: 40px; background: #2962ff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-        
-        .tabs { display: flex; width: 100%; border-bottom: 1px solid #1c2530; }
-        .tab { flex: 1; padding: 15px; text-align: center; font-size: 12px; color: var(--text-gray); font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        .tab.active-tab { color: #0095ff; border-bottom: 2px solid #0095ff; }
-
-        .empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-bottom: 100px; }
-        .empty-icon { font-size: 60px; color: #0095ff; margin-bottom: 20px; opacity: 0.8; }
+        /* --- DASHBOARD & NAVEGAÇÃO --- */
+        .top-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; background: #0d121a; border-bottom: 1px solid #1c2530; }
+        .content-area { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 100px; }
+        .page-content { display: none; animation: fadeIn 0.3s ease; }
+        .page-active { display: block; }
 
         /* --- MENU INFERIOR --- */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #0d121a; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #1c2530; }
-        .nav-item { text-align: center; color: #506176; font-size: 10px; cursor: pointer; }
-        .nav-item i { font-size: 20px; margin-bottom: 4px; display: block; }
-        .nav-item.active-nav { color: #0095ff; }
-        .nav-item.gold { color: #ffd700; }
-        .btn-plus { width: 50px; height: 50px; background: #87ceeb; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: -25px; border: 5px solid var(--bg-dark); color: #000; font-size: 20px; }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0d121a; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #1c2530; z-index: 100; }
+        .nav-btn { color: #57606f; text-align: center; font-size: 11px; cursor: pointer; transition: 0.3s; }
+        .nav-btn i { font-size: 22px; margin-bottom: 5px; display: block; }
+        .nav-btn.active-link { color: var(--blue); transform: translateY(-5px); }
+        .center-btn { background: var(--blue); width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: -40px; border: 6px solid var(--bg); color: white; font-size: 20px; box-shadow: 0 5px 15px rgba(0,149,255,0.4); }
 
-        /* --- FORMULÁRIOS --- */
-        .input-group { width: 100%; margin-bottom: 15px; position: relative; }
-        .input-group i { position: absolute; left: 15px; top: 15px; color: #0095ff; }
-        .input-group input { width: 100%; padding: 15px 15px 15px 45px; border-radius: 15px; border: none; background: #f0f2f5; color: #333; }
+        /* --- VITRINE --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+        .item-card { background: var(--card); border-radius: 20px; padding: 12px; border: 1px solid #1c2530; transition: 0.3s; }
+        .item-card img { width: 100%; height: 140px; object-fit: cover; border-radius: 15px; }
     </style>
 </head>
 <body>
 
-    <div id="screen-home" class="screen active">
-        <div class="main-card">
-            <div class="app-icon"><i class="fas fa-couch"></i></div>
-            <h1>JEFTER MÓVEIS</h1>
-            <p class="subtitle">Boas-vindas! Aqui você compra produtos de melhor qualidade.</p>
-            <div class="stat-badge"><i class="fas fa-users"></i> 2 clientes já entraram</div>
-            <button class="btn btn-client" onclick="showScreen('screen-client-login')"><i class="fas fa-shopping-cart"></i> Entrar como Cliente</button>
-            <button class="btn btn-admin" onclick="showScreen('screen-admin-login')"><i class="fas fa-user-shield"></i> Acesso Administrativo</button>
-            <div style="font-size: 10px; color: #555; margin-top: 20px;">🇧🇷 PT-BR • Loja Online</div>
+    <div id="screen-login" class="screen active" style="justify-content: center; align-items: center;">
+        <div id="login-card" class="glass-card">
+            <div style="font-size: 50px; color: var(--blue); margin-bottom: 15px;"><i class="fas fa-couch"></i></div>
+            <h2 style="margin-bottom: 10px;">JEFTER MÓVEIS</h2>
+            <p style="color: #a4b0be; font-size: 13px; margin-bottom: 25px;">Qualidade premium para seu lar</p>
+            
+            <div class="input-box"><i class="fas fa-user"></i><input type="text" id="user" placeholder="Usuário"></div>
+            <div class="input-box"><i class="fas fa-lock"></i><input type="password" id="pass" placeholder="Senha ADM"></div>
+
+            <button onclick="tentarAcesso()" style="width: 100%; padding: 16px; border-radius: 15px; border: none; background: var(--blue); color: white; font-weight: bold; cursor: pointer; font-size: 16px; box-shadow: 0 8px 20px rgba(0,149,255,0.3);">ENTRAR NO PAINEL</button>
+            <p style="margin-top: 20px; font-size: 12px; color: #57606f; cursor: pointer;" onclick="entrarComoCliente()">Entrar como Visitante</p>
         </div>
     </div>
 
-    <div id="screen-client-login" class="screen">
-        <div class="main-card">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="40" style="margin-bottom: 20px;">
-            <h2 style="font-size: 20px; margin-bottom: 5px;">Entrar com Google</h2>
-            <p class="subtitle">Preencha seus dados para continuar</p>
-            <div class="input-group">
-                <i class="fas fa-user"></i>
-                <input type="text" id="client-name" placeholder="Seu nome completo">
-            </div>
-            <div class="input-group">
-                <i class="fas fa-envelope"></i>
-                <input type="email" placeholder="Seu e-mail">
-            </div>
-            <button class="btn btn-client" onclick="startLoading()">Continuar <i class="fas fa-arrow-right"></i></button>
-            <div style="margin: 15px 0; font-size: 12px; color: #444;">ou</div>
-            <button class="btn" style="background: #18253a; color: #5da9ff; border: 1px solid #263852;"><i class="fab fa-facebook"></i> Usar Facebook</button>
-            <p class="subtitle" onclick="showScreen('screen-home')" style="cursor:pointer;">← Voltar</p>
+    <div id="screen-loading" class="screen" style="justify-content: center; align-items: center;">
+        <div class="loader-content">
+            <div style="font-size: 60px; color: var(--blue);"><i class="fas fa-circle-notch fa-spin"></i></div>
+            <h2 style="margin-top: 20px; letter-spacing: 2px;">SINCRONIZANDO</h2>
+            <div class="bar-container"><div id="fill" class="bar-fill"></div></div>
+            <div id="perc" style="font-weight: bold; color: var(--blue);">0%</div>
         </div>
     </div>
 
-    <div id="screen-admin-login" class="screen">
-        <div class="main-card">
-            <div style="font-size: 50px; color: #ffd700; margin-bottom: 15px;"><i class="fas fa-lock"></i></div>
-            <h2 style="font-size: 22px;">Área Restrita</h2>
-            <p class="subtitle">Somente pessoal autorizado</p>
-            <div class="input-group"><i class="fas fa-user"></i><input type="text" id="adm-user" placeholder="Usuário"></div>
-            <div class="input-group"><i class="fas fa-key"></i><input type="password" id="adm-pass" placeholder="Senha"></div>
-            <button class="btn" style="background: linear-gradient(to right, #8a2be2, #4b0082); color: white;" onclick="checkAdmin()">🚀 Entrar como Admin</button>
-            <p class="subtitle" onclick="showScreen('screen-home')" style="cursor:pointer;">← Voltar</p>
-        </div>
-    </div>
-
-    <div id="screen-loading" class="screen">
-        <div class="app-icon" style="box-shadow: 0 0 40px #0095ff66;"><i class="fas fa-couch"></i></div>
-        <h1 id="load-title">JEFTER MÓVEIS</h1>
-        <p id="load-name" style="margin-bottom: 5px;">Olá!</p>
-        <p class="subtitle">Quase lá... 🚀</p>
-        <div class="progress-bar"><div id="fill" class="progress-fill"></div></div>
-        <div id="percent" style="font-size: 12px; color: #555;">0%</div>
-    </div>
-
-    <div id="screen-dash" class="screen" style="justify-content: flex-start; padding: 0;">
-        <div class="top-nav">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <div class="user-circle">J</div>
+    <div id="screen-dash" class="screen">
+        <div class="top-header">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 45px; height: 45px; background: var(--blue); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-weight: bold;">J</div>
                 <div>
-                    <div style="font-size: 14px; font-weight: bold;">JEFTER MÓVEIS <span id="tag-admin" style="background: #1c2b3e; color: #5da9ff; font-size: 9px; padding: 2px 6px; border-radius: 10px; display:none;">Admin</span></div>
-                    <div id="welcome-msg" style="font-size: 11px; color: var(--text-gray);">Olá, Cliente 👋</div>
+                    <div style="font-size: 14px; font-weight: bold;">JEFTER MÓVEIS</div>
+                    <div id="status-user" style="font-size: 11px; color: #747d8c;">Modo Visitante</div>
                 </div>
             </div>
-            <div style="display: flex; gap: 15px; font-size: 13px;">
-                <span style="color: #5da9ff;">Suporte</span>
-                <span style="color: #ff4d4d;" onclick="logout()">Sair</span>
+            <i class="fas fa-sign-out-alt" style="color: var(--red); cursor: pointer;" onclick="sair()"></i>
+        </div>
+
+        <div class="content-area">
+            <div id="page-produtos" class="page-content page-active">
+                <h3 style="margin-bottom: 20px;">Coleção Exclusiva</h3>
+                <div id="vitrine" class="grid">
+                    </div>
+            </div>
+
+            <div id="page-vendas" class="page-content">
+                <div style="text-align: center; padding: 40px;">
+                    <i class="fas fa-chart-line" style="font-size: 50px; color: #2ed573;"></i>
+                    <h3 style="margin-top: 15px;">Relatório de Vendas</h3>
+                    <p style="color: #747d8c; margin-top: 10px;">Nenhuma venda registrada hoje.</p>
+                </div>
+            </div>
+
+            <div id="page-add" class="page-content">
+                <h3 style="margin-bottom: 20px;">Postar Novo Móvel</h3>
+                <div class="glass-card" style="width: 100%; max-width: none; text-align: left;">
+                    <label style="font-size: 12px; color: var(--blue);">NOME DO PRODUTO</label>
+                    <div class="input-box" style="margin-top: 5px;"><input type="text" id="pNome" placeholder="Ex: Sofá Retrátil"></div>
+                    
+                    <label style="font-size: 12px; color: var(--blue);">PREÇO DE VENDA</label>
+                    <div class="input-box" style="margin-top: 5px;"><input type="text" id="pPreco" placeholder="R$ 0.000,00"></div>
+
+                    <label style="font-size: 12px; color: var(--blue);">URL DA IMAGEM</label>
+                    <div class="input-box" style="margin-top: 5px;"><input type="text" id="pImg" placeholder="Link da foto"></div>
+
+                    <button onclick="salvarProduto()" style="width: 100%; padding: 15px; background: var(--blue); border: none; border-radius: 12px; color: white; font-weight: bold;">PUBLICAR NO SITE</button>
+                </div>
+            </div>
+
+            <div id="page-config" class="page-content">
+                <h3>Configurações</h3>
+                <div style="margin-top: 20px; background: var(--card); padding: 15px; border-radius: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <span>Notificações</span>
+                        <i class="fas fa-toggle-on" style="color: #2ed573; font-size: 24px;"></i>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>Modo Escuro</span>
+                        <i class="fas fa-toggle-on" style="color: #2ed573; font-size: 24px;"></i>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="tabs">
-            <div class="tab active-tab">✨ Novos</div>
-            <div class="tab">🔄 Seminovos</div>
-            <div class="tab">♻️ Usados</div>
-        </div>
-
-        <div class="empty-state">
-            <div class="empty-icon"><i class="fas fa-couch"></i></div>
-            <h3 style="font-size: 16px; margin-bottom: 8px;">Nenhum produto aqui ainda</h3>
-            <p class="subtitle">Em breve novos produtos! 🚀</p>
-            <button id="btn-first-product" class="btn" style="width: auto; background: #0055ff; padding: 10px 20px; display:none;">+ Adicionar primeiro produto</button>
-        </div>
-
-        <div class="bottom-nav">
-            <div class="nav-item active-nav"><i class="fas fa-couch"></i>Produtos</div>
-            <div class="nav-item"><i class="fas fa-hand-holding-usd"></i>Vendas</div>
-            <div class="btn-plus"><i class="fas fa-plus"></i></div>
-            <div class="nav-item"><i class="fas fa-cog"></i>Config</div>
-            <div class="nav-item gold"><i class="fas fa-user-lock"></i>Admin</div>
+        <div class="nav-bar">
+            <div class="nav-btn active-link" onclick="mudarPagina('page-produtos', this)"><i class="fas fa-couch"></i>Produtos</div>
+            <div class="nav-btn" onclick="mudarPagina('page-vendas', this)"><i class="fas fa-receipt"></i>Vendas</div>
+            <div class="center-btn" onclick="mudarPagina('page-add', this)"><i class="fas fa-plus"></i></div>
+            <div class="nav-btn" onclick="mudarPagina('page-config', this)"><i class="fas fa-cog"></i>Ajustes</div>
+            <div class="nav-btn" style="color: var(--gold);"><i class="fas fa-crown"></i>ADM</div>
         </div>
     </div>
 
     <script>
-        // --- CORREÇÃO 1: LOGIN PERSISTENTE ---
-        function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
+        // --- LOGICA DE ACESSO ---
+        function tentarAcesso() {
+            const u = document.getElementById('user').value;
+            const p = document.getElementById('pass').value;
+            const card = document.getElementById('login-card');
 
-        // Verifica se já estava logado
-        window.onload = () => {
-            const sessao = localStorage.getItem('jeff_sessao');
-            if(sessao) {
-                renderDashboard(sessao);
-                showScreen('screen-dash');
-            }
-        };
-
-        function checkAdmin() {
-            const u = document.getElementById('adm-user').value;
-            const p = document.getElementById('adm-pass').value;
-
-            if(u === "JEFFG" && p === "rrJEFTER.ADMrr") {
-                localStorage.setItem('jeff_sessao', 'ADMIN');
-                startLoading('ADMIN');
+            if (u === "JEFFG" && p === "rrJEFTER.ADMrr") {
+                localStorage.setItem('role', 'ADM');
+                iniciarSistema();
             } else {
-                alert("Acesso negado!");
+                // ANIMAÇÃO DE ACESSO NEGADO
+                card.classList.add('error-login');
+                setTimeout(() => card.classList.remove('error-login'), 500);
+                alert("ACESSO NEGADO: Credenciais Inválidas!");
             }
         }
 
-        function startLoading(type = 'CLIENTE') {
-            const name = document.getElementById('client-name').value || "Jeff";
-            showScreen('screen-loading');
-            document.getElementById('load-name').innerText = "Olá, " + name + "! 👋";
+        function entrarComoCliente() {
+            localStorage.setItem('role', 'VISITANTE');
+            iniciarSistema();
+        }
+
+        function iniciarSistema() {
+            document.getElementById('screen-login').classList.remove('active');
+            document.getElementById('screen-loading').classList.add('active');
             
-            let p = 0;
-            const interval = setInterval(() => {
-                p += Math.floor(Math.random() * 10) + 2;
-                if(p > 100) p = 100;
-                document.getElementById('fill').style.width = p + "%";
-                document.getElementById('percent').innerText = p + "%";
+            let progresso = 0;
+            const tempoTotal = 3000; // 3 Segundos
+            const incremento = 100 / (tempoTotal / 50);
+
+            const timer = setInterval(() => {
+                progresso += incremento;
+                if (progresso > 100) progresso = 100;
                 
-                if(p >= 100) {
-                    clearInterval(interval);
-                    renderDashboard(type, name);
-                    showScreen('screen-dash');
+                document.getElementById('fill').style.width = progresso + "%";
+                document.getElementById('perc').innerText = Math.floor(progresso) + "%";
+
+                if (progresso >= 100) {
+                    clearInterval(timer);
+                    configurarDash();
                 }
             }, 50);
         }
 
-        function renderDashboard(type, name = "Jeff") {
-            if(type === 'ADMIN') {
-                document.getElementById('tag-admin').style.display = 'inline';
-                document.getElementById('btn-first-product').style.display = 'block';
-                document.getElementById('welcome-msg').innerText = "Painel Administrativo";
+        function configurarDash() {
+            const role = localStorage.getItem('role');
+            document.getElementById('screen-loading').classList.remove('active');
+            document.getElementById('screen-dash').classList.add('active');
+            
+            if (role === 'ADM') {
+                document.getElementById('status-user').innerText = "Administrador Logado";
+                document.getElementById('status-user').style.color = "#ffd700";
             } else {
-                document.getElementById('welcome-msg').innerText = "Olá, " + name + " 👋";
+                document.getElementById('status-user').innerText = "Modo Visitante";
+                // Esconde funções de ADM para visitantes
+                document.querySelector('.center-btn').style.display = 'none';
+            }
+            renderizarVitrine();
+        }
+
+        // --- NAVEGAÇÃO ENTRE PÁGINAS ---
+        function mudarPagina(idPagina, botao) {
+            const role = localStorage.getItem('role');
+            
+            // Bloqueio de segurança: Visitante não entra em Vendas ou Add
+            if (role !== 'ADM' && (idPagina === 'page-vendas' || idPagina === 'page-add')) {
+                alert("Apenas o Administrador Jeff pode acessar esta função!");
+                return;
+            }
+
+            // Remove classes ativas
+            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('page-active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-link'));
+
+            // Ativa a nova página
+            document.getElementById(idPagina).classList.add('page-active');
+            if(botao.classList.contains('nav-btn')) {
+                botao.classList.add('active-link');
             }
         }
 
-        function logout() {
-            localStorage.clear();
-            location.reload();
+        // --- SISTEMA DE PRODUTOS ---
+        function salvarProduto() {
+            const nome = document.getElementById('pNome').value;
+            const preco = document.getElementById('pPreco').value;
+            const img = document.getElementById('pImg').value;
+
+            if (nome && preco && img) {
+                let estoque = JSON.parse(localStorage.getItem('jeff_db')) || [];
+                estoque.push({ nome, preco, img });
+                localStorage.setItem('jeff_db', JSON.stringify(estoque));
+                
+                alert("Sucesso! O móvel já está na vitrine.");
+                document.getElementById('pNome').value = "";
+                document.getElementById('pPreco').value = "";
+                document.getElementById('pImg').value = "";
+                
+                mudarPagina('page-produtos', document.querySelector('.nav-btn'));
+                renderizarVitrine();
+            } else {
+                alert("Preencha todos os campos!");
+            }
         }
-    </script>
-</body>
-</html>
+
+        function renderizarVitrine() {
+            const dados = JSON.parse(localStorage

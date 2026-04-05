@@ -3,238 +3,280 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jefter Móveis | Original Premium</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Premium Furniture Store</title>
+    
     <style>
         :root {
-            --bg: #03060f;
-            --card: #0d162d;
-            --neon-blue: #00d2ff;
-            --neon-purple: #9d4eff;
-            --text: #ffffff;
-            --glass: rgba(255, 255, 255, 0.03);
+            --primary: #d4af37;
+            --bg: #000000;
+            --card-bg: #111111;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
 
         body {
-            margin: 0; padding: 0;
-            font-family: 'Poppins', sans-serif;
             background-color: var(--bg);
-            background-image: radial-gradient(circle at top right, #0a1c3d, transparent);
-            color: var(--text);
-            display: flex; flex-direction: column; align-items: center;
-            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
         }
 
-        /* TELA DE LOADING (Foto 3) */
-        #loading-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg); z-index: 9999;
-            display: none; flex-direction: column; justify-content: center; align-items: center;
+        /* ANIMAÇÕES ORIGINAIS */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .loader-logo {
-            width: 100px; height: 100px;
-            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-            border-radius: 25px; display: flex; justify-content: center; align-items: center;
-            font-size: 50px; box-shadow: 0 0 30px rgba(0, 210, 255, 0.4);
-            margin-bottom: 25px;
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
         }
 
-        .bar-bg { width: 250px; height: 8px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
-        .bar-fill { height: 100%; width: 0%; background: var(--neon-blue); transition: width 0.1s linear; }
-
-        /* CONTAINERS GLASSMORPHISM (Fotos 1 e 2) */
-        .container {
-            width: 90%; max-width: 400px;
-            background: var(--card);
-            padding: 40px 30px; border-radius: 35px;
-            text-align: center; margin: 40px 0;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
-            border: 1px solid rgba(255,255,255,0.08);
-            display: none; animation: slideUp 0.5s ease;
+        /* TELA DE LOGIN COM EFEITO DE BLUR */
+        #tela-login {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: var(--transition);
         }
 
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .logo-main {
-            width: 80px; height: 80px;
-            background: linear-gradient(135deg, #00c6ff, #0072ff);
-            border-radius: 22px; margin: 0 auto 20px;
-            display: flex; justify-content: center; align-items: center; font-size: 40px;
+        .login-box {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+            text-align: center;
+            animation: fadeIn 0.6s ease-out;
+            width: 320px;
         }
 
-        /* BOTÕES E INPUTS */
-        .btn {
-            width: 100%; padding: 18px; border: none; border-radius: 20px;
-            font-weight: 600; font-size: 15px; cursor: pointer;
-            transition: 0.3s; display: flex; align-items: center; justify-content: center;
-            margin-bottom: 15px; color: white; text-transform: uppercase;
+        /* ESTILO DOS INPUTS PREMIUM */
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 8px;
+            outline: none;
+            transition: var(--transition);
         }
 
-        .btn-google { background: #fff; color: #000; border: none; margin-bottom: 20px; }
-        .btn-blue { background: linear-gradient(to right, #00c6ff, #0072ff); box-shadow: 0 10px 20px rgba(0,114,255,0.3); }
-        .btn-outline { background: transparent; border: 1px solid var(--neon-purple); color: var(--neon-purple); }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(212, 175, 55, 0.3); }
 
-        .input-group { position: relative; margin-bottom: 15px; text-align: left; }
-        .input-group i { position: absolute; left: 18px; top: 18px; color: var(--neon-blue); }
-        input, select {
-            width: 100%; padding: 18px 20px 18px 50px; border-radius: 18px;
-            border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2);
-            color: white; font-size: 15px;
+        /* BOTÕES COM HOVER ORIGINAL */
+        button {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        /* PAINEL E VITRINE */
-        #admin-panel { display: none; width: 90%; max-width: 400px; }
-        .vitrine { width: 90%; max-width: 400px; display: none; padding-bottom: 100px; }
-        .card-item { background: var(--card); border-radius: 30px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
-        .card-item img { width: 100%; border-radius: 20px; height: 230px; object-fit: cover; }
+        button:hover {
+            background: #fff;
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        /* LAYOUT DA VITRINE E PRODUTOS */
+        header {
+            padding: 25px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #222;
+            animation: slideIn 0.8s ease;
+        }
+
+        .logo { font-size: 1.8rem; font-weight: 800; letter-spacing: -1px; }
+        .logo span { color: var(--primary); }
+
+        .container { padding: 40px 5%; }
+
+        #area-adm {
+            background: #0a0a0a;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 50px;
+            border: 1px dashed var(--primary);
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .grid-produtos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        /* CARD DO MÓVEL COM ANIMAÇÃO DE HOVER */
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid #222;
+            animation: fadeIn 0.5s ease backwards;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+        }
+
+        .card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .card:hover img { transform: scale(1.1); }
+
+        .card-info { padding: 20px; text-align: center; }
+        .card-info h3 { margin-bottom: 10px; font-size: 1.3rem; }
+        .card-info p { color: var(--primary); font-size: 1.5rem; font-weight: 700; margin-bottom: 15px; }
         
-        .footer { padding: 30px; text-align: center; font-size: 12px; color: #8b9bb4; opacity: 0.5; }
+        .btn-logout { 
+            width: auto; 
+            background: transparent; 
+            color: #ff4444; 
+            border: 1px solid #ff4444; 
+            padding: 8px 15px;
+        }
     </style>
 </head>
 <body>
 
-    <div id="loading-screen">
-        <div class="loader-logo">🛋️</div>
-        <h2 id="l-txt">Entrando... 🚀</h2>
-        <div class="bar-bg"><div class="bar-fill" id="l-fill"></div></div>
-    </div>
-
-    <div class="container" id="tela-home" style="display: block;">
-        <div class="logo-main">🛋️</div>
-        <h1>JEFTER MÓVEIS</h1>
-        <p style="opacity: 0.6; margin-bottom: 30px;">A melhor qualidade premium.</p>
-        <button class="btn btn-blue" onclick="nav('tela-cliente')">🛒 Fazer Login como Cliente</button>
-        <button class="btn btn-outline" onclick="nav('tela-admin-login')">🔐 Painel Administrativo</button>
-    </div>
-
-    <div class="container" id="tela-cliente">
-        <div class="btn btn-google">
-            <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" height="20" style="margin-right:10px;"> Continuar com Google
-        </div>
-        <div class="input-group"><i class="fas fa-user"></i><input type="text" id="cli-nome" placeholder="Seu Nome"></div>
-        <button class="btn btn-blue" onclick="entrar('cliente')">Entrar na Loja</button>
-        <p onclick="nav('tela-home')" style="cursor:pointer; font-size:12px; opacity:0.5;">← Voltar</p>
-    </div>
-
-    <div class="container" id="tela-admin-login">
-        <div style="font-size: 50px; margin-bottom: 15px;">🔐</div>
-        <h2>Acesso Admin</h2>
-        <div class="input-group"><i class="fas fa-user-shield"></i><input type="text" id="adm-user" placeholder="Usuário"></div>
-        <div class="input-group"><i class="fas fa-key"></i><input type="password" id="adm-pass" placeholder="Senha"></div>
-        <button class="btn btn-blue" style="background:var(--neon-purple);" onclick="entrar('admin')">Acessar Sistema</button>
-        <p onclick="nav('tela-home')" style="cursor:pointer; font-size:12px; opacity:0.5;">← Voltar</p>
-    </div>
-
-    <div id="admin-panel">
-        <div class="container" style="display:block; margin-top:0;">
-            <h3>🛠️ Gerenciar Loja</h3>
-            <input type="text" id="p-nome" placeholder="Nome do Produto" style="margin-bottom:10px;">
-            <input type="text" id="p-preco" placeholder="Preço (R$)" style="margin-bottom:10px;">
-            <input type="text" id="p-img" placeholder="Link da Foto" style="margin-bottom:10px;">
-            <button class="btn btn-blue" onclick="postar()">Publicar Móvel</button>
-            <hr style="opacity:0.1; margin:20px 0;">
-            <h3>⚙️ Configurações</h3>
-            <input type="text" id="cfg-pix" placeholder="Chave PIX" style="margin-bottom:10px;">
-            <input type="text" id="cfg-zap" placeholder="WhatsApp Suporte" style="margin-bottom:10px;">
-            <button class="btn btn-outline" onclick="salvarCfg()">Salvar Tudo</button>
-            <button class="btn" style="background:red; font-size:12px; margin-top:20px;" onclick="localStorage.clear(); location.reload();">Sair</button>
+    <div id="tela-login">
+        <div class="login-box">
+            <h2>JEFF ADMIN</h2>
+            <input type="text" id="userField" placeholder="Usuário">
+            <input type="password" id="passField" placeholder="Senha">
+            <button onclick="validaAcesso()">Acessar Painel</button>
+            <p style="color: #666; margin-top: 20px; cursor: pointer; font-size: 12px;" onclick="fecharLogin()">Entrar como Visitante</p>
         </div>
     </div>
 
-    <div class="vitrine" id="vitrine"></div>
+    <header>
+        <div class="logo">JEFF<span>STORE</span></div>
+        <button id="logoutBtn" class="btn-logout" style="display:none;" onclick="sair()">Logout</button>
+    </header>
 
-    <div class="footer">
-        <p id="f-zap">Suporte: (99) 9205-7452</p>
-        <p>Postagens: 0 clientes já ligaram</p>
+    <div class="container">
+        <section id="area-adm">
+            <h2 style="margin-bottom: 20px;">Gerenciar Estoque</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <input type="text" id="pNome" placeholder="Nome do Móvel">
+                <input type="text" id="pPreco" placeholder="Preço (R$)">
+                <input type="text" id="pImg" placeholder="Link da Foto">
+                <button onclick="adicionarMovel()">Postar Agora</button>
+            </div>
+        </section>
+
+        <h1 style="margin-bottom: 30px; text-align: center;">Coleção Premium</h1>
+        <div id="vitrine" class="grid-produtos">
+            </div>
     </div>
 
     <script>
-        const CRED = { u: "JEFFG", p: "rrJEFTER.ADMrr" };
-
-        function nav(id) {
-            document.querySelectorAll('.container, #admin-panel, .vitrine').forEach(s => s.style.display = 'none');
-            document.getElementById(id).style.display = 'block';
-        }
-
-        function entrar(tipo) {
-            if(tipo === 'admin') {
-                const u = document.getElementById('adm-user').value;
-                const p = document.getElementById('adm-pass').value;
-                if(u !== CRED.u || p !== CRED.p) return alert("Erro: Senha incorreta!");
-            }
-
-            const l = document.getElementById('loading-screen');
-            const fill = document.getElementById('l-fill');
-            const txt = document.getElementById('l-txt');
-            l.style.display = 'flex';
-
-            let w = 0;
-            const msgs = ["Entrando... 🚀", "Carregando... 🛠️", "Sincronizando... ✅", "Pronto! ✨"];
-            
-            const timer = setInterval(() => {
-                w += 4;
-                fill.style.width = w + '%';
-                if(w == 24) txt.innerText = msgs[1];
-                if(w == 60) txt.innerText = msgs[2];
-                if(w == 88) txt.innerText = msgs[3];
-
-                if(w >= 100) {
-                    clearInterval(timer);
-                    l.style.display = 'none';
-                    if(tipo === 'admin') {
-                        localStorage.setItem("jefter_adm", "true");
-                        nav('admin-panel');
-                    } else {
-                        nav('vitrine');
-                    }
-                    render();
-                }
-            }, 100);
-        }
-
-        function postar() {
-            const n = document.getElementById('p-nome').value;
-            const p = document.getElementById('p-preco').value;
-            const i = document.getElementById('p-img').value;
-            let list = JSON.parse(localStorage.getItem("loja_db")) || [];
-            list.push({n, p, i});
-            localStorage.setItem("loja_db", JSON.stringify(list));
-            alert("Postado com sucesso!"); render();
-        }
-
-        function salvarCfg() {
-            localStorage.setItem("loja_pix", document.getElementById('cfg-pix').value);
-            localStorage.setItem("loja_zap", document.getElementById('cfg-zap').value);
-            alert("Configurações salvas!"); location.reload();
-        }
-
-        function render() {
-            const v = document.getElementById('vitrine');
-            const list = JSON.parse(localStorage.getItem("loja_db")) || [];
-            const zap = localStorage.getItem("loja_zap") || "9992057452";
-            document.getElementById('f-zap').innerText = "Suporte: " + zap;
-            
-            v.innerHTML = <h2 style="text-align:center;">Nosso Catálogo</h2> + list.map(item => `
-                <div class="card-item">
-                    <img src="${item.i || 'https://via.placeholder.com/300'}">
-                    <h3>${item.n}</h3>
-                    <p style="color:var(--neon-blue); font-size:20px; font-weight:bold;">${item.p}</p>
-                    <button class="btn btn-blue" onclick="window.open('https://wa.me/${zap}')">Comprar via WhatsApp</button>
-                </div>
-            `).join('');
-        }
-
+        // --- LOGICA DE PERSISTÊNCIA (CORREÇÃO 1) ---
         window.onload = () => {
-            if(localStorage.getItem("jefter_adm") === "true") {
-                nav('admin-panel'); render();
-                document.getElementById('cfg-pix').value = localStorage.getItem("loja_pix") || "";
-                document.getElementById('cfg-zap').value = localStorage.getItem("loja_zap") || "";
+            if(localStorage.getItem('sessaoAtiva') === 'true') {
+                liberarAdm();
             }
+            renderizarVitrine();
         };
+
+        function fecharLogin() {
+            document.getElementById('tela-login').style.opacity = '0';
+            setTimeout(() => { document.getElementById('tela-login').style.display = 'none'; }, 400);
+        }
+
+        // --- LOGIN COM SUAS CREDENCIAIS ---
+        function validaAcesso() {
+            const u = document.getElementById('userField').value;
+            const p = document.getElementById('passField').value;
+
+            if(u === "JEFFG" && p === "rrJEFTER.ADMrr") {
+                localStorage.setItem('sessaoAtiva', 'true');
+                liberarAdm();
+                fecharLogin();
+            } else {
+                alert("Acesso negado, Jeff!");
+            }
+        }
+
+        function liberarAdm() {
+            document.getElementById('tela-login').style.display = 'none';
+            document.getElementById('area-adm').style.display = 'block';
+            document.getElementById('logoutBtn').style.display = 'block';
+        }
+
+        function sair() {
+            localStorage.removeItem('sessaoAtiva');
+            location.reload();
+        }
+
+        // --- CORREÇÃO 2: SINCRONIZAÇÃO ADM -> CLIENTE ---
+        function adicionarMovel() {
+            const n = document.getElementById('pNome').value;
+            const pr = document.getElementById('pPreco').value;
+            const im = document.getElementById('pImg').value;
+
+            if(n && pr && im) {
+                let estoque = JSON.parse(localStorage.getItem('meuEstoque')) || [];
+                estoque.push({ nome: n, preco: pr, imagem: im });
+                localStorage.setItem('meuEstoque', JSON.stringify(estoque));
+
+                alert("Móvel adicionado com sucesso!");
+                
+                // Limpar campos
+                document.getElementById('pNome').value = "";
+                document.getElementById('pPreco').value = "";
+                document.getElementById('pImg').value = "";
+
+                renderizarVitrine();
+            }
+        }
+
+        function renderizarVitrine() {
+            const lista = JSON.parse(localStorage.getItem('meuEstoque')) || [];
+            const box = document.getElementById('vitrine');
+            box.innerHTML = "";
+
+            lista.forEach((item, index) => {
+                box.innerHTML += `
+                    <div class="card" style="animation-delay: ${index * 0.1}s">
+                        <img src="${item.imagem}" onerror="this.src='https://via.placeholder.com/400x300?text=Imagem+Indisponivel'">
+                        <div class="card-info">
+                            <h3>${item.nome}</h3>
+                            <p>R$ ${item.preco}</p>
+                            <button onclick="window.open('https://wa.me/seunumeroaqui')">Comprar</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
     </script>
 </body>
 </html>

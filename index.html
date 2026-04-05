@@ -3,210 +3,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jefter Móveis - Premium</title>
+    <title>Jefter Móveis | Loja Oficial Premium</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        /* CSS PREMIUM - DESIGN IDÊNTICO ÀS FOTOS */
         :root {
             --bg: #03060f;
             --card: #0d162d;
             --neon-blue: #00d2ff;
             --neon-purple: #9d4eff;
             --text: #ffffff;
+            --gray: #8b9bb4;
+            --glass: rgba(255, 255, 255, 0.03);
         }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
 
         body {
             margin: 0; padding: 0;
             font-family: 'Poppins', sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            display: flex; justify-content: center; align-items: center;
+            display: flex; flex-direction: column; align-items: center;
             min-height: 100vh; overflow-x: hidden;
         }
 
+        /* Animações */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes glow { 0%, 100% { box-shadow: 0 0 15px rgba(0,210,255,0.2); } 50% { box-shadow: 0 0 30px rgba(0,210,255,0.5); } }
+
+        /* CONTAINERS GLOBAIS (Estilo Glassmorphism) */
         .container {
-            width: 90%; max-width: 380px;
+            width: 92%; max-width: 400px;
             background: var(--card);
-            padding: 35px 25px;
-            border-radius: 30px;
-            text-align: center;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.8);
-            border: 1px solid rgba(255,255,255,0.05);
-            display: none; /* Escondido inicial */
+            padding: 35px 25px; border-radius: 30px;
+            text-align: center; margin: 20px 0;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+            border: 1px solid rgba(255,255,255,0.08);
+            display: none; /* Escondido por padrão, controlado por JS */
+            animation: slideUp 0.6s ease;
         }
 
-        .logo-container {
-            width: 80px; height: 80px;
-            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-            border-radius: 20px;
-            margin: 0 auto 20px;
-            display: flex; justify-content: center; align-items: center;
-            font-size: 40px;
-            box-shadow: 0 0 20px rgba(0,210,255,0.4);
-        }
-
-        .btn {
-            display: flex; align-items: center; justify-content: center;
-            width: 100%; padding: 16px; margin-bottom: 15px;
-            border: none; border-radius: 18px;
-            font-size: 14px; font-weight: 600;
-            cursor: pointer; transition: 0.3s;
-            color: white; text-transform: uppercase;
-        }
-
-        .btn-client { background: linear-gradient(to right, #00c6ff, #0072ff); }
-        .btn-admin { background: rgba(157, 78, 255, 0.1); border: 1px solid var(--neon-purple); }
-
-        /* Loading Screen */
+        /* 1. TELA DE LOADING (Foto 3/47) */
         #loading-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg);
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 2000;
+            background: var(--bg); z-index: 5000;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            animation: fadeIn 0.5s ease;
         }
 
-        .loader-bar {
-            width: 200px; height: 6px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 10px; margin-top: 20px; overflow: hidden;
+        .logo-loading {
+            width: 100px; height: 100px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            border-radius: 28px; margin-bottom: 25px;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 50px; animation: glow 2s infinite;
         }
 
-        .loader-fill {
+        .loader-bar-bg {
+            width: 80%; max-width: 300px; height: 6px;
+            background: rgba(255,255,255,0.1); border-radius: 10px;
+            margin-top: 30px; overflow: hidden;
+        }
+
+        .loader-bar-fill {
             height: 100%; width: 0%;
-            background: var(--neon-blue);
-            transition: width 0.1s linear;
+            background: linear-gradient(to right, var(--neon-blue), var(--neon-purple));
+            border-radius: 10px; transition: width 0.1s linear;
         }
 
-        /* Inputs de Login */
-        .input-box {
-            width: 100%; padding: 15px; margin-bottom: 10px;
-            border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(0,0,0,0.2); color: white; box-sizing: border-box;
+        #load-msg { font-size: 14px; color: var(--gray); margin-top: 15px; font-weight: 300; }
+
+        /* LOGO E TEXTOS (TELA INICIAL) */
+        .logo-main {
+            width: 80px; height: 80px;
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            border-radius: 20px; margin: 0 auto 20px;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 40px; box-shadow: 0 10px 30px rgba(0,114,255,0.3);
         }
 
-        #vitrine { width: 90%; max-width: 380px; display: none; margin-top: 20px; }
-        .card { background: var(--card); padding: 15px; border-radius: 20px; margin-bottom: 15px; }
-        .card img { width: 100%; border-radius: 15px; }
+        h1 { font-size: 26px; font-weight: 600; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+        .subtitle { font-size: 14px; color: var(--gray); margin: 10px 0 30px 0; line-height: 1.5; }
+
+        /* BOTÕES PREMIUM COM GRADIENTE E GLOW (Foto 1) */
+        .btn {
+            display: flex; align-items: center; justify-content: center;
+            width: 100%; padding: 18px; margin-bottom: 15px;
+            border: none; border-radius: 18px;
+            font-size: 15px; font-weight: 600; cursor: pointer;
+            transition: 0.3s ease; text-decoration: none; color: white;
+            box-sizing: border-box; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .btn i { margin-right: 12px; font-size: 18px; }
+
+        .btn-client {
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            box-shadow: 0 8px 25px rgba(0,114,255,0.4);
+        }
+        .btn-client:hover { box-shadow: 0 12px 30px rgba(0,114,255,0.6); transform: translateY(-2px); }
+
+        .btn-admin {
+            background: rgba(157, 78, 255, 0.06);
+            border: 1px solid var(--neon-purple);
+            color: #d1b3ff;
+        }
+        .btn-admin:hover { background: rgba(157, 78, 255, 0.12); box-shadow: 0 0 15px rgba(157,78,255,0.2); }
+
+        /* INPUTS ESTILIZADOS (Foto 1/4) */
+        .input-group { position: relative; margin-bottom: 15px; text-align: left; }
+        .input-group i { position: absolute; left: 18px; top: 18px; color: var(--neon-blue); font-size: 18px; }
+        input, select {
+            width: 100%; padding: 18px 18px 18px 55px;
+            border-radius: 18px; border: 1px solid rgba(255,255,255,0.1);
+            background: var(--glass); color: white; font-size: 15px;
+            box-sizing: border-box; transition: 0.3s;
+        }
+        input:focus, select:focus { border-color: var(--neon-blue); background: rgba(255,255,255,0.06); }
+        select { appearance: none; color: var(--gray); }
+
+        /* MENU DE CATEGORIAS (Foto 2/3) */
+        .category-menu {
+            width: 92%; max-width: 400px; display: flex;
+            background: var(--card); border-radius: 20px;
+            margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05);
+            overflow: hidden;
+        }
+        .cat-item {
+            flex: 1; padding: 15px; text-align: center;
+            font-size: 12px; color: var(--gray); cursor: pointer;
+            transition: 0.3s; text-transform: uppercase; font-weight: 600;
+        }
+        .cat-item.active { background: rgba(0,210,255,0.1); color: var(--neon-blue); border-bottom: 2px solid var(--neon-blue); }
+
+        /* VITRINE DE PRODUTOS */
+        .vitrine-grid {
+            width: 92%; max-width: 400px; display: none;
+            grid-template-columns: 1fr; gap: 20px; padding-bottom: 100px;
+        }
+        .product-card {
+            background: var(--card); border-radius: 25px; padding: 20px;
+            border: 1px solid rgba(255,255,255,0.05); text-align: left;
+            animation: fadeIn 0.5s ease;
+        }
+        .product-card img { width: 100%; border-radius: 18px; height: 230px; object-fit: cover; margin-bottom: 15px; }
+        .product-card h3 { margin: 0; font-size: 19px; font-weight: 600; }
+        .product-card p { color: var(--neon-blue); font-weight: bold; font-size: 20px; margin: 8px 0 15px 0; }
+
+        /* PAINEL ADM (Foto 3) - ONDE TUDO SE CONFIGURA */
+        #admin-panel { width: 92%; max-width: 400px; display: none; margin-top: 20px; }
+        .admin-section { background: var(--card); border-radius: 25px; padding: 25px; margin-bottom: 20px; border: 1px solid rgba(157, 78, 255, 0.2); }
+        .admin-section h3 { margin-top: 0; color: var(--neon-purple); }
+
+        /* RODAPÉ FIXED */
+        .footer-fixed {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: rgba(3, 6, 15, 0.9); backdrop-filter: blur(5px);
+            padding: 15px; text-align: center; font-size: 12px; color: var(--gray);
+            border-top: 1px solid rgba(255,255,255,0.05); z-index: 1000;
+        }
     </style>
 </head>
 <body>
 
-    <div id="loading-screen" style="display:none;">
-        <div class="logo-container">🛋️</div>
-        <h2 id="load-txt">Entrando... 🚀</h2>
-        <div class="loader-bar"><div class="loader-fill" id="fill"></div></div>
-    </div>
-
-    <div class="container" id="tela-home" style="display:block;">
-        <div class="logo-container">🛋️</div>
+    <div id="loading-screen">
+        <div class="logo-loading">🛋️</div>
         <h1>JEFTER MÓVEIS</h1>
-        <p style="opacity:0.6; margin-bottom:30px;">Qualidade Premium para seu lar</p>
+        <div class="loader-bar-bg">
+            <div class="loader-bar-fill" id="bar-fill"></div>
+        </div>
+        <p id="load-msg">Iniciando o sistema premium... 🚀</p>
+    </div>
+
+    <div class="container" id="home-screen" style="display: block;">
+        <div class="logo-main">🛋️</div>
+        <h1>JEFTER MÓVEIS</h1>
+        <p class="subtitle">Boas-vindas! Aqui você compra produtos de melhor qualidade.</p>
         
-        <button class="btn btn-client" onclick="irPara('tela-cliente')">🛒 Fazer Login como Cliente</button>
-        <button class="btn btn-admin" onclick="irPara('tela-admin')">🔐 Acesso Administrativo</button>
+        <button class="btn btn-client" onclick="showScreen('client-login-screen')"><i class="fas fa-shopping-cart"></i> Fazer Login como Cliente</button>
+        <button class="btn btn-admin" onclick="showScreen('admin-login-screen')"><i class="fas fa-lock"></i> Acesso Administrativo</button>
+        
+        <div style="background: var(--glass); padding: 12px; border-radius: 15px; font-size: 13px; margin-top: 20px;">
+            👥 <span>2</span> clientes já entraram
+        </div>
     </div>
 
-    <div class="container" id="tela-cliente">
-        <h2>Área do Cliente</h2>
-        <input type="text" class="input-box" placeholder="Seu Nome">
-        <button class="btn btn-client" onclick="entrar('cliente')">Entrar Agora</button>
-        <p onclick="irPara('tela-home')" style="cursor:pointer; font-size:12px; opacity:0.5;">← Voltar</p>
+    <div class="container" id="client-login-screen">
+        <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google" style="height:30px; margin-bottom:20px;">
+        <h2>Entrar com Google</h2>
+        <p class="subtitle">Preencha seus dados para continuar</p>
+        
+        <div class="input-group">
+            <i class="fas fa-user"></i>
+            <input type="text" id="c-name" placeholder="Seu nome completo">
+        </div>
+        <div class="input-group">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="c-mail" placeholder="Seu e-mail">
+        </div>
+        <button class="btn btn-client" onclick="startLoading('cliente')">Continuar <i class="fas fa-arrow-right" style="margin-left: 10px;"></i></button>
+        <p onclick="showScreen('home-screen')" style="cursor: pointer; font-size: 13px; opacity: 0.6; margin-top: 20px;">← Voltar ao início</p>
     </div>
 
-    <div class="container" id="tela-admin">
-        <h2>Acesso ADM</h2>
-        <input type="text" id="user" class="input-box" placeholder="Usuário">
-        <input type="password" id="pass" class="input-box" placeholder="Senha">
-        <button class="btn btn-admin" onclick="entrar('admin')">Entrar no Painel</button>
-        <p onclick="irPara('tela-home')" style="cursor:pointer; font-size:12px; opacity:0.5;">← Voltar</p>
+    <div class="container" id="admin-login-screen">
+        <div style="font-size: 50px; margin-bottom: 15px;">🔐</div>
+        <h2>Área Restrita</h2>
+        <p class="subtitle">Somente pessoal autorizado (Jefter)</p>
+        
+        <div class="input-group">
+            <i class="fas fa-user-shield"></i>
+            <input type="text" id="adm-user" placeholder="Usuário Admin">
+        </div>
+        <div class="input-group">
+            <i class="fas fa-key"></i>
+            <input type="password" id="adm-pass" placeholder="Senha Secreta">
+        </div>
+        <button class="btn btn-admin" style="background: var(--neon-purple); color: white;" onclick="startLoading('admin')">🚀 Entrar no Painel</button>
+        <p onclick="showScreen('home-screen')" style="cursor: pointer; font-size: 13px; opacity: 0.6; margin-top: 20px;">← Voltar</p>
     </div>
 
-    <div class="container" id="painel-post">
-        <h3>Postar Novo Móvel</h3>
-        <input type="text" id="p-nome" class="input-box" placeholder="Nome">
-        <input type="text" id="p-preco" class="input-box" placeholder="Preço">
-        <input type="text" id="p-img" class="input-box" placeholder="Link da Imagem">
-        <button class="btn btn-client" onclick="postar()">Postar Produto</button>
-        <button class="btn" style="background:red; font-size:10px;" onclick="localStorage.clear(); location.reload();">Sair</button>
+    <div id="admin-panel">
+        <div class="admin-section">
+            <h3> Couch 🛋️ Postar Novo Móvel</h3>
+            <div class="input-group"><i class="fas fa-couch"></i><input type="text" id="p-nome" placeholder="Nome do Móvel"></div>
+            <div class="input-group"><i class="fas fa-tag"></i><input type="text" id="p-preco" placeholder="Preço (R$)"></div>
+            <div class="input-group"><i class="fas fa-image"></i><input type="text" id="p-img" placeholder="URL da Imagem"></div>
+            <div class="input-group"><i class="fas fa-layer-group"></i>
+                <select id="p-cat">
+                    <option value="novos">Novos</option>
+                    <option value="seminovos">Seminovos</option>
+                    <option value="usados">Usados</option>
+                </select>
+            </div>
+            <button class="btn btn-client" onclick="addProduto()">Publicar Produto</button>
+        </div>
+        
+        <div class="admin-section">
+            <h3>⚙️ Configurações da Loja</h3>
+            <div class="input-group"><i class="fas fa-university"></i><input type="text" id="cfg-pix" placeholder="Sua Chave PIX"></div>
+            <div class="input-group"><i class="fas fa-headset"></i><input type="text" id="cfg-suporte" placeholder="WhatsApp de Suporte"></div>
+            <button class="btn btn-admin" onclick="saveConfig()">Salvar Alterações</button>
+            <button class="btn" style="background: #ff4b2b; margin-top: 15px;" onclick="logoutAdmin()">🚪 Sair do Painel</button>
+        </div>
     </div>
 
-    <div id="vitrine"></div>
+    <div class="category-menu" id="cat-menu" style="display: none;">
+        <div class="cat-item active" onclick="switchCategory('novos')" id="cat-novos">✨ Novos</div>
+        <div class="cat-item" onclick="switchCategory('seminovos')" id="cat-seminovos">🔄 Seminovos</div>
+        <div class="cat-item" onclick="switchCategory('usados')" id="cat-usados">♻️ Usados</div>
+    </div>
+    <div class="vitrine-grid" id="vitrine-area"></div>
+
+    <div class="footer-fixed">
+        <p id="txt-suporte">Suporte: (99) 9205-7452</p>
+        <p>Postagens: <span id="call-count">0</span> clientes já ligaram</p>
+    </div>
 
     <script>
-        const ADM_U = "JEFFG";
-        const ADM_P = "rrJEFTER.ADMrr";
+        // CONFIGURAÇÕES SEGURAS (Igual ao original)
+        const ADMIN_AUTH = { u: "JEFFG", p: "rrJEFTER.ADMrr" };
 
-        function irPara(id) {
-            document.querySelectorAll('.container').forEach(c => c.style.display = 'none');
-            document.getElementById(id).style.display = 'block';
+        // Frases do loading
+        const loadPhrases = ["Entrando... 🚀", "Quase lá... 🛠️", "Validando as credenciais... ✅", "Pronto! ✨"];
+
+        // Função para trocar de tela
+        function showScreen(screenId) {
+            document.querySelectorAll('.container, #admin-panel, #cat-menu, .vitrine-grid').forEach(e => e.style.display = 'none');
+            document.getElementById(screenId).style.display = 'block';
         }
 
-        function entrar(tipo) {
-            if(tipo === 'admin') {
-                const u = document.getElementById('user').value;
-                const p = document.getElementById('pass').value;
-                if(u !== ADM_U || p !== ADM_P) return alert("Erro: Senha errada! ❌");
+        // --- ANIMAÇÃO DE LOADING (2.5 Segundos) ---
+        function startLoading(type) {
+            if(type === 'admin') {
+                const u = document.getElementById('adm-user').value;
+                const p = document.getElementById('adm-pass').value;
+                if(u !== ADMIN_AUTH.u || p !== ADMIN_AUTH.p) return alert("🚫 Acesso Negado! Usuário ou senha incorretos.");
             }
 
-            // Inicia Loading de 2.5s
-            document.querySelectorAll('.container').forEach(c => c.style.display = 'none');
-            const screen = document.getElementById('loading-screen');
-            const fill = document.getElementById('fill');
-            const txt = document.getElementById('load-txt');
-            screen.style.display = 'flex';
-
-            let width = 0;
-            const msg = ["Entrando... 🚀", "Quase lá... 🛠️", "Validando... ✅", "Pronto! ✨"];
+            const lScreen = document.getElementById('loading-screen');
+            const fill = document.getElementById('bar-fill');
+            const msg = document.getElementById('load-msg');
+            lScreen.style.display = 'flex';
             
-            const interval = setInterval(() => {
-                width += 4;
-                fill.style.width = width + '%';
-                if(width == 20) txt.innerText = msg[1];
-                if(width == 60) txt.innerText = msg[2];
-                if(width == 90) txt.innerText = msg[3];
+            let progress = 0;
+            const timer = setInterval(() => {
+                progress += 4;
+                fill.style.width = progress + '%';
+                
+                if(progress == 20) msg.innerText = loadPhrases[1];
+                if(progress == 60) msg.innerText = loadPhrases[2];
+                if(progress == 90) msg.innerText = loadPhrases[3];
 
-                if(width >= 100) {
-                    clearInterval(interval);
-                    screen.style.display = 'none';
-                    if(tipo === 'admin') {
-                        localStorage.setItem("adm", "true");
-                        irPara('painel-post');
+                if(progress >= 100) {
+                    clearInterval(timer);
+                    lScreen.style.display = 'none';
+                    if(type === 'admin') {
+                        localStorage.setItem("jefter_authenticated", "true");
+                        showScreen('admin-panel');
                     } else {
-                        document.getElementById('vitrine').style.display = 'block';
-                        render();
+                        document.getElementById('cat-menu').style.display = 'flex';
+                        switchCategory('novos'); // Mostra 'Novos' por padrão
                     }
+                    render();
                 }
-            }, 100);
+            }, 100); // Total 2.5s
         }
 
-        function postar() {
+        // --- FUNÇÕES DO ADMINISTRADOR (Postar, PIX, Suporte) ---
+        function addProduto() {
             const n = document.getElementById('p-nome').value;
             const p = document.getElementById('p-preco').value;
             const i = document.getElementById('p-img').value;
-            let db = JSON.parse(localStorage.getItem("db")) || [];
-            db.push({n, p, i});
-            localStorage.setItem("db", JSON.stringify(db));
-            alert("Postado! 🛋️");
-            render();
+            const c = document.getElementById('p-cat').value;
+            if(!n || !p) return alert("Preencha o nome e preço do móvel!");
+
+            let db = JSON.parse(localStorage.getItem("loja_db")) || [];
+            db.push({n, p, i, c});
+            localStorage.setItem("loja_db", JSON.stringify(db));
+            alert("🛋️ Móvel postado com sucesso!");
+            location.reload(); // Recarrega para limpar campos e atualizar vitrine
         }
 
-        function render() {
-            const v = document.getElementById('vitrine');
-            const db = JSON.parse(localStorage.getItem("db")) || [];
-            v.innerHTML = db.map(item => `
-                <div class="card">
-                    <img src="${item.i}">
-                    <h3>${item.n}</h3>
-                    <p style="color:var(--neon-blue); font-weight:bold;">${item.p}</p>
-                </div>
-            `).join('');
+        function saveConfig() {
+            const pix = document.getElementById('cfg-pix').value;
+            const suporte = document.getElementById('cfg-suporte').value;
+            localStorage.setItem("loja_pix", pix);
+            localStorage.setItem("loja_suporte", suporte);
+            alert("⚙️ Configurações salvas!");
+            location.reload();
         }
 
+        function logoutAdmin() { localStorage.removeItem("jefter_authenticated"); location.reload(); }
+
+        // --- VITRINE E CATEGORIAS ---
+        function switchCategory(cat) {
+            document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
+            document.getElementById('cat-' + cat).classList.add('active');
+            render(cat);
+        }
+
+        function render(category = 'novos') {
+            const area = document.getElementById('vitrine-area');
+            const db = JSON.parse(localStorage.getItem("loja_db")) || [];
+            const suporte = localStorage.getItem("loja_suporte") || "(99) 9205-7452";
+            const pix = localStorage.getItem("loja_pix") || "Não configurado";
+            
+            // Atualiza campos no painel ADM para o Jefter ver o que está salvo
+            if(document.getElementById('admin-panel').style.display !== 'none') {
+                document.getElementById('cfg-pix').value = pix;
+                document.getElementById('cfg-suporte').value = suporte;
+            }
+
+            // Atualiza suporte no rodapé
+            document.getElementById('txt-suporte').innerText = "Suporte: " + suporte;
+            
+            // Filtra produtos pela categoria
+            const produtosFiltrados = db.filter(item => item.c === category);
+
+            if (produtosFiltrados.length === 0) {
+                area.innerHTML = <p style="text-align:center; color:var(--gray); grid-column:1/-1;">Nenhum produto nesta categoria ainda.</p>;
+            } else {
+                area.style.display = 'grid';
+                area.innerHTML = produtosFiltrados.map(item => `
+                    <div class="product-card">
+                        <img src="${item.i || 'https://via.placeholder.com/400x300?text=Jefter+Móveis'}" alt="${item.n}">
+                        <h3>${item.n}</h3>
+                        <p>${item.p}</p>
+                        <button class="btn btn-client" style="padding:10px; font-size:12px; margin:0;" onclick="window.open('https://wa.me/${suporte}?text=Olá! Tenho interesse no móvel: ${item.n}')">Falar no WhatsApp</button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Ao carregar a página
         window.onload = () => {
-            if(localStorage.getItem("adm") === "true") {
-                irPara('painel-post');
-                document.getElementById('vitrine').style.display = 'block';
-                render();
+            if (localStorage.getItem("jefter_authenticated") === "true") {
+                showScreen('admin-panel');
+                render(); // Carrega configurações
             }
         };
     </script>

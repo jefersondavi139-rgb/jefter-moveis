@@ -3,273 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JEFTER MÓVEIS | O REI DOS MÓVEIS 👑</title>
+    <title>JEFTER MÓVEIS | PREMIUM 👑</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
     <style>
-        /* ESTILO EXTREMO E CHAMATIVO */
         :root {
-            --neon-blue: #00f2ff;
-            --deep-blue: #0062ff;
-            --dark-bg: #03070f;
-            --glass: rgba(255, 255, 255, 0.05);
-            --gold: #ffcc00;
+            --neon: #00f2ff;
+            --blue: #0062ff;
+            --dark: #02050a;
+            --glass: rgba(255, 255, 255, 0.07);
         }
 
         body {
-            margin: 0; padding: 0; font-family: 'Poppins', sans-serif;
-            background: var(--dark-bg); color: white; overflow-x: hidden;
+            margin: 0; background: var(--dark); color: white;
+            font-family: 'Poppins', sans-serif; overflow-x: hidden;
         }
 
-        /* ANIMAÇÕES */
-        @keyframes pulse { 0% { box-shadow: 0 0 10px var(--neon-blue); } 50% { box-shadow: 0 0 30px var(--neon-blue); } 100% { box-shadow: 0 0 10px var(--neon-blue); } }
-        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+        /* ANIMAÇÕES EXTREMAS */
+        @keyframes glow { 0% { text-shadow: 0 0 5px var(--neon); } 50% { text-shadow: 0 0 20px var(--neon), 0 0 30px var(--blue); } 100% { text-shadow: 0 0 5px var(--neon); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* TELA DE LOADING */
+        /* TELA DE CARREGAMENTO ANIMADA */
         #loader {
-            position: fixed; top: 0; width: 100%; height: 100%; background: #000;
-            display: none; justify-content: center; align-items: center; z-index: 9999;
+            position: fixed; top: 0; width: 100%; height: 100%; background: var(--dark);
+            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10000;
         }
+        .loader-bar { width: 200px; height: 4px; background: #111; border-radius: 10px; overflow: hidden; margin-top: 20px; }
+        .loader-fill { width: 0%; height: 100%; background: var(--neon); box-shadow: 0 0 15px var(--neon); animation: load 2.5s forwards; }
+        @keyframes load { to { width: 100%; } }
 
-        /* PÁGINAS (DIVS QUE SE COMPORTAM COMO PÁGINAS) */
-        .page { display: none; min-height: 100vh; padding: 20px; box-sizing: border-box; }
-        .page.active { display: block; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        /* PÁGINAS */
+        .page { display: none; min-height: 100vh; animation: slideUp 0.6s ease-out; }
+        .active-page { display: block; }
 
-        /* HEADER PREMIUM */
-        header {
-            background: linear-gradient(90deg, #001a33, #0062ff);
-            padding: 15px 25px; display: flex; justify-content: space-between;
-            align-items: center; border-bottom: 3px solid var(--neon-blue);
-            box-shadow: 0 5px 20px rgba(0, 242, 255, 0.3);
+        /* TELA DE ENTRADA (LOGIN CLIENTE) */
+        .hero { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: radial-gradient(circle at center, #001a33, var(--dark)); }
+        .logo-main { font-family: 'Orbitron', sans-serif; font-size: 3.5rem; color: var(--neon); animation: glow 2s infinite; margin-bottom: 10px; }
+        
+        .btn-main {
+            background: linear-gradient(45deg, var(--blue), var(--neon));
+            border: none; padding: 20px 50px; border-radius: 50px; color: white;
+            font-weight: 900; font-size: 1.2rem; cursor: pointer; transition: 0.4s;
+            box-shadow: 0 0 20px rgba(0, 98, 255, 0.4); text-transform: uppercase;
         }
+        .btn-main:hover { transform: scale(1.1); box-shadow: 0 0 40px var(--neon); }
 
-        /* BOTÕES EXTREMOS */
-        .mega-btn {
-            background: linear-gradient(135deg, var(--deep-blue), var(--neon-blue));
-            border: none; border-radius: 15px; color: white; padding: 15px 30px;
-            font-weight: bold; font-size: 18px; cursor: pointer; transition: 0.3s;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); margin: 10px 0;
-            width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
-        .mega-btn:active { transform: scale(0.95); }
+        /* HEADER E ABAS */
+        header { padding: 20px; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); display: flex; justify-content: space-between; border-bottom: 2px solid var(--blue); position: sticky; top: 0; z-index: 500; }
+        .tabs { display: flex; justify-content: space-around; background: #050a14; padding: 10px; gap: 5px; }
+        .tab { flex: 1; padding: 15px; text-align: center; cursor: pointer; font-weight: bold; border-radius: 10px; transition: 0.3s; color: #444; }
+        .tab.active { background: var(--blue); color: white; box-shadow: 0 0 15px var(--blue); }
 
-        /* ABAS CORRIGIDAS */
-        .tab-bar { display: flex; background: #0a111f; gap: 5px; padding: 5px; }
-        .tab {
-            flex: 1; padding: 15px; text-align: center; font-weight: bold;
-            cursor: pointer; transition: 0.3s; color: #555; border-radius: 10px;
-        }
-        .tab.active { background: var(--glass); color: var(--neon-blue); border: 1px solid var(--neon-blue); box-shadow: inset 0 0 10px var(--neon-blue); }
+        /* CARDS */
+        .grid { padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding-bottom: 120px; }
+        .card { background: var(--glass); border-radius: 20px; border: 1px solid rgba(0,242,255,0.1); padding: 15px; transition: 0.3s; }
+        .card:hover { border-color: var(--neon); background: rgba(0,242,255,0.05); transform: translateY(-5px); }
+        .card-img { width: 100%; height: 180px; background: #000; border-radius: 15px; margin-bottom: 15px; border: 1px solid #111; }
+        .price { font-size: 1.8rem; color: var(--neon); font-weight: 900; margin: 10px 0; font-family: 'Orbitron'; }
 
-        /* CARDS DE PRODUTOS */
-        .product-card {
-            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 242, 255, 0.2);
-            border-radius: 25px; padding: 20px; margin: 15px 0; animation: float 4s infinite ease-in-out;
-        }
-        .price-tag { font-size: 28px; color: var(--neon-blue); font-weight: 900; text-shadow: 0 0 10px var(--neon-blue); }
+        /* FORMULÁRIOS ADM */
+        .form-box { background: var(--glass); padding: 30px; border-radius: 20px; border: 1px solid var(--blue); max-width: 400px; margin: 40px auto; }
+        input, select { width: 100%; padding: 15px; margin: 10px 0; background: #000; border: 1px solid #222; color: white; border-radius: 10px; box-sizing: border-box; }
 
-        /* PAINEL DE CONFIGURAÇÕES REAL */
-        .config-card { background: #111; padding: 25px; border-radius: 20px; border-left: 5px solid var(--neon-blue); margin-bottom: 15px; }
-        input, select { width: 100%; padding: 15px; margin: 10px 0; border-radius: 10px; border: 1px solid #333; background: #000; color: white; font-size: 16px; }
+        /* FOOTER ADM ESCONDIDO */
+        .adm-access { text-align: center; padding: 40px; color: #222; cursor: pointer; font-size: 12px; }
+        .adm-access:hover { color: var(--blue); }
 
-        /* FOOTER ADM */
-        .nav-bottom {
-            position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(0, 0, 0, 0.9);
-            display: flex; justify-content: space-around; padding: 10px 0; border-top: 2px solid var(--neon-blue);
-        }
+        .nav-adm { position: fixed; bottom: 0; width: 100%; background: rgba(0,0,0,0.9); height: 80px; display: none; justify-content: space-around; align-items: center; border-top: 2px solid var(--neon); }
+        .circle-add { width: 60px; height: 60px; background: var(--neon); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: black; font-size: 30px; margin-top: -40px; box-shadow: 0 0 20px var(--neon); }
     </style>
 </head>
 <body>
 
-<div id="loader"><h2 style="color:var(--neon-blue)">🔥 CARREGANDO JEFTER MÓVEIS...</h2></div>
-
-<div id="page-login" class="page active" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-    <div style="text-align: center; background: var(--glass); padding: 40px; border-radius: 30px; border: 1px solid var(--neon-blue);">
-        <h1 style="font-size: 40px; margin-bottom: 0;">JEFTER MÓVEIS 🛋️</h1>
-        <p style="color: #888;">O Extremo em Qualidade e Preço</p>
-        
-        <button class="mega-btn" onclick="fazerLogin('cliente')">👤 ENTRAR COMO CLIENTE</button>
-        <button class="mega-btn" style="background:transparent; border: 2px solid var(--neon-blue);" onclick="mostrarTelaAdm()">🔐 PAINEL DO DONO</button>
-    </div>
-</div>
-
-<div id="page-adm-login" class="page">
-    <div style="max-width: 400px; margin: auto;">
-        <h2>ACESSO RESTRITO 🚫</h2>
-        <input type="text" id="user" placeholder="Usuário">
-        <input type="password" id="pass" placeholder="Senha Secreta">
-        <button class="mega-btn" onclick="verificarSenha()">ENTRAR NO SISTEMA</button>
-        <button onclick="mudarPagina('page-login')" style="color:gray; background:none; border:none; width:100%; cursor:pointer;">Voltar</button>
-    </div>
-</div>
-
-<div id="page-loja" class="page">
-    <header>
-        <div style="font-weight: 900; font-size: 20px;">J <span id="loja-nome">MÓVEIS</span></div>
-        <div style="font-size: 14px;">🔥 <span id="user-count">1450</span> ONLINE</div>
-    </header>
-
-    <div class="tab-bar">
-        <div class="tab active" id="tab-novos" onclick="filtrar('novos')">🆕 NOVOS</div>
-        <div class="tab" id="tab-usados" onclick="filtrar('usados')">♻️ USADOS</div>
-        <div class="tab" id="tab-seminovos" onclick="filtrar('seminovos')">✨ SEMI</div>
+    <div id="loader">
+        <h1 style="font-family: 'Orbitron'; color: var(--neon);">JEFTER MÓVEIS</h1>
+        <div class="loader-bar"><div class="loader-fill"></div></div>
+        <p style="margin-top: 10px; letter-spacing: 3px; font-size: 10px;">SISTEMA PREMIUM v3.0</p>
     </div>
 
-    <div id="container-produtos" style="padding-bottom: 100px;">
+    <div id="page-entry" class="page active-page">
+        <div class="hero">
+            <div class="logo-main">JEFTER MÓVEIS</div>
+            <p style="margin-bottom: 30px; color: #aaa;">QUALIDADE EXTREMA PARA SUA CASA</p>
+            <button class="btn-main" onclick="entrarLoja('cliente')">ENTRAR NA LOJA 🛒</button>
+            
+            <div class="adm-access" onclick="showPage('page-adm-login')">Acesso Administrativo</div>
+        </div>
+    </div>
+
+    <div id="page-adm-login" class="page">
+        <div class="form-box">
+            <h2 style="text-align:center; color:var(--neon)">PAINEL DO DONO</h2>
+            <input type="text" id="adm-user" placeholder="Usuário">
+            <input type="password" id="adm-pass" placeholder="Senha">
+            <button class="btn-main" style="width:100%" onclick="loginAdm()">ACESSAR</button>
+            <p onclick="showPage('page-entry')" style="text-align:center; cursor:pointer; color:gray; margin-top:15px;">Voltar</p>
+        </div>
+    </div>
+
+    <div id="page-shop" class="page">
+        <header>
+            <div style="font-family: 'Orbitron'; font-weight: 900; color: var(--neon);">J MÓVEIS</div>
+            <div style="font-size: 12px; color: var(--neon);">🔥 <span id="span-online">1450</span> ONLINE</div>
+        </header>
+
+        <div class="tabs">
+            <div class="tab active" id="tab-novos" onclick="filtrar('novos')">NOVOS</div>
+            <div class="tab" id="tab-usados" onclick="filtrar('usados')">USADOS</div>
+            <div class="tab" id="tab-seminovos" onclick="filtrar('seminovos')">SEMI-NOVOS</div>
         </div>
 
-    <div class="nav-bottom" id="menu-adm" style="display: none;">
-        <button onclick="mudarPagina('page-config')" style="background:none; border:none; color:white; font-size:25px;">⚙️</button>
-        <button onclick="mudarPagina('page-postar')" style="background:var(--neon-blue); border:none; color:black; width:60px; height:60px; border-radius:50%; font-size:30px; margin-top:-30px;">+</button>
-        <button onclick="mudarPagina('page-vendas')" style="background:none; border:none; color:white; font-size:25px;">💰</button>
+        <div id="shelf" class="grid">
+            </div>
+
+        <div id="menu-adm-fixo" class="nav-adm">
+            <div onclick="showPage('page-config')">⚙️</div>
+            <div class="circle-add" onclick="showPage('page-post')">+</div>
+            <div onclick="localStorage.removeItem('sessao'); location.reload();">🚪</div>
+        </div>
     </div>
-</div>
 
-<div id="page-postar" class="page">
-    <h2>POSTAR NOVO MÓVEL 🚀</h2>
-    <div class="config-card">
-        <input type="text" id="prod-nome" placeholder="Nome do Móvel">
-        <input type="text" id="prod-preco" placeholder="Valor (R$)">
-        <select id="prod-cat">
-            <option value="novos">Novo</option>
-            <option value="usados">Usado</option>
-            <option value="seminovos">Semi-Novo</option>
-        </select>
-        <button class="mega-btn" onclick="salvarProduto()">PUBLICAR AGORA ✅</button>
-        <button class="mega-btn" style="background:#333" onclick="mudarPagina('page-loja')">CANCELAR</button>
+    <div id="page-post" class="page">
+        <div class="form-box">
+            <h3>POSTAR MÓVEL</h3>
+            <input type="text" id="p-nome" placeholder="Nome do Produto">
+            <input type="text" id="p-preco" placeholder="Preço (R$)">
+            <select id="p-cat">
+                <option value="novos">Novos</option>
+                <option value="usados">Usados</option>
+                <option value="seminovos">Semi-Novos</option>
+            </select>
+            <button class="btn-main" style="width:100%" onclick="salvarProduto()">PUBLICAR ✅</button>
+            <button onclick="showPage('page-shop')" style="background:none; border:none; color:white; width:100%; margin-top:10px;">Cancelar</button>
+        </div>
     </div>
-</div>
 
-<div id="page-config" class="page">
-    <h2>CONFIGURAÇÕES AVANÇADAS ⚙️</h2>
-    <div class="config-card">
-        <label>Nome da Loja:</label>
-        <input type="text" id="conf-nome" value="JEFTER MÓVEIS">
-        <label>Suporte WhatsApp:</label>
-        <input type="text" id="conf-zap" value="(99) 9205-7452">
-        <label>Clientes Online (Fake):</label>
-        <input type="number" id="conf-online" value="1450">
-        <button class="mega-btn" onclick="aplicarConfig()">SALVAR TUDO 💾</button>
-        <button class="mega-btn" style="background:#333" onclick="mudarPagina('page-loja')">VOLTAR</button>
+    <div id="page-config" class="page">
+        <div class="form-box">
+            <h3>CONFIGURAÇÕES</h3>
+            <input type="text" id="c-online" placeholder="Número de Clientes Fake">
+            <input type="text" id="c-suporte" placeholder="WhatsApp Suporte">
+            <button class="btn-main" style="width:100%" onclick="salvarConfig()">SALVAR 💾</button>
+            <button onclick="showPage('page-shop')" style="background:none; border:none; color:white; width:100%; margin-top:10px;">Voltar</button>
+        </div>
     </div>
-</div>
 
-<div id="page-vendas" class="page">
-    <h2>HISTÓRICO DE VENDAS 💰</h2>
-    <div class="config-card" style="text-align: center;">
-        <p>Aguardando novas vendas pelo PIX...</p>
-        <button class="mega-btn" onclick="mudarPagina('page-loja')">VOLTAR</button>
-    </div>
-</div>
+    <script>
+        // BANCO DE DADOS LOCAL
+        let db = JSON.parse(localStorage.getItem('jefter_data')) || {
+            online: "1450",
+            suporte: "(99) 9205-7452",
+            produtos: []
+        };
 
-<script>
-    // --- LÓGICA DE MEMÓRIA E PERSISTÊNCIA ---
-    let bancoDeDados = JSON.parse(localStorage.getItem('db_jefter')) || {
-        nomeLoja: "JEFTER MÓVEIS",
-        whatsapp: "(99) 9205-7452",
-        online: 1450,
-        produtos: []
-    };
+        let catAtiva = 'novos';
 
-    let categoriaAtual = 'novos';
+        // CARREGAMENTO INICIAL
+        window.onload = () => {
+            setTimeout(() => {
+                document.getElementById('loader').style.display = 'none';
+                const sessao = localStorage.getItem('sessao');
+                if(sessao) {
+                    showPage('page-shop');
+                    if(sessao === 'admin') document.getElementById('menu-adm-fixo').style.display = 'flex';
+                }
+                atualizarTela();
+            }, 2500);
+        };
 
-    window.onload = () => {
-        const sessao = localStorage.getItem('sessao');
-        if(sessao) {
-            mudarPagina('page-loja');
-            if(sessao === 'adm') document.getElementById('menu-adm').style.display = 'flex';
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
+            document.getElementById(id).classList.add('active-page');
+            window.scrollTo(0,0);
         }
-        atualizarLoja();
-    };
 
-    function mudarPagina(id) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        window.scrollTo(0,0);
-    }
-
-    function mostrarTelaAdm() { mudarPagina('page-adm-login'); }
-
-    function verificarSenha() {
-        const u = document.getElementById('user').value;
-        const p = document.getElementById('pass').value;
-        if(u === "jefter_28" && p === "Josue_2808") {
-            localStorage.setItem('sessao', 'adm');
-            location.reload();
-        } else { alert("ACESSO NEGADO! Verifique a senha."); }
-    }
-
-    function fazerLogin(tipo) {
-        document.getElementById('loader').style.display = 'flex';
-        setTimeout(() => {
+        function entrarLoja(tipo) {
             localStorage.setItem('sessao', tipo);
             location.reload();
-        }, 2000);
-    }
-
-    // --- FUNÇÕES DE PRODUTO (CORRIGIDAS) ---
-    function filtrar(cat) {
-        categoriaAtual = cat;
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.getElementById('tab-' + cat).classList.add('active');
-        atualizarLoja();
-    }
-
-    function salvarProduto() {
-        const nome = document.getElementById('prod-nome').value;
-        const preco = document.getElementById('prod-preco').value;
-        const cat = document.getElementById('prod-cat').value;
-
-        if(nome && preco) {
-            bancoDeDados.produtos.push({ nome, preco, cat, id: Date.now() });
-            localStorage.setItem('db_jefter', JSON.stringify(bancoDeDados));
-            alert("✅ Postado com Sucesso!");
-            mudarPagina('page-loja');
-            atualizarLoja();
-        }
-    }
-
-    function atualizarLoja() {
-        const container = document.getElementById('container-produtos');
-        const filtrados = bancoDeDados.produtos.filter(p => p.cat === categoriaAtual);
-        
-        document.getElementById('loja-nome').innerText = bancoDeDados.nomeLoja;
-        document.getElementById('user-count').innerText = bancoDeDados.online;
-
-        if(filtrados.length === 0) {
-            container.innerHTML = "<p style='text-align:center; padding:50px; color:gray;'>Nenhum móvel nesta aba. Postar agora!</p>";
-            return;
         }
 
-        container.innerHTML = filtrados.map(p => `
-            <div class="product-card">
-                <div style="height:150px; background:#111; border-radius:15px; display:flex; align-items:center; justify-content:center;">🖼️</div>
-                <div style="padding-top:15px;">
-                    <div style="color:var(--gold)">⭐⭐⭐⭐⭐</div>
-                    <h3 style="margin:5px 0;">${p.nome}</h3>
-                    <div class="price-tag">R$ ${p.preco}</div>
-                    <button class="mega-btn" onclick="alert('WhatsApp: ' + bancoDeDados.whatsapp)">COMPRAR AGORA 🛒</button>
-                    ${localStorage.getItem('sessao') === 'adm' ? `<button onclick="remover('${p.id}')" style="background:red; border:none; color:white; border-radius:5px; padding:5px;">Apagar Móvel</button>` : ''}
+        function loginAdm() {
+            const u = document.getElementById('adm-user').value;
+            const p = document.getElementById('adm-pass').value;
+            if(u === "jefter_28" && p === "Josue_2808") {
+                localStorage.setItem('sessao', 'admin');
+                location.reload();
+            } else { alert("ACESSO NEGADO!"); }
+        }
+
+        function filtrar(cat) {
+            catAtiva = cat;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('tab-'+cat).classList.add('active');
+            atualizarTela();
+        }
+
+        function salvarProduto() {
+            const nome = document.getElementById('p-nome').value;
+            const preco = document.getElementById('p-preco').value;
+            const cat = document.getElementById('p-cat').value;
+            if(nome && preco) {
+                db.produtos.push({ nome, preco, cat, id: Date.now() });
+                localStorage.setItem('jefter_data', JSON.stringify(db));
+                showPage('page-shop');
+                atualizarTela();
+            }
+        }
+
+        function salvarConfig() {
+            db.online = document.getElementById('c-online').value || db.online;
+            db.suporte = document.getElementById('c-suporte').value || db.suporte;
+            localStorage.setItem('jefter_data', JSON.stringify(db));
+            location.reload();
+        }
+
+        function atualizarTela() {
+            const shelf = document.getElementById('shelf');
+            const filtrados = db.produtos.filter(p => p.cat === catAtiva);
+            document.getElementById('span-online').innerText = db.online;
+
+            if(filtrados.length === 0) {
+                shelf.innerHTML = "<p style='text-align:center; grid-column: 1/-1; padding:40px; color:#333'>Nenhum móvel nesta categoria.</p>";
+                return;
+            }
+
+            shelf.innerHTML = filtrados.map(p => `
+                <div class="card">
+                    <div class="card-img" style="display:flex; align-items:center; justify-content:center; color:#222; font-size:40px;">🛋️</div>
+                    <div style="color:gold; font-size:12px;">⭐⭐⭐⭐⭐</div>
+                    <h3 style="margin:5px 0; font-size:16px;">${p.nome}</h3>
+                    <div class="price">R$ ${p.preco}</div>
+                    <button class="btn-main" style="width:100%; padding:10px; font-size:14px;" onclick="alert('Chamar no Suporte: ' + db.suporte)">COMPRAR</button>
+                    ${localStorage.getItem('sessao') === 'admin' ? `<button onclick="apagar('${p.id}')" style="background:red; border:none; color:white; width:100%; margin-top:5px; border-radius:5px; padding:5px; font-size:10px;">EXCLUIR</button>` : ''}
                 </div>
-            </div>
-        `).join('');
-    }
+            `).join('');
+        }
 
-    function remover(id) {
-        bancoDeDados.produtos = bancoDeDados.produtos.filter(p => p.id != id);
-        localStorage.setItem('db_jefter', JSON.stringify(bancoDeDados));
-        atualizarLoja();
-    }
-
-    function aplicarConfig() {
-        bancoDeDados.nomeLoja = document.getElementById('conf-nome').value;
-        bancoDeDados.whatsapp = document.getElementById('conf-zap').value;
-        bancoDeDados.online = document.getElementById('conf-online').value;
-        localStorage.setItem('db_jefter', JSON.stringify(bancoDeDados));
-        alert("💎 Configurações Atualizadas!");
-        mudarPagina('page-loja');
-        atualizarLoja();
-    }
-</script>
+        function apagar(id) {
+            db.produtos = db.produtos.filter(p => p.id != id);
+            localStorage.setItem('jefter_data', JSON.stringify(db));
+            atualizarTela();
+        }
+    </script>
 </body>
-            </html>
-        
+</html>

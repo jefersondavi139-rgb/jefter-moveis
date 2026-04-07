@@ -3,220 +3,307 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>JEFTER MÓVEIS | OFICIAL</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>JEFTER MÓVEIS | LUXURY EDITION</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --neon: #00f2ff; --blue: #0062ff; --dark: #010307; --glass: rgba(255, 255, 255, 0.08); }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; background: var(--dark); color: white; font-family: 'Poppins', sans-serif; height: 100vh; width: 100vw; overflow: hidden; }
-        
-        .screen { display: none; height: 100vh; width: 100%; overflow-y: auto; padding-bottom: 80px; position: absolute; top: 0; left: 0; background: var(--dark); }
-        .active-screen { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        :root {
+            --bg: #020205;
+            --primary: #8b5cf6; /* Roxo Neon */
+            --secondary: #06b6d4; /* Azul Elétrico */
+            --accent: #f472b6; /* Rosa Shock */
+            --glass: rgba(255, 255, 255, 0.03);
+            --card-bg: #0a0a0f;
+        }
 
-        /* LOGIN SCREEN */
-        #screen-login { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; z-index: 9999; }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { 
+            background: var(--bg); 
+            color: #fff; 
+            font-family: 'Montserrat', sans-serif; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
+
+        /* SISTEMA DE TELAS */
+        .view { 
+            display: none; 
+            height: 100vh; 
+            width: 100%; 
+            overflow-y: auto; 
+            padding-bottom: 90px; 
+            position: absolute;
+            background: var(--bg);
+        }
+        .view-active { display: block; animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* TELA DE ENTRADA (SPLASH) */
+        #view-intro { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            background: radial-gradient(circle at center, #1e1b4b 0%, #020205 100%);
+            z-index: 9999;
+        }
+
+        .logo-main {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 32px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
         /* BOTÕES ESTILIZADOS */
-        .btn { width: 100%; max-width: 300px; padding: 15px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; margin: 10px 0; font-family: 'Poppins'; transition: 0.2s; }
-        .btn-primary { background: linear-gradient(90deg, var(--blue), var(--neon)); color: white; box-shadow: 0 4px 15px rgba(0, 242, 255, 0.3); }
-        .btn-outline { background: transparent; color: white; border: 1px solid #333; }
+        .btn-main {
+            width: 85%;
+            max-width: 300px;
+            padding: 18px;
+            border: none;
+            border-radius: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-client { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; }
+        .btn-adm { background: var(--glass); color: #fff; border: 1px solid rgba(255,255,255,0.1); }
 
-        /* NAVEGAÇÃO SUPERIOR */
-        header { padding: 15px; background: #000; border-bottom: 2px solid var(--blue); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .tabs { display: flex; background: #050a14; position: sticky; top: 0; z-index: 90; }
-        .tab { flex: 1; padding: 15px; text-align: center; font-size: 12px; font-weight: bold; color: #555; cursor: pointer; border-bottom: 2px solid transparent; }
-        .tab.active { color: var(--neon); border-bottom-color: var(--neon); background: rgba(0,242,255,0.05); }
+        /* CABEÇALHO */
+        header { 
+            padding: 20px; 
+            background: rgba(2, 2, 5, 0.8); 
+            backdrop-filter: blur(10px);
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-        /* GRID DE PRODUTOS */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; padding: 15px; }
-        .card { background: var(--glass); border-radius: 20px; padding: 12px; border: 1px solid rgba(255,255,255,0.1); }
-        .card img { width: 100%; height: 150px; border-radius: 15px; object-fit: cover; }
+        /* VITRINE */
+        .tabs { display: flex; padding: 10px; gap: 10px; background: #050508; }
+        .tab { 
+            flex: 1; padding: 12px; text-align: center; border-radius: 12px; 
+            font-size: 11px; font-weight: 600; color: #444; cursor: pointer;
+        }
+        .tab.active { background: var(--glass); color: var(--secondary); border: 1px solid var(--secondary); }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
+        .product-card { 
+            background: var(--card-bg); 
+            border-radius: 20px; 
+            padding: 10px; 
+            border: 1px solid rgba(255,255,255,0.03);
+            position: relative;
+        }
+        .product-card img { width: 100%; height: 160px; border-radius: 15px; object-fit: cover; }
+        .product-price { color: var(--secondary); font-weight: 700; margin: 8px 0; font-size: 18px; }
 
         /* MENU INFERIOR */
-        #main-nav { position: fixed; bottom: 0; width: 100%; background: #000; height: 75px; display: none; justify-content: space-around; align-items: center; border-top: 2px solid var(--blue); z-index: 1000; }
-        .nav-item { color: #555; text-align: center; font-size: 10px; cursor: pointer; flex: 1; }
-        .nav-item.active { color: var(--neon); }
+        .bottom-nav { 
+            position: fixed; bottom: 0; width: 100%; height: 80px; 
+            background: rgba(10, 10, 15, 0.95); 
+            backdrop-filter: blur(15px);
+            display: none; justify-content: space-around; align-items: center; 
+            border-top: 1px solid rgba(255,255,255,0.05);
+            z-index: 1000;
+        }
+        .nav-link { color: #555; text-align: center; font-size: 10px; cursor: pointer; text-decoration: none; }
+        .nav-link.active { color: var(--primary); }
 
-        /* MODAL */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; z-index: 10000; align-items: center; justify-content: center; padding: 20px; }
-        .modal-content { background: #0a0f1a; border: 1px solid var(--blue); padding: 30px; border-radius: 25px; width: 100%; max-width: 350px; }
-        input, select { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 1px solid #222; background: #000; color: white; }
+        /* MODAL DE LOGIN */
+        .modal { 
+            position: fixed; top: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.9); 
+            display: none; align-items: center; justify-content: center; z-index: 10000;
+        }
+        .modal-box { 
+            background: #0f0f15; padding: 30px; border-radius: 24px; 
+            width: 90%; max-width: 360px; border: 1px solid var(--primary);
+        }
+        input, select { 
+            width: 100%; padding: 16px; margin: 10px 0; border-radius: 14px; 
+            border: 1px solid #1a1a25; background: #050508; color: #fff; outline: none;
+        }
     </style>
 </head>
 <body>
 
-    <div id="screen-login" class="screen active-screen">
-        <h1 style="font-family:'Orbitron'; color:var(--neon); font-size: 32px;">JEFTER MÓVEIS</h1>
-        <p style="color:#555; font-size:10px; letter-spacing: 2px; margin-bottom: 30px;">QUALIDADE E DESIGN PREMIUM</p>
-        <button class="btn btn-primary" onclick="app.start('cliente')">👤 ENTRAR COMO CLIENTE</button>
-        <button class="btn btn-outline" onclick="app.openLogin()">🔐 ACESSO ADMINISTRATIVO</button>
+    <div id="view-intro" class="view view-active">
+        <div class="logo-main">JEFTER<br>MÓVEIS</div>
+        <button class="btn-main btn-client" onclick="Core.init('cliente')">Explorar Loja</button>
+        <button class="btn-main btn-adm" onclick="Core.toggleModal(true)">Acesso Administrativo</button>
     </div>
 
-    <div id="screen-shop" class="screen">
+    <div id="view-shop" class="view">
         <header>
-            <div style="font-family:'Orbitron'; color:var(--neon)">JEFT MÓVEIS</div>
-            <div onclick="app.nav('screen-cart')">🛒 <span id="cart-count">0</span></div>
+            <div style="font-family:'Syncopate'; font-size:14px;">J MÓVEIS</div>
+            <div onclick="Core.go('view-cart')" style="cursor:pointer">🛒 <span id="cart-dot" style="color:var(--accent)">0</span></div>
         </header>
         <div class="tabs">
-            <div class="tab active" id="tab-novos" onclick="app.filter('novos')">NOVOS</div>
-            <div class="tab" id="tab-usados" onclick="app.filter('usados')">USADOS</div>
-            <div class="tab" id="tab-seminovos" onclick="app.filter('seminovos')">SEMI-NOVOS</div>
+            <div class="tab active" id="tab-novos" onclick="Core.filter('novos')">NOVOS</div>
+            <div class="tab" id="tab-usados" onclick="Core.filter('usados')">USADOS</div>
+            <div class="tab" id="tab-seminovos" onclick="Core.filter('seminovos')">SEMI-NOVOS</div>
         </div>
-        <div id="product-grid" class="grid"></div>
+        <div id="shelf" class="grid"></div>
     </div>
 
-    <div id="screen-post" class="screen">
-        <div style="padding: 20px;">
-            <h2 style="color:var(--neon)">NOVO ANÚNCIO</h2>
-            <input type="text" id="post-title" placeholder="Nome do Móvel">
-            <input type="text" id="post-price" placeholder="Preço (Ex: 1.200)">
-            <select id="post-cat">
-                <option value="novos">Categoria: Novos</option>
-                <option value="usados">Categoria: Usados</option>
-                <option value="seminovos">Categoria: Semi-Novos</option>
+    <div id="view-admin" class="view">
+        <div style="padding: 30px;">
+            <h2 style="color:var(--primary); margin-bottom: 20px;">NOVO PRODUTO</h2>
+            <input type="text" id="p-title" placeholder="Nome do Móvel">
+            <input type="text" id="p-price" placeholder="Preço (Ex: 2.400)">
+            <select id="p-cat">
+                <option value="novos">Novos</option>
+                <option value="usados">Usados</option>
+                <option value="seminovos">Semi-Novos</option>
             </select>
-            <input type="file" id="post-file" accept="image/*" style="border:none">
-            <button class="btn btn-primary" onclick="app.save()">PUBLICAR AGORA</button>
+            <input type="file" id="p-file" accept="image/*" style="border:none; background:none;">
+            <button class="btn-main btn-client" onclick="Core.upload()">Publicar no Site</button>
         </div>
     </div>
 
-    <div id="screen-cart" class="screen">
-        <div style="padding: 20px;">
-            <h2>MEU CARRINHO</h2>
-            <div id="cart-list"></div>
-            <div id="cart-total" style="font-size:24px; margin: 20px 0; color:var(--neon)">Total: R$ 0,00</div>
-            <button class="btn btn-primary" onclick="app.checkout()">FINALIZAR NO WHATSAPP</button>
-            <button class="btn btn-outline" onclick="app.nav('screen-shop')">VOLTAR</button>
+    <div id="view-cart" class="view">
+        <div style="padding: 25px;">
+            <h2>MEU PEDIDO</h2>
+            <div id="cart-list" style="margin-top:20px;"></div>
+            <div id="cart-total" style="font-size:24px; color:var(--secondary); margin: 30px 0;">Total: R$ 0,00</div>
+            <button class="btn-main btn-client" style="width:100%" onclick="Core.checkout()">Enviar para o WhatsApp</button>
+            <button class="btn-main btn-adm" style="width:100%" onclick="Core.go('view-shop')">Voltar à Loja</button>
         </div>
     </div>
 
-    <div id="modal-adm" class="modal">
-        <div class="modal-content">
-            <h3 style="text-align:center; color:var(--neon)">LOGIN DO DONO</h3>
-            <p id="login-msg" style="color:red; font-size:12px; display:none;">Dados incorretos!</p>
-            <input type="text" id="adm-user" placeholder="Usuário">
-            <input type="password" id="adm-pass" placeholder="Senha">
-            <button class="btn btn-primary" onclick="app.verifyAdm()">ENTRAR</button>
-            <button class="btn btn-outline" onclick="app.closeLogin()">CANCELAR</button>
+    <div id="modal-login" class="modal">
+        <div class="modal-box">
+            <h3 style="text-align:center; margin-bottom:20px;">SISTEMA INTERNO</h3>
+            <div id="log-err" style="color:red; font-size:12px; text-align:center; display:none;">Credenciais Inválidas</div>
+            <input type="text" id="user" placeholder="Usuário">
+            <input type="password" id="pass" placeholder="Senha">
+            <button class="btn-main btn-client" style="width:100%" onclick="Core.auth()">Acessar Painel</button>
+            <button class="btn-main btn-adm" style="width:100%" onclick="Core.toggleModal(false)">Voltar</button>
         </div>
     </div>
 
-    <nav id="main-nav">
-        <div class="nav-item" onclick="app.nav('screen-shop')">🏠<br>Início</div>
-        <div class="nav-item" onclick="app.nav('screen-cart')">🛒<br>Carrinho</div>
-        <div class="nav-item adm-only" id="nav-post" style="display:none" onclick="app.nav('screen-post')">➕<br>Postar</div>
-        <div class="nav-item" onclick="location.reload()">🚪<br>Sair</div>
+    <nav class="bottom-nav" id="nav-bar">
+        <div class="nav-link" onclick="Core.go('view-shop')">🏠<br>Início</div>
+        <div class="nav-link" onclick="Core.go('view-cart')">🛒<br>Carrinho</div>
+        <div id="nav-adm-link" class="nav-link" style="display:none" onclick="Core.go('view-admin')">➕<br>Postar</div>
+        <div class="nav-link" onclick="location.reload()">🚪<br>Sair</div>
     </nav>
 
     <script>
-        const app = {
-            db: JSON.parse(localStorage.getItem('JEFTER_PRO_FINAL')) || { produtos: [] },
+        const Core = {
+            data: JSON.parse(localStorage.getItem('J_FINAL_V10')) || { items: [] },
             cart: [],
-            currentCat: 'novos',
-            imgTemp: "",
+            cat: 'novos',
+            tempImg: "",
 
-            start: (role) => {
-                document.getElementById('main-nav').style.display = 'flex';
-                if(role === 'adm') document.getElementById('nav-post').style.display = 'block';
-                app.nav('screen-shop');
-                app.render();
+            init: (role) => {
+                document.getElementById('nav-bar').style.display = 'flex';
+                if(role === 'adm') document.getElementById('nav-adm-link').style.display = 'block';
+                Core.go('view-shop');
+                Core.render();
             },
 
-            nav: (id) => {
-                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
-                document.getElementById(id).classList.add('active-screen');
+            go: (id) => {
+                document.querySelectorAll('.view').forEach(v => v.classList.remove('view-active'));
+                document.getElementById(id).classList.add('view-active');
                 window.scrollTo(0,0);
             },
 
-            openLogin: () => document.getElementById('modal-adm').style.display = 'flex',
-            closeLogin: () => document.getElementById('modal-adm').style.display = 'none',
+            toggleModal: (show) => { document.getElementById('modal-login').style.display = show ? 'flex' : 'none'; },
 
-            verifyAdm: () => {
-                const u = document.getElementById('adm-user').value;
-                const p = document.getElementById('adm-pass').value;
+            auth: () => {
+                const u = document.getElementById('user').value;
+                const p = document.getElementById('pass').value;
                 if(u === "jefter_28" && p === "Josue_2808") {
-                    app.closeLogin();
-                    app.start('adm');
+                    Core.toggleModal(false); Core.init('adm');
                 } else {
-                    document.getElementById('login-msg').style.display = 'block';
+                    document.getElementById('log-err').style.display = 'block';
                 }
             },
 
             filter: (c) => {
-                app.currentCat = c;
+                Core.cat = c;
                 document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
                 document.getElementById('tab-'+c).classList.add('active');
-                app.render();
+                Core.render();
             },
 
             render: () => {
-                const grid = document.getElementById('product-grid');
-                const items = app.db.produtos.filter(p => p.cat === app.currentCat);
-                grid.innerHTML = items.map(p => `
-                    <div class="card">
-                        <img src="${p.img}">
-                        <div style="font-weight:bold; margin-top:10px; font-size:14px;">${p.title}</div>
-                        <div style="color:var(--neon); font-family:'Orbitron';">R$ ${p.price}</div>
-                        <button class="btn btn-primary" style="padding:8px; font-size:12px;" onclick="app.addCart(${p.id})">COMPRAR</button>
-                        ${document.getElementById('nav-post').style.display === 'block' ? `<button onclick="app.del(${p.id})" style="background:none; border:none; color:red; font-size:10px; width:100%; margin-top:5px;">Apagar</button>` : ''}
+                const shelf = document.getElementById('shelf');
+                const list = Core.data.items.filter(i => i.cat === Core.cat);
+                shelf.innerHTML = list.map(i => `
+                    <div class="product-card">
+                        <img src="${i.img}">
+                        <div style="font-size:12px; font-weight:600; margin-top:10px;">${i.title}</div>
+                        <div class="product-price">R$ ${i.price}</div>
+                        <button class="btn-main btn-client" style="padding:10px; font-size:10px; width:100%;" onclick="Core.addCart(${i.id})">COMPRAR</button>
+                        ${document.getElementById('nav-adm-link').style.display === 'block' ? `<button onclick="Core.del(${i.id})" style="background:none; border:none; color:red; font-size:9px; width:100%; margin-top:8px;">Remover</button>` : ''}
                     </div>
                 `).join('');
             },
 
-            save: () => {
-                const title = document.getElementById('post-title').value;
-                const price = document.getElementById('post-price').value;
-                const cat = document.getElementById('post-cat').value;
-                if(!title || !app.imgTemp) return alert("Preencha tudo!");
+            upload: () => {
+                const t = document.getElementById('p-title').value;
+                const p = document.getElementById('p-price').value;
+                const c = document.getElementById('p-cat').value;
+                if(!t || !Core.tempImg) return;
 
-                app.db.produtos.push({ id: Date.now(), title, price, cat, img: app.imgTemp });
-                localStorage.setItem('JEFTER_PRO_FINAL', JSON.stringify(app.db));
-                app.nav('screen-shop');
-                app.render();
+                Core.data.items.push({ id: Date.now(), title: t, price: p, cat: c, img: Core.tempImg });
+                localStorage.setItem('J_FINAL_V10', JSON.stringify(Core.data));
+                Core.go('view-shop'); Core.render();
             },
 
             addCart: (id) => {
-                const item = app.db.produtos.find(p => p.id === id);
-                app.cart.push(item);
-                document.getElementById('cart-count').innerText = app.cart.length;
-                app.updateCartUI();
-                app.nav('screen-cart');
+                const item = Core.data.items.find(i => i.id === id);
+                Core.cart.push(item);
+                document.getElementById('cart-dot').innerText = Core.cart.length;
+                Core.updateCartUI();
+                Core.go('view-cart');
             },
 
             updateCartUI: () => {
                 const list = document.getElementById('cart-list');
                 let total = 0;
-                list.innerHTML = app.cart.map((item, idx) => {
-                    total += parseFloat(item.price.replace('.','').replace(',','.'));
-                    return `<div style="display:flex; padding:10px; background:var(--glass); margin-bottom:10px; border-radius:10px; align-items:center;">
-                        <img src="${item.img}" style="width:40px; height:40px; border-radius:5px; margin-right:10px;">
-                        <div style="flex:1; font-size:12px;">${item.title}</div>
-                        <div style="color:var(--neon)">R$ ${item.price}</div>
-                        <button onclick="app.removeCart(${idx})" style="background:none; border:none; color:white; margin-left:10px;">❌</button>
+                list.innerHTML = Core.cart.map((i, idx) => {
+                    total += parseFloat(i.price.replace('.','').replace(',','.'));
+                    return `<div style="display:flex; background:var(--glass); padding:15px; border-radius:15px; margin-bottom:10px; align-items:center;">
+                        <img src="${i.img}" style="width:40px; height:40px; border-radius:8px; margin-right:15px;">
+                        <div style="flex:1; font-size:13px;">${i.title}</div>
+                        <div style="color:var(--secondary)">R$ ${i.price}</div>
+                        <button onclick="Core.remCart(${idx})" style="background:none; border:none; color:white; margin-left:15px;">✕</button>
                     </div>`;
                 }).join('');
                 document.getElementById('cart-total').innerText = "Total: R$ " + total.toLocaleString('pt-BR');
             },
 
-            removeCart: (idx) => { app.cart.splice(idx, 1); app.updateCartUI(); document.getElementById('cart-count').innerText = app.cart.length; },
+            remCart: (idx) => { Core.cart.splice(idx,1); Core.updateCartUI(); document.getElementById('cart-dot').innerText = Core.cart.length; },
 
             checkout: () => {
-                let msg = "Olá Jefter Móveis! Tenho interesse em:\n";
-                app.cart.forEach(i => msg += `- ${i.title} (R$ ${i.price})\n`);
+                if(Core.cart.length === 0) return;
+                let msg = "Olá Jefter Móveis! Quero comprar:\n\n" + Core.cart.map(i => `- ${i.title} (R$ ${i.price})`).join("\n");
                 window.open(`https://wa.me/559992057452?text=${encodeURIComponent(msg)}`);
             },
 
             del: (id) => {
-                app.db.produtos = app.db.produtos.filter(p => p.id !== id);
-                localStorage.setItem('JEFTER_PRO_FINAL', JSON.stringify(app.db));
-                app.render();
+                Core.data.items = Core.data.items.filter(i => i.id !== id);
+                localStorage.setItem('J_FINAL_V10', JSON.stringify(Core.data));
+                Core.render();
             }
         };
 
-        document.getElementById('post-file').addEventListener('change', (e) => {
+        document.getElementById('p-file').addEventListener('change', (e) => {
             const reader = new FileReader();
-            reader.onload = () => app.imgTemp = reader.result;
+            reader.onload = () => Core.tempImg = reader.result;
             reader.readAsDataURL(e.target.files[0]);
         });
     </script>

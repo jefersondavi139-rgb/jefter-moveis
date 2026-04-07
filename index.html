@@ -2,140 +2,223 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JEFTER MÓVEIS | GITHUB EDITION</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>JEFTER MÓVEIS | OFICIAL</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root { --neon: #00f2ff; --blue: #0062ff; --dark: #010307; --glass: rgba(255, 255, 255, 0.08); }
-        body { margin: 0; background: var(--dark); color: white; font-family: 'Poppins', sans-serif; overflow: hidden; }
-        .page { display: none; height: 100vh; width: 100%; overflow-y: auto; padding-bottom: 85px; box-sizing: border-box; }
-        .active-page { display: block; animation: fadeIn 0.3s ease; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; background: var(--dark); color: white; font-family: 'Poppins', sans-serif; height: 100vh; width: 100vw; overflow: hidden; }
+        
+        .screen { display: none; height: 100vh; width: 100%; overflow-y: auto; padding-bottom: 80px; position: absolute; top: 0; left: 0; background: var(--dark); }
+        .active-screen { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        header { padding: 15px; background: #000; border-bottom: 2px solid var(--blue); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        .tab-bar { display: flex; background: #050a14; position: sticky; top: 0; z-index: 900; }
-        .tab { flex: 1; padding: 15px; text-align: center; cursor: pointer; color: #555; font-weight: bold; font-size: 12px; }
-        .tab.active { color: var(--neon); border-bottom: 3px solid var(--neon); background: rgba(0,242,255,0.05); }
-        .grid { padding: 15px; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+
+        /* LOGIN SCREEN */
+        #screen-login { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; z-index: 9999; }
+        
+        /* BOTÕES ESTILIZADOS */
+        .btn { width: 100%; max-width: 300px; padding: 15px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; margin: 10px 0; font-family: 'Poppins'; transition: 0.2s; }
+        .btn-primary { background: linear-gradient(90deg, var(--blue), var(--neon)); color: white; box-shadow: 0 4px 15px rgba(0, 242, 255, 0.3); }
+        .btn-outline { background: transparent; color: white; border: 1px solid #333; }
+
+        /* NAVEGAÇÃO SUPERIOR */
+        header { padding: 15px; background: #000; border-bottom: 2px solid var(--blue); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .tabs { display: flex; background: #050a14; position: sticky; top: 0; z-index: 90; }
+        .tab { flex: 1; padding: 15px; text-align: center; font-size: 12px; font-weight: bold; color: #555; cursor: pointer; border-bottom: 2px solid transparent; }
+        .tab.active { color: var(--neon); border-bottom-color: var(--neon); background: rgba(0,242,255,0.05); }
+
+        /* GRID DE PRODUTOS */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; padding: 15px; }
         .card { background: var(--glass); border-radius: 20px; padding: 12px; border: 1px solid rgba(255,255,255,0.1); }
-        .card img { width: 100%; height: 140px; border-radius: 15px; object-fit: cover; background: #000; }
-        .price { color: var(--neon); font-family: 'Orbitron'; font-size: 18px; margin: 8px 0; }
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 5px; font-family: 'Poppins'; }
-        .btn-buy { background: linear-gradient(90deg, var(--blue), var(--neon)); color: white; }
-        .btn-sec { background: #111; color: white; border: 1px solid #333; }
-        .nav-bottom { position: fixed; bottom: 0; width: 100%; background: #000; height: 75px; display: none; justify-content: space-around; align-items: center; border-top: 2px solid var(--blue); z-index: 2000; }
-        .nav-item { text-align: center; font-size: 10px; color: #555; cursor: pointer; }
-        .modal { position: fixed; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); display: none; z-index: 5000; justify-content: center; align-items: center; }
-        .modal-content { background: #0a0f1a; padding: 30px; border-radius: 25px; border: 1px solid var(--blue); width: 85%; max-width: 350px; text-align: center; }
-        input, select { width: 100%; padding: 14px; margin: 10px 0; border-radius: 12px; border: 1px solid #222; background: #000; color: white; box-sizing: border-box; }
-        #err-log { color: #ff4444; font-size: 12px; display: none; margin-bottom: 10px; }
+        .card img { width: 100%; height: 150px; border-radius: 15px; object-fit: cover; }
+
+        /* MENU INFERIOR */
+        #main-nav { position: fixed; bottom: 0; width: 100%; background: #000; height: 75px; display: none; justify-content: space-around; align-items: center; border-top: 2px solid var(--blue); z-index: 1000; }
+        .nav-item { color: #555; text-align: center; font-size: 10px; cursor: pointer; flex: 1; }
+        .nav-item.active { color: var(--neon); }
+
+        /* MODAL */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; z-index: 10000; align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: #0a0f1a; border: 1px solid var(--blue); padding: 30px; border-radius: 25px; width: 100%; max-width: 350px; }
+        input, select { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 1px solid #222; background: #000; color: white; }
     </style>
 </head>
 <body>
 
-    <div id="p-login" class="page active-page" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
-        <h1 style="font-family:'Orbitron'; color:var(--neon);">JEFTER MÓVEIS</h1>
-        <button class="btn btn-buy" style="max-width:280px" onclick="entrar('cliente')">👤 ENTRAR NA LOJA</button>
-        <button class="btn btn-sec" style="max-width:280px; margin-top:15px;" onclick="document.getElementById('m-adm').style.display='flex'">🔐 ACESSO DO DONO</button>
+    <div id="screen-login" class="screen active-screen">
+        <h1 style="font-family:'Orbitron'; color:var(--neon); font-size: 32px;">JEFTER MÓVEIS</h1>
+        <p style="color:#555; font-size:10px; letter-spacing: 2px; margin-bottom: 30px;">QUALIDADE E DESIGN PREMIUM</p>
+        <button class="btn btn-primary" onclick="app.start('cliente')">👤 ENTRAR COMO CLIENTE</button>
+        <button class="btn btn-outline" onclick="app.openLogin()">🔐 ACESSO ADMINISTRATIVO</button>
     </div>
 
-    <div id="p-shop" class="page">
-        <header><div style="font-family:'Orbitron'; color:var(--neon)">J MÓVEIS</div><div onclick="ir('p-cart')">🛒 <span id="c-count">0</span></div></header>
-        <div class="tab-bar">
-            <div class="tab active" id="t-novos" onclick="cat('novos')">NOVOS</div>
-            <div class="tab" id="t-usados" onclick="cat('usados')">USADOS</div>
-            <div class="tab" id="t-seminovos" onclick="cat('seminovos')">SEMI</div>
+    <div id="screen-shop" class="screen">
+        <header>
+            <div style="font-family:'Orbitron'; color:var(--neon)">JEFT MÓVEIS</div>
+            <div onclick="app.nav('screen-cart')">🛒 <span id="cart-count">0</span></div>
+        </header>
+        <div class="tabs">
+            <div class="tab active" id="tab-novos" onclick="app.filter('novos')">NOVOS</div>
+            <div class="tab" id="tab-usados" onclick="app.filter('usados')">USADOS</div>
+            <div class="tab" id="tab-seminovos" onclick="app.filter('seminovos')">SEMI-NOVOS</div>
         </div>
-        <div id="grid" class="grid"></div>
+        <div id="product-grid" class="grid"></div>
     </div>
 
-    <div id="p-post" class="page" style="padding:20px;">
-        <h2>POSTAR MÓVEL</h2>
-        <input type="text" id="n" placeholder="Nome">
-        <input type="text" id="p" placeholder="Preço">
-        <select id="c"><option value="novos">Novos</option><option value="usados">Usados</option><option value="seminovos">Semi</option></select>
-        <input type="file" id="f" accept="image/*">
-        <button class="btn btn-buy" onclick="salvar()">PUBLICAR</button>
+    <div id="screen-post" class="screen">
+        <div style="padding: 20px;">
+            <h2 style="color:var(--neon)">NOVO ANÚNCIO</h2>
+            <input type="text" id="post-title" placeholder="Nome do Móvel">
+            <input type="text" id="post-price" placeholder="Preço (Ex: 1.200)">
+            <select id="post-cat">
+                <option value="novos">Categoria: Novos</option>
+                <option value="usados">Categoria: Usados</option>
+                <option value="seminovos">Categoria: Semi-Novos</option>
+            </select>
+            <input type="file" id="post-file" accept="image/*" style="border:none">
+            <button class="btn btn-primary" onclick="app.save()">PUBLICAR AGORA</button>
+        </div>
     </div>
 
-    <div id="p-cart" class="page" style="padding:20px;">
-        <h2>CARRINHO</h2>
-        <div id="l-cart"></div>
-        <button class="btn btn-buy" onclick="zap()">FINALIZAR</button>
-        <button class="btn btn-sec" onclick="ir('p-shop')">VOLTAR</button>
+    <div id="screen-cart" class="screen">
+        <div style="padding: 20px;">
+            <h2>MEU CARRINHO</h2>
+            <div id="cart-list"></div>
+            <div id="cart-total" style="font-size:24px; margin: 20px 0; color:var(--neon)">Total: R$ 0,00</div>
+            <button class="btn btn-primary" onclick="app.checkout()">FINALIZAR NO WHATSAPP</button>
+            <button class="btn btn-outline" onclick="app.nav('screen-shop')">VOLTAR</button>
+        </div>
     </div>
 
-    <div id="m-adm" class="modal">
+    <div id="modal-adm" class="modal">
         <div class="modal-content">
-            <h3>LOGIN ADM</h3>
-            <div id="err-log">Senha Incorreta!</div>
-            <input type="text" id="u-adm" placeholder="Usuário">
-            <input type="password" id="s-adm" placeholder="Senha">
-            <button class="btn btn-buy" onclick="login()">ENTRAR</button>
-            <button class="btn btn-sec" onclick="document.getElementById('m-adm').style.display='none'">VOLTAR</button>
+            <h3 style="text-align:center; color:var(--neon)">LOGIN DO DONO</h3>
+            <p id="login-msg" style="color:red; font-size:12px; display:none;">Dados incorretos!</p>
+            <input type="text" id="adm-user" placeholder="Usuário">
+            <input type="password" id="adm-pass" placeholder="Senha">
+            <button class="btn btn-primary" onclick="app.verifyAdm()">ENTRAR</button>
+            <button class="btn btn-outline" onclick="app.closeLogin()">CANCELAR</button>
         </div>
     </div>
 
-    <nav class="nav-bottom" id="nav">
-        <div class="nav-item" onclick="ir('p-shop')">🏠<br>Início</div>
-        <div class="nav-item" onclick="ir('p-cart')">🛒<br>Carrinho</div>
-        <div class="nav-item adm" style="display:none" onclick="ir('p-post')">➕<br>Postar</div>
+    <nav id="main-nav">
+        <div class="nav-item" onclick="app.nav('screen-shop')">🏠<br>Início</div>
+        <div class="nav-item" onclick="app.nav('screen-cart')">🛒<br>Carrinho</div>
+        <div class="nav-item adm-only" id="nav-post" style="display:none" onclick="app.nav('screen-post')">➕<br>Postar</div>
         <div class="nav-item" onclick="location.reload()">🚪<br>Sair</div>
     </nav>
 
     <script>
-        let db = JSON.parse(localStorage.getItem('j_git_v1')) || { produtos: [] };
-        let carrinho = []; let categoria = 'novos'; let foto = "";
+        const app = {
+            db: JSON.parse(localStorage.getItem('JEFTER_PRO_FINAL')) || { produtos: [] },
+            cart: [],
+            currentCat: 'novos',
+            imgTemp: "",
 
-        document.getElementById('f').addEventListener('change', (e) => {
-            const r = new FileReader(); r.onload = () => foto = r.result; r.readAsDataURL(e.target.files[0]);
+            start: (role) => {
+                document.getElementById('main-nav').style.display = 'flex';
+                if(role === 'adm') document.getElementById('nav-post').style.display = 'block';
+                app.nav('screen-shop');
+                app.render();
+            },
+
+            nav: (id) => {
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+                document.getElementById(id).classList.add('active-screen');
+                window.scrollTo(0,0);
+            },
+
+            openLogin: () => document.getElementById('modal-adm').style.display = 'flex',
+            closeLogin: () => document.getElementById('modal-adm').style.display = 'none',
+
+            verifyAdm: () => {
+                const u = document.getElementById('adm-user').value;
+                const p = document.getElementById('adm-pass').value;
+                if(u === "jefter_28" && p === "Josue_2808") {
+                    app.closeLogin();
+                    app.start('adm');
+                } else {
+                    document.getElementById('login-msg').style.display = 'block';
+                }
+            },
+
+            filter: (c) => {
+                app.currentCat = c;
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.getElementById('tab-'+c).classList.add('active');
+                app.render();
+            },
+
+            render: () => {
+                const grid = document.getElementById('product-grid');
+                const items = app.db.produtos.filter(p => p.cat === app.currentCat);
+                grid.innerHTML = items.map(p => `
+                    <div class="card">
+                        <img src="${p.img}">
+                        <div style="font-weight:bold; margin-top:10px; font-size:14px;">${p.title}</div>
+                        <div style="color:var(--neon); font-family:'Orbitron';">R$ ${p.price}</div>
+                        <button class="btn btn-primary" style="padding:8px; font-size:12px;" onclick="app.addCart(${p.id})">COMPRAR</button>
+                        ${document.getElementById('nav-post').style.display === 'block' ? `<button onclick="app.del(${p.id})" style="background:none; border:none; color:red; font-size:10px; width:100%; margin-top:5px;">Apagar</button>` : ''}
+                    </div>
+                `).join('');
+            },
+
+            save: () => {
+                const title = document.getElementById('post-title').value;
+                const price = document.getElementById('post-price').value;
+                const cat = document.getElementById('post-cat').value;
+                if(!title || !app.imgTemp) return alert("Preencha tudo!");
+
+                app.db.produtos.push({ id: Date.now(), title, price, cat, img: app.imgTemp });
+                localStorage.setItem('JEFTER_PRO_FINAL', JSON.stringify(app.db));
+                app.nav('screen-shop');
+                app.render();
+            },
+
+            addCart: (id) => {
+                const item = app.db.produtos.find(p => p.id === id);
+                app.cart.push(item);
+                document.getElementById('cart-count').innerText = app.cart.length;
+                app.updateCartUI();
+                app.nav('screen-cart');
+            },
+
+            updateCartUI: () => {
+                const list = document.getElementById('cart-list');
+                let total = 0;
+                list.innerHTML = app.cart.map((item, idx) => {
+                    total += parseFloat(item.price.replace('.','').replace(',','.'));
+                    return `<div style="display:flex; padding:10px; background:var(--glass); margin-bottom:10px; border-radius:10px; align-items:center;">
+                        <img src="${item.img}" style="width:40px; height:40px; border-radius:5px; margin-right:10px;">
+                        <div style="flex:1; font-size:12px;">${item.title}</div>
+                        <div style="color:var(--neon)">R$ ${item.price}</div>
+                        <button onclick="app.removeCart(${idx})" style="background:none; border:none; color:white; margin-left:10px;">❌</button>
+                    </div>`;
+                }).join('');
+                document.getElementById('cart-total').innerText = "Total: R$ " + total.toLocaleString('pt-BR');
+            },
+
+            removeCart: (idx) => { app.cart.splice(idx, 1); app.updateCartUI(); document.getElementById('cart-count').innerText = app.cart.length; },
+
+            checkout: () => {
+                let msg = "Olá Jefter Móveis! Tenho interesse em:\n";
+                app.cart.forEach(i => msg += `- ${i.title} (R$ ${i.price})\n`);
+                window.open(`https://wa.me/559992057452?text=${encodeURIComponent(msg)}`);
+            },
+
+            del: (id) => {
+                app.db.produtos = app.db.produtos.filter(p => p.id !== id);
+                localStorage.setItem('JEFTER_PRO_FINAL', JSON.stringify(app.db));
+                app.render();
+            }
+        };
+
+        document.getElementById('post-file').addEventListener('change', (e) => {
+            const reader = new FileReader();
+            reader.onload = () => app.imgTemp = reader.result;
+            reader.readAsDataURL(e.target.files[0]);
         });
-
-        function ir(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
-            document.getElementById(id).classList.add('active-page');
-        }
-
-        function entrar(t) {
-            document.getElementById('nav').style.display = 'flex';
-            if(t === 'adm') document.querySelectorAll('.adm').forEach(e => e.style.display = 'block');
-            ir('p-shop'); render();
-        }
-
-        function login() {
-            if(document.getElementById('u-adm').value === "jefter_28" && document.getElementById('s-adm').value === "Josue_2808") {
-                document.getElementById('m-adm').style.display = 'none'; entrar('adm');
-            } else { document.getElementById('err-log').style.display = 'block'; }
-        }
-
-        function salvar() {
-            const nome = document.getElementById('n').value; const preco = document.getElementById('p').value;
-            if(!nome || !foto) return;
-            db.produtos.push({ id: Date.now(), nome, preco, cat: document.getElementById('c').value, img: foto });
-            localStorage.setItem('j_git_v1', JSON.stringify(db));
-            ir('p-shop'); render();
-        }
-
-        function render() {
-            const g = document.getElementById('grid');
-            g.innerHTML = db.produtos.filter(p => p.cat === categoria).map(p => `
-                <div class="card">
-                    <img src="${p.img}">
-                    <b>${p.nome}</b><div class="price">R$ ${p.preco}</div>
-                    <button class="btn btn-buy" onclick="add(${p.id})">COMPRAR</button>
-                </div>`).join('');
-        }
-
-        function cat(c) {
-            categoria = c; document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.getElementById('t-'+c).classList.add('active'); render();
-        }
-
-        function add(id) { carrinho.push(db.produtos.find(p => p.id === id)); document.getElementById('c-count').innerText = carrinho.length; }
-        
-        function zap() {
-            let m = "Olá! Quero: " + carrinho.map(i => i.nome).join(", ");
-            window.open("https://wa.me/559992057452?text=" + encodeURIComponent(m));
-        }
     </script>
 </body>
 </html>

@@ -3,182 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JEFTER MÓVEIS | V5 STABLE</title>
+    <title>JEFTER MÓVEIS | GITHUB EDITION</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root { --neon: #00f2ff; --blue: #0062ff; --dark: #010307; --glass: rgba(255, 255, 255, 0.08); }
         body { margin: 0; background: var(--dark); color: white; font-family: 'Poppins', sans-serif; overflow: hidden; }
-        
-        .page { display: none; height: 100vh; width: 100%; overflow-y: auto; padding-bottom: 80px; box-sizing: border-box; }
+        .page { display: none; height: 100vh; width: 100%; overflow-y: auto; padding-bottom: 85px; box-sizing: border-box; }
         .active-page { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
         header { padding: 15px; background: #000; border-bottom: 2px solid var(--blue); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        
         .tab-bar { display: flex; background: #050a14; position: sticky; top: 0; z-index: 900; }
         .tab { flex: 1; padding: 15px; text-align: center; cursor: pointer; color: #555; font-weight: bold; font-size: 12px; }
         .tab.active { color: var(--neon); border-bottom: 3px solid var(--neon); background: rgba(0,242,255,0.05); }
-
         .grid { padding: 15px; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
         .card { background: var(--glass); border-radius: 20px; padding: 12px; border: 1px solid rgba(255,255,255,0.1); }
         .card img { width: 100%; height: 140px; border-radius: 15px; object-fit: cover; background: #000; }
         .price { color: var(--neon); font-family: 'Orbitron'; font-size: 18px; margin: 8px 0; }
-        
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 5px; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 5px; font-family: 'Poppins'; }
         .btn-buy { background: linear-gradient(90deg, var(--blue), var(--neon)); color: white; }
         .btn-sec { background: #111; color: white; border: 1px solid #333; }
-
-        .nav-bottom { position: fixed; bottom: 0; width: 100%; background: #000; height: 70px; display: none; justify-content: space-around; align-items: center; border-top: 2px solid var(--blue); z-index: 2000; }
+        .nav-bottom { position: fixed; bottom: 0; width: 100%; background: #000; height: 75px; display: none; justify-content: space-around; align-items: center; border-top: 2px solid var(--blue); z-index: 2000; }
         .nav-item { text-align: center; font-size: 10px; color: #555; cursor: pointer; }
-
-        .modal { position: fixed; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; z-index: 5000; justify-content: center; align-items: center; }
-        .modal-content { background: #0a0f1a; padding: 25px; border-radius: 20px; border: 1px solid var(--blue); width: 85%; max-width: 350px; }
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #222; background: #000; color: white; box-sizing: border-box; }
+        .modal { position: fixed; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); display: none; z-index: 5000; justify-content: center; align-items: center; }
+        .modal-content { background: #0a0f1a; padding: 30px; border-radius: 25px; border: 1px solid var(--blue); width: 85%; max-width: 350px; text-align: center; }
+        input, select { width: 100%; padding: 14px; margin: 10px 0; border-radius: 12px; border: 1px solid #222; background: #000; color: white; box-sizing: border-box; }
+        #err-log { color: #ff4444; font-size: 12px; display: none; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
-    <div id="page-login" class="page active-page" style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
-        <h1 style="font-family:'Orbitron'; color:var(--neon); margin-bottom:5px;">JEFTER MÓVEIS</h1>
-        <p style="color:#333; font-size:12px; margin-bottom:30px;">PREMIUM FURNITURE SYSTEM</p>
-        <button class="btn btn-buy" style="max-width:260px" onclick="entrar('cliente')">👤 ENTRAR NA LOJA</button>
-        <button class="btn btn-sec" style="max-width:260px; margin-top:10px;" onclick="abrirModal()">🔐 ACESSO DO DONO</button>
+    <div id="p-login" class="page active-page" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        <h1 style="font-family:'Orbitron'; color:var(--neon);">JEFTER MÓVEIS</h1>
+        <button class="btn btn-buy" style="max-width:280px" onclick="entrar('cliente')">👤 ENTRAR NA LOJA</button>
+        <button class="btn btn-sec" style="max-width:280px; margin-top:15px;" onclick="document.getElementById('m-adm').style.display='flex'">🔐 ACESSO DO DONO</button>
     </div>
 
-    <div id="page-shop" class="page">
-        <header>
-            <div style="font-family:'Orbitron'; color:var(--neon)">J MÓVEIS</div>
-            <div onclick="irPagina('page-cart')" style="cursor:pointer">🛒 <span id="cart-num">0</span></div>
-        </header>
+    <div id="p-shop" class="page">
+        <header><div style="font-family:'Orbitron'; color:var(--neon)">J MÓVEIS</div><div onclick="ir('p-cart')">🛒 <span id="c-count">0</span></div></header>
         <div class="tab-bar">
-            <div class="tab active" id="t-novos" onclick="mudarAba('novos')">NOVOS</div>
-            <div class="tab" id="t-usados" onclick="mudarAba('usados')">USADOS</div>
-            <div class="tab" id="t-seminovos" onclick="mudarAba('seminovos')">SEMI</div>
+            <div class="tab active" id="t-novos" onclick="cat('novos')">NOVOS</div>
+            <div class="tab" id="t-usados" onclick="cat('usados')">USADOS</div>
+            <div class="tab" id="t-seminovos" onclick="cat('seminovos')">SEMI</div>
         </div>
-        <div id="vitrine" class="grid"></div>
+        <div id="grid" class="grid"></div>
     </div>
 
-    <div id="page-post" class="page">
-        <div style="padding:20px;">
-            <h2 style="color:var(--neon)">POSTAR MÓVEL</h2>
-            <input type="text" id="p-nome" placeholder="Nome">
-            <input type="text" id="p-preco" placeholder="Preço (Ex: 1200)">
-            <select id="p-cat">
-                <option value="novos">Novos</option>
-                <option value="usados">Usados</option>
-                <option value="seminovos">Semi-Novos</option>
-            </select>
-            <input type="file" id="p-file" accept="image/*">
-            <button class="btn btn-buy" onclick="salvar()">PUBLICAR AGORA</button>
-        </div>
+    <div id="p-post" class="page" style="padding:20px;">
+        <h2>POSTAR MÓVEL</h2>
+        <input type="text" id="n" placeholder="Nome">
+        <input type="text" id="p" placeholder="Preço">
+        <select id="c"><option value="novos">Novos</option><option value="usados">Usados</option><option value="seminovos">Semi</option></select>
+        <input type="file" id="f" accept="image/*">
+        <button class="btn btn-buy" onclick="salvar()">PUBLICAR</button>
     </div>
 
-    <div id="page-cart" class="page">
-        <div style="padding:20px;">
-            <h2>CARRINHO</h2>
-            <div id="itens-cart"></div>
-            <h3 id="total-cart">Total: R$ 0,00</h3>
-            <button class="btn btn-buy" onclick="finalizar()">WHATSAPP</button>
-            <button class="btn btn-sec" onclick="irPagina('page-shop')">VOLTAR</button>
-        </div>
+    <div id="p-cart" class="page" style="padding:20px;">
+        <h2>CARRINHO</h2>
+        <div id="l-cart"></div>
+        <button class="btn btn-buy" onclick="zap()">FINALIZAR</button>
+        <button class="btn btn-sec" onclick="ir('p-shop')">VOLTAR</button>
     </div>
 
-    <div id="modal-adm" class="modal">
+    <div id="m-adm" class="modal">
         <div class="modal-content">
-            <h3 style="text-align:center; color:var(--neon)">LOGIN ADM</h3>
-            <input type="text" id="u" placeholder="Usuário">
-            <input type="password" id="s" placeholder="Senha">
-            <button class="btn btn-buy" onclick="checarAdm()">ENTRAR</button>
-            <button class="btn btn-sec" style="margin-top:8px" onclick="fecharModal()">VOLTAR</button>
+            <h3>LOGIN ADM</h3>
+            <div id="err-log">Senha Incorreta!</div>
+            <input type="text" id="u-adm" placeholder="Usuário">
+            <input type="password" id="s-adm" placeholder="Senha">
+            <button class="btn btn-buy" onclick="login()">ENTRAR</button>
+            <button class="btn btn-sec" onclick="document.getElementById('m-adm').style.display='none'">VOLTAR</button>
         </div>
     </div>
 
-    <nav class="nav-bottom" id="menu">
-        <div class="nav-item" onclick="irPagina('page-shop')">🏠<br>Loja</div>
-        <div class="nav-item" onclick="irPagina('page-cart')">🛒<br>Carrinho</div>
-        <div class="nav-item adm-link" style="display:none" onclick="irPagina('page-post')">➕<br>Postar</div>
-        <div class="nav-item" onclick="sair()">🚪<br>Sair</div>
+    <nav class="nav-bottom" id="nav">
+        <div class="nav-item" onclick="ir('p-shop')">🏠<br>Início</div>
+        <div class="nav-item" onclick="ir('p-cart')">🛒<br>Carrinho</div>
+        <div class="nav-item adm" style="display:none" onclick="ir('p-post')">➕<br>Postar</div>
+        <div class="nav-item" onclick="location.reload()">🚪<br>Sair</div>
     </nav>
 
     <script>
-        let dados = JSON.parse(localStorage.getItem('j_v6')) || { produtos: [] };
-        let cart = [];
-        let aba = 'novos';
-        let imgData = "";
+        let db = JSON.parse(localStorage.getItem('j_git_v1')) || { produtos: [] };
+        let carrinho = []; let categoria = 'novos'; let foto = "";
 
-        document.getElementById('p-file').addEventListener('change', (e) => {
-            const r = new FileReader();
-            r.onload = () => imgData = r.result;
-            r.readAsDataURL(e.target.files[0]);
+        document.getElementById('f').addEventListener('change', (e) => {
+            const r = new FileReader(); r.onload = () => foto = r.result; r.readAsDataURL(e.target.files[0]);
         });
 
-        function irPagina(id) {
+        function ir(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
             document.getElementById(id).classList.add('active-page');
         }
 
-        function abrirModal() { document.getElementById('modal-adm').style.display = 'flex'; }
-        function fecharModal() { document.getElementById('modal-adm').style.display = 'none'; }
-
-        function entrar(tipo) {
-            document.getElementById('menu').style.display = 'flex';
-            if(tipo === 'adm') document.querySelectorAll('.adm-link').forEach(el => el.style.display = 'block');
-            else document.querySelectorAll('.adm-link').forEach(el => el.style.display = 'none');
-            irPagina('page-shop');
-            render();
+        function entrar(t) {
+            document.getElementById('nav').style.display = 'flex';
+            if(t === 'adm') document.querySelectorAll('.adm').forEach(e => e.style.display = 'block');
+            ir('p-shop'); render();
         }
 
-        function checarAdm() {
-            if(document.getElementById('u').value === "jefter_28" && document.getElementById('s').value === "Josue_2808") {
-                fecharModal(); entrar('adm');
-            } else alert("Erro!");
+        function login() {
+            if(document.getElementById('u-adm').value === "jefter_28" && document.getElementById('s-adm').value === "Josue_2808") {
+                document.getElementById('m-adm').style.display = 'none'; entrar('adm');
+            } else { document.getElementById('err-log').style.display = 'block'; }
         }
 
         function salvar() {
-            const n = document.getElementById('p-nome').value;
-            const p = document.getElementById('p-preco').value;
-            const c = document.getElementById('p-cat').value;
-            if(!n || !p || !imgData) return alert("Preencha tudo!");
-            dados.produtos.push({id: Date.now(), n, p, c, img: imgData});
-            localStorage.setItem('j_v6', JSON.stringify(dados));
-            alert("Postado!"); irPagina('page-shop'); render();
+            const nome = document.getElementById('n').value; const preco = document.getElementById('p').value;
+            if(!nome || !foto) return;
+            db.produtos.push({ id: Date.now(), nome, preco, cat: document.getElementById('c').value, img: foto });
+            localStorage.setItem('j_git_v1', JSON.stringify(db));
+            ir('p-shop'); render();
         }
 
         function render() {
-            const vitrine = document.getElementById('vitrine');
-            const lista = dados.produtos.filter(p => p.c === aba);
-            vitrine.innerHTML = lista.map(p => `
+            const g = document.getElementById('grid');
+            g.innerHTML = db.produtos.filter(p => p.cat === categoria).map(p => `
                 <div class="card">
                     <img src="${p.img}">
-                    <div style="font-weight:bold; margin-top:5px;">${p.n}</div>
-                    <div class="price">R$ ${p.p}</div>
-                    <button class="btn btn-buy" onclick="comprar(${p.id})">COMPRAR</button>
-                    ${document.querySelector('.adm-link').style.display === 'block' ? `<button onclick="apagar(${p.id})" style="color:red; background:none; border:none; width:100%; font-size:10px;">Apagar</button>` : ''}
-                </div>
-            `).join('');
+                    <b>${p.nome}</b><div class="price">R$ ${p.preco}</div>
+                    <button class="btn btn-buy" onclick="add(${p.id})">COMPRAR</button>
+                </div>`).join('');
         }
 
-        function mudarAba(a) {
-            aba = a;
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.getElementById('t-'+a).classList.add('active');
-            render();
+        function cat(c) {
+            categoria = c; document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('t-'+c).classList.add('active'); render();
         }
 
-        function comprar(id) {
-            const item = dados.produtos.find(p => p.id === id);
-            cart.push(item);
-            document.getElementById('cart-num').innerText = cart.length;
-            alert("Carrinho atualizado!");
+        function add(id) { carrinho.push(db.produtos.find(p => p.id === id)); document.getElementById('c-count').innerText = carrinho.length; }
+        
+        function zap() {
+            let m = "Olá! Quero: " + carrinho.map(i => i.nome).join(", ");
+            window.open("https://wa.me/559992057452?text=" + encodeURIComponent(m));
         }
-
-        function apagar(id) {
-            dados.produtos = dados.produtos.filter(p => p.id !== id);
-            localStorage.setItem('j_v6', JSON.stringify(dados));
-            render();
-        }
-
-        function sair() { location.reload(); }
     </script>
 </body>
 </html>

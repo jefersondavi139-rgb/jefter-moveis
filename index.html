@@ -3,233 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JEFTER MÓVEIS | PREMIUM STORE</title>
+    <title>JEFTER MÓVEIS | V5 EXTREME</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root { --neon: #00f2ff; --blue: #0062ff; --dark: #010307; --glass: rgba(255, 255, 255, 0.08); }
         body { margin: 0; background: var(--dark); color: white; font-family: 'Poppins', sans-serif; overflow-x: hidden; }
         
-        /* TELAS */
-        .page { display: none; min-height: 100vh; width: 100%; animation: fadeIn 0.4s ease; padding-bottom: 100px; box-sizing: border-box; }
-        .active-page { display: block; }
+        /* GERENCIAMENTO DE TELAS */
+        .page { display: none; min-height: 100vh; width: 100%; padding-bottom: 90px; box-sizing: border-box; }
+        .active-page { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* HEADER E NAVIGATION */
-        header { padding: 15px; background: rgba(0,0,0,0.9); border-bottom: 2px solid var(--blue); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        .tab-bar { display: flex; background: #050a14; position: sticky; top: 60px; z-index: 900; }
-        .tab { flex: 1; padding: 15px; text-align: center; cursor: pointer; color: #555; font-weight: bold; border-bottom: 2px solid transparent; }
-        .tab.active { color: var(--neon); border-bottom-color: var(--neon); background: rgba(0,242,255,0.05); }
+        /* HEADER */
+        header { padding: 15px; background: #000; border-bottom: 2px solid var(--blue); display: flex; justify-content: space-between; align-items: center; sticky: top; z-index: 1000; }
+        
+        /* ABAS DA VITRINE */
+        .tab-bar { display: flex; background: #050a14; border-bottom: 1px solid #111; }
+        .tab { flex: 1; padding: 15px; text-align: center; cursor: pointer; color: #555; font-weight: bold; font-size: 13px; }
+        .tab.active { color: var(--neon); border-bottom: 3px solid var(--neon); background: rgba(0,242,255,0.05); }
 
-        /* CARDS DE PRODUTO */
+        /* CARDS E GRID */
         .grid { padding: 15px; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
-        .card { background: var(--glass); border-radius: 20px; padding: 12px; border: 1px solid rgba(255,255,255,0.1); }
+        .card { background: var(--glass); border-radius: 20px; padding: 12px; border: 1px solid rgba(255,255,255,0.1); position: relative; }
         .card img { width: 100%; height: 140px; border-radius: 15px; object-fit: cover; background: #000; }
         .price { color: var(--neon); font-family: 'Orbitron'; font-size: 18px; margin: 8px 0; }
         
-        /* BOTÕES ESTILIZADOS */
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 5px; font-size: 13px; }
+        /* BOTÕES */
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 5px; font-family: 'Poppins'; }
         .btn-buy { background: linear-gradient(90deg, var(--blue), var(--neon)); color: white; }
-        .btn-cart { background: #222; color: white; border: 1px solid #444; }
+        .btn-sec { background: #222; color: white; }
 
-        /* MENU INFERIOR (MOBILE & PC) */
-        .nav-bottom { position: fixed; bottom: 0; width: 100%; background: rgba(0,0,0,0.95); height: 70px; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid var(--blue); z-index: 2000; }
-        .nav-item { text-align: center; font-size: 10px; color: #888; cursor: pointer; }
+        /* MENU INFERIOR FIXO */
+        .nav-bottom { position: fixed; bottom: 0; width: 100%; background: #000; height: 75px; display: none; justify-content: space-around; align-items: center; border-top: 2px solid var(--blue); z-index: 2000; }
+        .nav-item { text-align: center; font-size: 10px; color: #555; cursor: pointer; }
         .nav-item.active { color: var(--neon); }
-        .add-btn { width: 55px; height: 55px; background: var(--neon); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: black; font-size: 30px; margin-top: -35px; box-shadow: 0 0 15px var(--neon); }
 
-        /* FORMULÁRIOS */
-        .form-group { padding: 20px; max-width: 500px; margin: auto; }
+        /* MODAIS E FORMULÁRIOS INTERNOS */
+        .modal { position: fixed; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; z-index: 5000; justify-content: center; align-items: center; }
+        .modal-content { background: #0a0f1a; padding: 30px; border-radius: 25px; border: 1px solid var(--blue); width: 90%; max-width: 400px; }
         input, select, textarea { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 1px solid #222; background: #000; color: white; box-sizing: border-box; }
-        
-        /* CARRINHO E PÁGINA DE VENDA */
-        .cart-item { display: flex; gap: 15px; background: var(--glass); padding: 15px; border-radius: 15px; margin-bottom: 10px; align-items: center; }
-        .cart-item img { width: 60px; height: 60px; border-radius: 10px; }
+
+        /* CARRINHO */
+        .cart-item { display: flex; gap: 15px; background: var(--glass); padding: 10px; border-radius: 15px; margin-bottom: 10px; align-items: center; }
+        .cart-item img { width: 50px; height: 50px; border-radius: 10px; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div style="font-family: 'Orbitron'; color: var(--neon);">JEFTER MÓVEIS</div>
-        <div id="cart-count" onclick="showPage('page-cart')" style="cursor:pointer">🛒 0</div>
-    </header>
-
-    <div id="page-login" class="page active-page" style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
-        <h1 style="font-family:'Orbitron'; font-size:35px; animation: glow 2s infinite;">BEM-VINDO</h1>
-        <p style="color:gray">Escolha como deseja acessar:</p>
-        <button class="btn btn-buy" style="max-width:300px" onclick="setRole('cliente')">👤 ENTRAR COMO CLIENTE</button>
-        <button class="btn btn-cart" style="max-width:300px" onclick="setRole('adm')">🔐 PAINEL ADMINISTRATIVO</button>
+    <div id="page-start" class="page active-page" style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
+        <h1 style="font-family:'Orbitron'; font-size:30px; color:var(--neon);">JEFTER MÓVEIS</h1>
+        <p style="color:#444; margin-bottom:30px;">QUALIDADE AO SEU ALCANCE</p>
+        <button class="btn btn-buy" style="max-width:280px" onclick="entrarComo('cliente')">👤 ENTRAR NA LOJA</button>
+        <button class="btn btn-sec" style="max-width:280px; margin-top:15px; border:1px solid #333" onclick="abrirModalAdm()">🔐 ACESSO DO DONO</button>
     </div>
 
     <div id="page-shop" class="page">
+        <header>
+            <div style="font-family:'Orbitron'; color:var(--neon)">J MÓVEIS</div>
+            <div onclick="showPage('page-cart')" style="cursor:pointer">🛒 <span id="cart-badge">0</span></div>
+        </header>
         <div class="tab-bar">
-            <div class="tab active" id="t-novos" onclick="filter('novos')">NOVOS</div>
-            <div class="tab" id="t-usados" onclick="filter('usados')">USADOS</div>
-            <div class="tab" id="t-seminovos" onclick="filter('seminovos')">SEMI</div>
+            <div class="tab active" id="t-novos" onclick="filtrar('novos')">NOVOS</div>
+            <div class="tab" id="t-usados" onclick="filtrar('usados')">USADOS</div>
+            <div class="tab" id="t-seminovos" onclick="filtrar('seminovos')">SEMI</div>
         </div>
-        <div id="product-grid" class="grid"></div>
+        <div id="grid-produtos" class="grid"></div>
     </div>
 
     <div id="page-details" class="page">
-        <div class="form-group">
-            <h2 id="det-nome">Nome do Produto</h2>
-            <img id="det-img" src="" style="width:100%; border-radius:20px; margin-bottom:15px;">
-            <p class="price" id="det-preco">R$ 0,00</p>
+        <div style="padding:20px;">
+            <h2 id="view-nome"></h2>
+            <img id="view-img" src="" style="width:100%; border-radius:20px; height:250px; object-fit:cover;">
+            <div class="price" id="view-preco" style="font-size:28px;"></div>
             <label>Escolha a Cor:</label>
-            <select id="det-cor">
+            <select id="view-cor">
                 <option>Preto Premium</option>
                 <option>Branco Neve</option>
                 <option>Madeira Rústica</option>
-                <option>Azul Marinho</option>
             </select>
             <label>Quantidade:</label>
-            <input type="number" id="det-qtd" value="1" min="1">
-            <button class="btn btn-buy" onclick="addToCart()">ADICIONAR AO CARRINHO 🛒</button>
-            <button class="btn btn-cart" onclick="showPage('page-shop')">VOLTAR</button>
+            <input type="number" id="view-qtd" value="1" min="1">
+            <button class="btn btn-buy" onclick="adicionarAoCarrinho()">ADICIONAR AO CARRINHO 🛒</button>
+            <button class="btn btn-sec" onclick="showPage('page-shop')">VOLTAR</button>
         </div>
     </div>
 
     <div id="page-cart" class="page">
-        <div class="form-group">
-            <h2>MEU CARRINHO 🛒</h2>
-            <div id="cart-list"></div>
-            <hr border="0.1" color="#222">
-            <div id="cart-total" style="font-size:20px; font-weight:bold; margin:20px 0;">Total: R$ 0,00</div>
-            <button class="btn btn-buy" onclick="checkout()">FINALIZAR PEDIDO PELO WHATSAPP</button>
-            <button class="btn btn-cart" onclick="showPage('page-shop')">CONTINUAR COMPRANDO</button>
+        <div style="padding:20px;">
+            <h2>MEU CARRINHO</h2>
+            <div id="lista-carrinho"></div>
+            <div id="total-carrinho" style="font-size:22px; font-weight:bold; margin:20px 0; color:var(--neon)">Total: R$ 0,00</div>
+            <button class="btn btn-buy" onclick="finalizarPedido()">FINALIZAR NO WHATSAPP ✅</button>
+            <button class="btn btn-sec" onclick="showPage('page-shop')">CONTINUAR COMPRANDO</button>
         </div>
     </div>
 
     <div id="page-post" class="page">
-        <div class="form-group">
-            <h2>POSTAR NOVO MÓVEL 🛋️</h2>
-            <input type="text" id="p-nome" placeholder="Nome do Móvel">
-            <input type="text" id="p-preco" placeholder="Preço (Ex: 1.200)">
-            <select id="p-cat">
-                <option value="novos">Novo</option>
-                <option value="usados">Usado</option>
-                <option value="seminovos">Semi-Novo</option>
+        <div style="padding:20px;">
+            <h2>NOVA POSTAGEM 📸</h2>
+            <input type="text" id="post-nome" placeholder="Nome do Móvel">
+            <input type="text" id="post-preco" placeholder="Preço (Ex: 850)">
+            <select id="post-cat">
+                <option value="novos">Categoria: Novos</option>
+                <option value="usados">Categoria: Usados</option>
+                <option value="seminovos">Categoria: Semi-Novos</option>
             </select>
-            <label>Foto do Dispositivo:</label>
-            <input type="file" id="p-file" accept="image/*">
-            <button class="btn btn-buy" onclick="saveProduct()">PUBLICAR MÓVEL</button>
+            <label>Selecionar Foto:</label>
+            <input type="file" id="post-file" accept="image/*">
+            <button class="btn btn-buy" onclick="salvarNovoMovel()">PUBLICAR AGORA</button>
         </div>
     </div>
 
-    <div id="page-config" class="page">
-        <div class="form-group">
-            <h2>CONFIGURAÇÕES DO SITE</h2>
-            <label>Clientes Online Fake:</label>
-            <input type="text" id="c-online" value="1.450">
-            <label>WhatsApp Suporte:</label>
-            <input type="text" id="c-zap" value="559992057452">
-            <button class="btn btn-buy" onclick="saveConfig()">SALVAR CONFIGURAÇÕES</button>
-            <button class="btn btn-cart" onclick="logout()">SAIR DA CONTA</button>
+    <div id="modal-adm" class="modal">
+        <div class="modal-content">
+            <h2 style="text-align:center; color:var(--neon); font-family:'Orbitron';">LOGIN DONO</h2>
+            <input type="text" id="login-u" placeholder="Usuário">
+            <input type="password" id="login-p" placeholder="Senha">
+            <button class="btn btn-buy" onclick="confirmarAdm()">ENTRAR</button>
+            <button class="btn btn-sec" style="margin-top:10px;" onclick="fecharModalAdm()">CANCELAR</button>
         </div>
     </div>
 
-    <div class="nav-bottom" id="bottom-bar" style="display:none">
-        <div class="nav-item" onclick="showPage('page-shop')">🏠<br>Início</div>
+    <nav class="nav-bottom" id="nav-main">
+        <div class="nav-item" onclick="showPage('page-shop')">🏠<br>Loja</div>
         <div class="nav-item" onclick="showPage('page-cart')">🛒<br>Carrinho</div>
-        <div class="nav-item" id="adm-post-btn" onclick="showPage('page-post')">➕<br>Postar</div>
-        <div class="nav-item" id="adm-cfg-btn" onclick="showPage('page-config')">⚙️<br>Config</div>
-        <div class="nav-item cliente-only" onclick="logout()">🚪<br>Sair</div>
-    </div>
+        <div class="nav-item adm-only" style="display:none" onclick="showPage('page-post')">➕<br>Postar</div>
+        <div class="nav-item" onclick="fazerLogout()">🚪<br>Sair</div>
+    </nav>
 
     <script>
-        let db = JSON.parse(localStorage.getItem('jefter_v5')) || { produtos: [], online: "1.450", zap: "559992057452" };
-        let cart = [];
-        let currentCat = 'novos';
-        let tempImg = "";
-        let selectedProduct = null;
+        // BANCO DE DATOS E ESTADO
+        let dados = JSON.parse(localStorage.getItem('jefter_vFinal')) || { produtos: [], zap: "559992057452" };
+        let carrinho = [];
+        let catAtual = 'novos';
+        let imagemBase64 = "";
+        let itemSelecionado = null;
 
-        // SISTEMA DE IMAGEM (FILE READER)
-        document.getElementById('p-file').addEventListener('change', function(e) {
+        // LÓGICA DE IMAGEM
+        document.getElementById('post-file').addEventListener('change', function(e) {
             const reader = new FileReader();
-            reader.onload = () => { tempImg = reader.result; };
+            reader.onload = () => imagemBase64 = reader.result;
             reader.readAsDataURL(e.target.files[0]);
         });
 
+        // NAVEGAÇÃO
         function showPage(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
             document.getElementById(id).classList.add('active-page');
             window.scrollTo(0,0);
         }
 
-        function setRole(role) {
-            if(role === 'adm') {
-                const p = prompt("Senha do Dono:");
-                if(p !== "Josue_2808") return alert("Senha Incorreta!");
-                document.getElementById('adm-post-btn').style.display = 'block';
-                document.getElementById('adm-cfg-btn').style.display = 'block';
-                document.querySelectorAll('.cliente-only').forEach(el => el.style.display = 'none');
+        function entrarComo(tipo) {
+            localStorage.setItem('perfil', tipo);
+            document.getElementById('nav-main').style.display = 'flex';
+            if(tipo === 'adm') {
+                document.querySelectorAll('.adm-only').forEach(el => el.style.display = 'block');
             } else {
-                document.getElementById('adm-post-btn').style.display = 'none';
-                document.getElementById('adm-cfg-btn').style.display = 'none';
-                document.querySelectorAll('.cliente-only').forEach(el => el.style.display = 'block');
+                document.querySelectorAll('.adm-only').forEach(el => el.style.display = 'none');
             }
-            localStorage.setItem('role', role);
-            document.getElementById('bottom-bar').style.display = 'flex';
             showPage('page-shop');
-            renderProducts();
+            renderizar();
         }
 
-        function saveProduct() {
-            const nome = document.getElementById('p-nome').value;
-            const preco = document.getElementById('p-preco').value;
-            const cat = document.getElementById('p-cat').value;
-            if(!nome || !tempImg) return alert("Preencha tudo e escolha a foto!");
+        function abrirModalAdm() { document.getElementById('modal-adm').style.display = 'flex'; }
+        function fecharModalAdm() { document.getElementById('modal-adm').style.display = 'none'; }
 
-            db.produtos.push({ id: Date.now(), nome, preco, cat, img: tempImg });
-            localStorage.setItem('jefter_v5', JSON.stringify(db));
-            alert("Móvel postado com sucesso!");
-            showPage('page-shop');
-            renderProducts();
+        function confirmarAdm() {
+            const u = document.getElementById('login-u').value;
+            const p = document.getElementById('login-p').value;
+            if(u === "jefter_28" && p === "Josue_2808") {
+                fecharModalAdm();
+                entrarComo('adm');
+            } else {
+                alert("Usuário ou Senha incorretos!");
+            }
         }
 
-        function renderProducts() {
-            const grid = document.getElementById('product-grid');
-            const list = db.produtos.filter(p => p.cat === currentCat);
-            grid.innerHTML = list.map(p => `
+        // PRODUTOS
+        function salvarNovoMovel() {
+            const nome = document.getElementById('post-nome').value;
+            const preco = document.getElementById('post-preco').value;
+            const cat = document.getElementById('post-cat').value;
+            if(!nome || !preco || !imagemBase64) return alert("Preencha tudo e selecione a foto!");
+
+            dados.produtos.push({ id: Date.now(), nome, preco, cat, img: imagemBase64 });
+            localStorage.setItem('jefter_vFinal', JSON.stringify(dados));
+            alert("Postado com sucesso!");
+            showPage('page-shop');
+            renderizar();
+        }
+
+        function renderizar() {
+            const grid = document.getElementById('grid-produtos');
+            const lista = dados.produtos.filter(p => p.cat === catAtual);
+            grid.innerHTML = lista.map(p => `
                 <div class="card">
                     <img src="${p.img}">
-                    <div style="font-size:12px; color:gold">⭐⭐⭐⭐⭐</div>
-                    <div style="font-weight:bold; margin-top:5px; height:35px; overflow:hidden">${p.nome}</div>
+                    <div style="font-size:10px; color:gold; margin-top:5px;">⭐⭐⭐⭐⭐</div>
+                    <div style="font-weight:bold; font-size:14px; margin:5px 0;">${p.nome}</div>
                     <div class="price">R$ ${p.preco}</div>
-                    <button class="btn btn-buy" onclick="openDetails(${p.id})">COMPRAR</button>
+                    <button class="btn btn-buy" onclick="verDetalhes(${p.id})">COMPRAR</button>
+                    ${localStorage.getItem('perfil') === 'adm' ? `<button onclick="apagar(${p.id})" style="background:red; color:white; border:none; border-radius:5px; margin-top:5px; padding:3px; width:100%; font-size:10px;">APAGAR</button>` : ''}
                 </div>
             `).join('');
         }
 
-        function filter(cat) {
-            currentCat = cat;
+        function filtrar(c) {
+            catAtual = c;
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.getElementById('t-'+cat).classList.add('active');
-            renderProducts();
+            document.getElementById('t-'+c).classList.add('active');
+            renderizar();
         }
 
-        function openDetails(id) {
-            selectedProduct = db.produtos.find(p => p.id === id);
-            document.getElementById('det-nome').innerText = selectedProduct.nome;
-            document.getElementById('det-preco').innerText = "R$ " + selectedProduct.preco;
-            document.getElementById('det-img').src = selectedProduct.img;
+        // COMPRA E CARRINHO
+        function verDetalhes(id) {
+            itemSelecionado = dados.produtos.find(p => p.id === id);
+            document.getElementById('view-nome').innerText = itemSelecionado.nome;
+            document.getElementById('view-preco').innerText = "R$ " + itemSelecionado.preco;
+            document.getElementById('view-img').src = itemSelecionado.img;
             showPage('page-details');
         }
 
-        function addToCart() {
-            const cor = document.getElementById('det-cor').value;
-            const qtd = document.getElementById('det-qtd').value;
-            cart.push({ ...selectedProduct, cor, qtd });
-            updateCartUI();
-            alert("Adicionado ao Carrinho!");
+        function adicionarAoCarrinho() {
+            const cor = document.getElementById('view-cor').value;
+            const qtd = document.getElementById('view-qtd').value;
+            carrinho.push({ ...itemSelecionado, cor, qtd: parseInt(qtd) });
+            atualizarBadge();
+            alert("🛒 Adicionado ao Carrinho!");
             showPage('page-shop');
         }
 
-        function updateCartUI() {
-            document.getElementById('cart-count').innerText = "🛒 " + cart.length;
-            const list = document.getElementById('cart-list');
+        function atualizarBadge() {
+            document.getElementById('cart-badge').innerText = carrinho.length;
+            const lista = document.getElementById('lista-carrinho');
             let total = 0;
-            list.innerHTML = cart.map((item, index) => {
-                total += parseFloat(item.preco.replace('.','')) * item.qtd;
+            lista.innerHTML = carrinho.map((item, index) => {
+                const subtotal = parseFloat(item.preco.replace('.','').replace(',','.')) * item.qtd;
+                total += subtotal;
                 return `
                 <div class="cart-item">
                     <img src="${item.img}">
@@ -238,35 +248,33 @@
                         <div style="font-size:12px; color:gray">Cor: ${item.cor} | Qtd: ${item.qtd}</div>
                     </div>
                     <div style="color:var(--neon)">R$ ${item.preco}</div>
-                    <button onclick="removeItem(${index})" style="background:none; border:none; color:red">X</button>
+                    <button onclick="removerItem(${index})" style="background:none; border:none; color:red; font-weight:bold">X</button>
                 </div>`;
             }).join('');
-            document.getElementById('cart-total').innerText = "Total: R$ " + total.toLocaleString('pt-BR');
+            document.getElementById('total-carrinho').innerText = "Total: R$ " + total.toLocaleString('pt-BR', {minimumFractionDigits: 2});
         }
 
-        function removeItem(i) { cart.splice(i, 1); updateCartUI(); }
+        function removerItem(i) { carrinho.splice(i, 1); atualizarBadge(); }
 
-        function checkout() {
-            if(cart.length === 0) return alert("Seu carrinho está vazio!");
-            let texto = `Olá Jefter Móveis! Gostaria de encomendar:\n\n`;
-            cart.forEach(i => {
-                texto += `📦 *${i.nome}*\n🎨 Cor: ${i.cor}\n🔢 Qtd: ${i.qtd}\n💰 Valor: R$ ${i.preco}\n\n`;
+        function finalizarPedido() {
+            if(carrinho.length === 0) return alert("O carrinho está vazio!");
+            let msg = `Olá Jefter Móveis! Quero encomendar:\n\n`;
+            carrinho.forEach(i => {
+                msg += `🛋️ *${i.nome}*\n🎨 Cor: ${i.cor}\n🔢 Qtd: ${i.qtd}\n💰 Preço: R$ ${i.preco}\n\n`;
             });
-            texto += `Este item está disponível?`;
-            const url = `https://wa.me/${db.zap}?text=${encodeURIComponent(texto)}`;
-            window.open(url, '_blank');
+            msg += `Estes itens estão disponíveis?`;
+            window.open(`https://wa.me/${dados.zap}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        function logout() {
-            localStorage.removeItem('role');
+        function apagar(id) {
+            dados.produtos = dados.produtos.filter(p => p.id !== id);
+            localStorage.setItem('jefter_vFinal', JSON.stringify(dados));
+            renderizar();
+        }
+
+        function fazerLogout() {
+            localStorage.removeItem('perfil');
             location.reload();
-        }
-
-        function saveConfig() {
-            db.online = document.getElementById('c-online').value;
-            db.zap = document.getElementById('c-zap').value.replace('+','').replace(' ','');
-            localStorage.setItem('jefter_v5', JSON.stringify(db));
-            alert("Configurações Salvas!");
         }
     </script>
 </body>

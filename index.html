@@ -3,123 +3,263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JEFTER MÓVEIS | OFFICIAL</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>JEFTER MÓVEIS | Premium Store 🛋️</title>
     <style>
-        /* INTERFACE 100% ORIGINAL (BASEADA NAS SUAS FOTOS) */
         :root {
-            --bg-dark: #050a12;
-            --blue-gradient: linear-gradient(135deg, #00c6ff, #0072ff);
-            --card-color: #0d1626;
+            --bg: #050a14;
+            --card: #0d1626;
+            --neon-blue: #00d2ff;
+            --royal: #0056ff;
+            --gold: #ffcc00;
+            --white: #ffffff;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background: var(--bg-dark); color: white; height: 100vh; overflow: hidden; }
+        body {
+            margin: 0; font-family: 'Poppins', sans-serif;
+            background: var(--bg); color: var(--white);
+            overflow-x: hidden;
+        }
 
-        .screen { display: none; height: 100vh; width: 100%; flex-direction: column; align-items: center; justify-content: center; }
-        .active { display: flex; }
+        /* TELA DE LOADING */
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg); display: none; justify-content: center;
+            align-items: center; z-index: 5000; flex-direction: column;
+        }
+        .spinner {
+            width: 60px; height: 60px; border: 6px solid #111;
+            border-top-color: var(--neon-blue); border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* ESTILO DA TELA DE CARREGAMENTO (FOTO 1) */
-        .logo-box { width: 110px; height: 110px; background: var(--blue-gradient); border-radius: 25px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; box-shadow: 0 0 20px rgba(0, 114, 255, 0.5); }
-        .loading-title { font-size: 24px; font-weight: 800; color: #00c6ff; margin-bottom: 5px; text-transform: uppercase; }
-        .status-text { color: #888; font-size: 14px; margin-bottom: 20px; }
-        .progress-bg { width: 250px; height: 8px; background: #1a2636; border-radius: 10px; overflow: hidden; }
-        .progress-bar { width: 0%; height: 100%; background: #0072ff; }
+        /* BOAS VINDAS & LOGIN */
+        #welcome-screen {
+            position: fixed; top: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #001f3f, #050a14);
+            display: flex; justify-content: center; align-items: center; z-index: 4000;
+        }
+        .glass-box {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px); padding: 40px;
+            border-radius: 30px; border: 1px solid var(--neon-blue);
+            width: 90%; max-width: 400px; text-align: center;
+            box-shadow: 0 0 40px rgba(0, 210, 255, 0.2);
+        }
 
-        /* ESTILO DO LOGIN (FOTO 2 E 3) */
-        .login-card { background: var(--card-color); padding: 30px; border-radius: 20px; width: 90%; max-width: 350px; text-align: center; border: 1px solid #1c2530; }
-        .input-group { background: #fff; border-radius: 15px; display: flex; align-items: center; margin-bottom: 15px; padding: 0 15px; }
-        .input-group i { color: #0072ff; width: 20px; }
-        .input-group input { width: 100%; padding: 15px; border: none; background: transparent; outline: none; color: #333; font-weight: bold; }
-        .btn-blue { width: 100%; padding: 15px; border-radius: 15px; border: none; background: #0072ff; color: white; font-weight: bold; cursor: pointer; font-size: 16px; }
-        .btn-purple { background: linear-gradient(to right, #6a11cb, #2575fc); margin-top: 10px; }
+        .btn {
+            width: 100%; padding: 15px; margin: 10px 0; border: none;
+            border-radius: 15px; font-weight: bold; cursor: pointer;
+            font-size: 16px; transition: 0.3s; display: flex;
+            align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-client { background: var(--white); color: #000; }
+        .btn-adm { background: transparent; border: 2px solid var(--neon-blue); color: var(--neon-blue); }
+        .btn-confirm { background: var(--royal); color: #fff; }
 
-        /* ESTILO DO DASHBOARD (FOTO 5 E 6) */
-        .header { width: 100%; padding: 15px; background: #0d1626; display: flex; justify-content: space-between; align-items: center; }
-        .tabs { width: 100%; display: flex; background: #0d1626; border-bottom: 1px solid #1c2530; }
-        .tab-item { flex: 1; padding: 15px; text-align: center; font-size: 12px; font-weight: bold; color: #555; cursor: pointer; }
-        .tab-item.active-tab { color: #00c6ff; border-bottom: 2px solid #00c6ff; }
-        
-        /* MENU INFERIOR ORIGINAL */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #0d1626; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #1c2530; }
-        .nav-link { color: #555; text-align: center; font-size: 10px; cursor: pointer; }
-        .nav-link i { font-size: 20px; display: block; margin-bottom: 4px; }
-        .nav-link.active-nav { color: #00c6ff; }
-        .btn-plus { background: #56ccf2; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; margin-top: -25px; border: 4px solid var(--bg-dark); }
+        /* HEADER & NAV */
+        header {
+            padding: 20px; background: var(--card);
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid var(--royal);
+        }
+        .logo-box { display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 1.2rem; }
+        .logo-j { background: var(--neon-blue); color: #000; padding: 5px 12px; border-radius: 8px; }
+
+        .tabs { display: flex; background: #08101d; sticky: top; z-index: 100; }
+        .tab { 
+            flex: 1; padding: 15px; text-align: center; cursor: pointer;
+            border-bottom: 3px solid transparent; color: #555; font-weight: bold;
+        }
+        .tab.active { border-color: var(--neon-blue); color: var(--neon-blue); background: rgba(0,210,255,0.05); }
+
+        /* PRODUTOS */
+        .grid { padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: var(--card); border-radius: 20px; overflow: hidden; border: 1px solid #1e2d44; transition: 0.3s; }
+        .card:hover { transform: translateY(-5px); border-color: var(--neon-blue); }
+        .card-img { width: 100%; height: 200px; background: #111; object-fit: cover; }
+        .card-body { padding: 20px; }
+        .stars { color: var(--gold); margin-bottom: 10px; }
+        .price { font-size: 1.6rem; color: var(--neon-blue); font-weight: 900; margin: 10px 0; }
+
+        /* PAINEL ADM FOOTER */
+        #adm-panel {
+            position: fixed; bottom: 0; width: 100%; background: #08101d;
+            height: 80px; display: none; justify-content: space-around;
+            align-items: center; border-top: 2px solid var(--neon-blue);
+        }
+        .fab {
+            width: 70px; height: 70px; background: var(--neon-blue);
+            border-radius: 50%; margin-top: -40px; display: flex;
+            justify-content: center; align-items: center; font-size: 40px;
+            color: #000; box-shadow: 0 0 20px var(--neon-blue); cursor: pointer;
+        }
+
+        .hidden { display: none !important; }
+        input { width: 100%; padding: 12px; margin: 5px 0; border-radius: 10px; border: 1px solid #333; background: #000; color: #fff; box-sizing: border-box; }
     </style>
 </head>
 <body>
 
-    <div id="scr-loading" class="screen active">
-        <div class="logo-box"><i class="fas fa-couch" style="font-size: 50px; color: white;"></i></div>
-        <div class="loading-title">JEFTER MÓVEIS</div>
-        <div class="status-text">Olá, Jsjsj! 👋</div>
-        <div class="status-text" style="margin-top: -15px; font-size: 12px;">Quase lá... 🚀</div>
-        <div class="progress-bg"><div id="bar" class="progress-bar"></div></div>
-        <div id="perc" style="margin-top: 10px; color: #0072ff; font-size: 12px;">0%</div>
+    <div id="loader">
+        <div class="spinner"></div>
+        <p style="color: var(--neon-blue); margin-top: 15px;">Segurança JEFTER ativada...</p>
     </div>
 
-    <div id="scr-login" class="screen">
-        <div class="login-card">
-            <i class="fas fa-user-shield" style="font-size: 50px; color: #ffd700; margin-bottom: 15px;"></i>
-            <h2 style="margin-bottom: 20px;">Área Restrita</h2>
-            <div class="input-group"><i class="fas fa-user"></i><input type="text" id="user" placeholder="Usuário"></div>
-            <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="pass" placeholder="Senha"></div>
-            <button class="btn-blue btn-purple" onclick="logar()">🚀 Entrar como Admin</button>
-            <p onclick="ir('scr-loading')" style="margin-top: 20px; color: #555; font-size: 12px; cursor: pointer;">← Voltar</p>
+    <div id="welcome-screen">
+        <div class="glass-box" id="login-main">
+            <h1 id="display-store-name">JEFTER MÓVEIS</h1>
+            <p>Móveis Novos, Usados e Seminovos com Qualidade Premium ✨</p>
+            <button class="btn btn-client" onclick="auth('cliente')">👤 Logar como Cliente</button>
+            <button class="btn btn-adm" onclick="showAdmLogin()">🔑 Logar como Admin</button>
+        </div>
+
+        <div class="glass-box hidden" id="adm-auth">
+            <h2>Acesso do Dono</h2>
+            <input type="text" id="user" placeholder="Usuário Admin">
+            <input type="password" id="pass" placeholder="Senha Secreta">
+            <button class="btn btn-confirm" onclick="auth('admin')">Entrar no Sistema</button>
+            <button onclick="location.reload()" style="background:none; border:none; color:gray; cursor:pointer; margin-top:10px;">Voltar</button>
         </div>
     </div>
 
-    <div id="scr-site" class="screen" style="justify-content: flex-start;">
-        <div class="header">
-            <div style="display: flex; align-items: center;"><div style="width:30px; height:30px; background:#0072ff; border-radius:5px; margin-right:10px; display:flex; align-items:center; justify-content:center; font-weight:bold;">J</div> JEFTER MÓVEIS</div>
-            <button onclick="location.reload()" style="background:#1c2530; border:none; color:white; padding:5px 10px; border-radius:5px; font-size:12px;">Sair</button>
+    <header>
+        <div class="logo-box">
+            <div class="logo-j">J</div>
+            <span id="header-store-name">JEFTER MÓVEIS</span>
         </div>
-        <div class="tabs">
-            <div class="tab-item active-tab">✨ NOVOS</div>
-            <div class="tab-item">SEMINOVOS</div>
-            <div class="tab-item">USADOS</div>
+        <div>
+            <span id="online-users">👤 0 Clientes Logados</span> | 🎧 <span id="support-link">Suporte</span>
         </div>
-        <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#555;">
-            <i class="fas fa-box-open" style="font-size:50px; margin-bottom:15px;"></i>
-            <p>Nenhum produto cadastrado.</p>
-        </div>
-        <div class="bottom-nav">
-            <div class="nav-link active-nav"><i class="fas fa-couch"></i>Produtos</div>
-            <div class="nav-link"><i class="fas fa-chart-line"></i>Vendas</div>
-            <div class="btn-plus"><i class="fas fa-plus"></i></div>
-            <div class="nav-link"><i class="fas fa-cog"></i>Config</div>
-            <div class="nav-link" onclick="ir('scr-login')"><i class="fas fa-user-lock"></i>Admin</div>
-        </div>
+    </header>
+
+    <div class="tabs">
+        <div class="tab active" onclick="setTab('novos')">NOVOS</div>
+        <div class="tab" onclick="setTab('usados')">USADOS</div>
+        <div class="tab" onclick="setTab('seminovos')">SEMINOVOS</div>
     </div>
+
+    <main class="grid" id="product-list"></main>
+
+    <div id="adm-panel">
+        <div onclick="configSite()" style="cursor:pointer">⚙️ Config</div>
+        <div class="fab" onclick="postar()">+</div>
+        <div onclick="alert('Histórico de Vendas')" style="cursor:pointer">💰 Vendas</div>
+    </div>
+
+    <footer style="text-align: center; padding: 40px; color: #444; font-size: 12px; margin-bottom: 80px;">
+        Dono: <span id="owner-name">JEFTER JOSUÉ DOS SANTOS LISBOA</span><br>
+        Suporte: <span id="support-number">(99) 9205-7452</span>
+    </footer>
 
     <script>
-        // CORREÇÃO: BARRA DE 100% QUE ENTRA NO SITE
-        let p = 0;
-        const load = setInterval(() => {
-            p++;
-            document.getElementById('bar').style.width = p + "%";
-            document.getElementById('perc').innerText = p + "%";
-            if(p >= 100) {
-                clearInterval(load);
-                setTimeout(() => ir('scr-site'), 500);
-            }
-        }, 30);
+        // LOGIN INFO
+        const ADM_USER = "jefter_28";
+        const ADM_PASS = "Josue_2808";
 
-        function ir(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
+        // BANCO DE DADOS LOCAL (MEMÓRIA)
+        let storeData = {
+            name: "JEFTER MÓVEIS",
+            support: "(99) 9205-7452",
+            online: 1450,
+            products: []
+        };
+
+        // CARREGAR AO INICIAR (RESOLVE ERRO DE LOGOUT)
+        window.onload = () => {
+            const savedLogin = localStorage.getItem('jefter_session');
+            const savedData = localStorage.getItem('jefter_db');
+            
+            if(savedData) storeData = JSON.parse(savedData);
+            
+            if(savedLogin) {
+                document.getElementById('welcome-screen').classList.add('hidden');
+                if(savedLogin === 'admin') document.getElementById('adm-panel').style.display = 'flex';
+                applyConfigs();
+                render();
+            }
+        };
+
+        function showAdmLogin() {
+            document.getElementById('login-main').classList.add('hidden');
+            document.getElementById('adm-auth').classList.remove('hidden');
         }
 
-        function logar() {
-            const u = document.getElementById('user').value;
-            const s = document.getElementById('pass').value;
-            if(u === "JEFFG" && s === "rrJEFTER.ADMrr") {
-                alert("Acesso Confirmado!");
-                ir('scr-site');
-            } else {
-                alert("Senha Incorreta!");
+        // AUTHENTICAÇÃO (RESOLVE ERRO DE LOGIN)
+        function auth(type) {
+            if(type === 'admin') {
+                const u = document.getElementById('user').value;
+                const p = document.getElementById('pass').value;
+                if(u !== ADM_USER || p !== ADM_PASS) return alert("Erro de Login!");
             }
+            
+            document.getElementById('loader').style.display = 'flex';
+            setTimeout(() => {
+                localStorage.setItem('jefter_session', type);
+                location.reload();
+            }, 2500);
+        }
+
+        // CONFIGURAÇÕES DO ADM
+        function configSite() {
+            const newName = prompt("Mudar nome da loja:", storeData.name);
+            const newSupp = prompt("Mudar WhatsApp Suporte:", storeData.support);
+            const newOnline = prompt("Mudar Clientes Online:", storeData.online);
+            
+            if(newName) storeData.name = newName;
+            if(newSupp) storeData.support = newSupp;
+            if(newOnline) storeData.online = newOnline;
+            
+            save();
+            applyConfigs();
+        }
+
+        function applyConfigs() {
+            document.getElementById('display-store-name').innerText = storeData.name;
+            document.getElementById('header-store-name').innerText = storeData.name;
+            document.getElementById('support-number').innerText = storeData.support;
+            document.getElementById('online-users').innerText = `👤 ${storeData.online} Clientes Logados`;
+        }
+
+        // POSTAGEM (RESOLVE ERRO DO CLIENTE NÃO VER)
+        function postar() {
+            const nome = prompt("Nome do Móvel:");
+            const preco = prompt("Preço (R$):");
+            const cat = prompt("Categoria (novos, usados, seminovos):");
+            
+            if(nome && preco) {
+                storeData.products.push({
+                    id: Date.now(),
+                    nome, preco, cat: cat || 'novos',
+                    estrelas: "⭐⭐⭐⭐⭐"
+                });
+                save();
+                render();
+            }
+        }
+
+        function render() {
+            const list = document.getElementById('product-list');
+            list.innerHTML = storeData.products.map(p => `
+                <div class="card">
+                    <div class="card-img" style="display:flex; align-items:center; justify-content:center;">🖼️</div>
+                    <div class="card-body">
+                        <div class="stars">${p.estrelas}</div>
+                        <h3>${p.nome}</h3>
+                        <p class="price">R$ ${p.preco}</p>
+                        <button class="btn btn-confirm" onclick="buy('${p.nome}')">Comprar Agora 🛒</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function save() {
+            localStorage.setItem('jefter_db', JSON.stringify(storeData));
+        }
+
+        function buy(nome) {
+            alert(`✅ Você escolheu: ${nome}\nEstamos redirecionando para o Pagamento PIX!\nSuporte: ${storeData.support}`);
+            alert("Obrigado pela compra! Garantimos alta qualidade no seu novo móvel.");
         }
     </script>
 </body>

@@ -3,205 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>JEFTER MÓVEIS | BLUE TECH</title>
+    <title>JEFTER MÓVEIS | V19 CUSTOM</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --blue-main: #007bff; /* Azul vibrante e moderno */
-            --blue-dark: #0056b3;
-            --bg-black: #050505;
+            --blue-glow: #00f2ff;
+            --blue-main: #007bff;
+            --bg-deep: #000000;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        body { 
-            background-color: var(--bg-black);
-            background-image: linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.9)), url('https://www.transparenttextures.com/patterns/cubes.png');
-            color: #fff; 
-            font-family: 'Poppins', sans-serif; 
-            height: 100vh; 
-            overflow: hidden; 
-        }
+        body { background-color: var(--bg-deep); color: #fff; font-family: 'Poppins', sans-serif; height: 100vh; overflow: hidden; }
 
         /* TELAS */
-        .screen { display: none; height: 100vh; width: 100%; position: absolute; top: 0; left: 0; overflow-y: auto; padding-bottom: 120px; }
+        .screen { display: none; height: 100vh; width: 100%; position: absolute; top: 0; left: 0; overflow-y: auto; padding-bottom: 120px; background: var(--bg-deep); }
         .screen-active { display: flex !important; flex-direction: column; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* TELA DE CARREGAMENTO ANIMADA */
-        #sc-loader { 
-            background: var(--bg-black); 
-            z-index: 9999; 
-            display: none; 
-            align-items: center; 
-            justify-content: center; 
-            flex-direction: column;
-        }
-        .loader-circle {
-            width: 60px; height: 60px;
-            border: 5px solid #111;
-            border-top: 5px solid var(--blue-main);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* LOADER 5s */
+        #sc-loader { z-index: 9999; display: none; align-items: center; justify-content: center; flex-direction: column; background: var(--bg-deep); }
+        .loader-spin { width: 60px; height: 60px; border: 4px solid #111; border-top: 4px solid var(--blue-glow); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* INPUTS E BOTÕES AZUIS */
-        input, select { 
-            width: 90%; max-width: 320px; padding: 18px; 
-            background: #111; border: 1px solid #222; 
-            color: #fff; margin: 10px auto; border-radius: 8px; outline: none;
-        }
-        input:focus { border-color: var(--blue-main); }
+        /* INPUTS E BOTÕES */
+        input { width: 90%; max-width: 320px; padding: 18px; background: #080808; border: 1px solid #222; color: #fff; margin: 10px auto; border-radius: 8px; outline: none; }
+        .btn-blue { width: 90%; max-width: 320px; padding: 18px; border: none; border-radius: 8px; font-weight: 600; background: var(--blue-main); color: #fff; cursor: pointer; margin: 10px auto; }
+        .btn-add-cart { background: var(--blue-main); border: none; color: #fff; padding: 8px 12px; border-radius: 5px; font-size: 11px; margin-top: 10px; cursor: pointer; width: 100%; }
 
-        .btn-blue {
-            width: 90%; max-width: 320px; padding: 18px; border: none; border-radius: 8px;
-            font-weight: 600; text-transform: uppercase; cursor: pointer;
-            background: var(--blue-main); color: #fff; font-size: 12px; letter-spacing: 1px;
-            margin: 10px auto; transition: 0.3s;
-        }
-        .btn-blue:active { transform: scale(0.98); background: var(--blue-dark); }
-        .btn-outline { background: transparent; border: 1px solid #333; color: #aaa; }
+        /* HEADER PERSONALIZADO */
+        header { padding: 25px; text-align: center; border-bottom: 1px solid #111; }
+        .welcome-user { font-size: 13px; color: var(--blue-glow); margin-top: 5px; font-weight: 300; }
 
-        /* CABEÇALHO E TABS */
-        header { padding: 25px; text-align: center; border-bottom: 1px solid #111; position: relative; }
-        .online-info { position: absolute; top: 15px; right: 20px; color: var(--blue-main); font-size: 11px; display: flex; align-items: center; gap: 5px; }
-        
-        .tabs-center { display: flex; justify-content: center; gap: 40px; padding: 20px; }
-        .tab { color: #555; font-size: 12px; text-transform: uppercase; font-weight: 600; cursor: pointer; padding-bottom: 5px; border-bottom: 2px solid transparent; }
-        .tab.active { color: var(--blue-main); border-bottom-color: var(--blue-main); }
-
-        /* GRID DE PRODUTOS */
+        /* TABS E SHELF */
+        .tabs-center { display: flex; justify-content: center; gap: 30px; padding: 20px; }
+        .tab { color: #444; font-size: 12px; text-transform: uppercase; cursor: pointer; font-weight: 600; }
+        .tab.active { color: var(--blue-glow); border-bottom: 2px solid var(--blue-glow); }
         .shelf { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
-        .card { background: #0d0d0d; border-radius: 10px; padding: 10px; border: 1px solid #1a1a1a; }
-        .card img { width: 100%; height: 130px; object-fit: cover; border-radius: 8px; }
+        .card { background: #080808; border-radius: 10px; padding: 12px; border: 1px solid #1a1a1a; }
+        .card img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; }
 
-        /* NAVBAR */
-        nav { 
-            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); 
-            width: 90%; max-width: 400px; height: 70px; 
-            background: rgba(10,10,10,0.95); border: 1px solid #222; 
-            display: none; justify-content: space-around; align-items: center; border-radius: 15px;
-        }
-        .nav-icon { font-size: 20px; color: #444; }
-        .nav-icon.active { color: var(--blue-main); }
+        /* CARRINHO */
+        .cart-item { display: flex; align-items: center; gap: 15px; background: #0a0a0a; padding: 15px; border-bottom: 1px solid #111; }
+        .cart-item img { width: 50px; height: 50px; border-radius: 5px; }
+        .badge { position: absolute; top: -5px; right: -8px; background: var(--blue-glow); color: #000; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: bold; }
 
-        /* MENSAGEM DE CRIPTOGRAFIA */
-        .crypto-tag { font-size: 10px; color: #444; margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        /* EMOJIS FLUTUANTES */
+        #emoji-rain { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; display: none; }
+        .floating-emoji { position: absolute; color: rgba(255, 255, 255, 0.1); font-size: 24px; animation: float linear infinite; }
+        @keyframes float { 0% { transform: translateY(110vh); } 100% { transform: translateY(-10vh); } }
+
+        /* POPUP DE BOAS VINDAS */
+        .popup-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); display:none; align-items:center; justify-content:center; z-index:10000; }
+        .popup-box { width: 85%; max-width: 300px; background: #0d0d0d; border: 1px solid var(--blue-main); padding: 30px; border-radius: 15px; text-align: center; }
+
+        nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 85%; height: 70px; background: rgba(10,10,10,0.95); border: 1px solid #222; display: none; justify-content: space-around; align-items: center; border-radius: 20px; z-index: 1000; }
+        .nav-icon { font-size: 22px; color: #444; position: relative; cursor: pointer; }
+        .nav-icon.active { color: var(--blue-glow); }
     </style>
 </head>
 <body>
 
+    <div id="emoji-rain"></div>
+
+    <div id="popup-welcome" class="popup-overlay">
+        <div class="popup-box">
+            <h3 style="color:var(--blue-glow); margin-bottom:15px;">Bem-vindo à Jefter Móveis!</h3>
+            <p style="font-size:13px; color:#ccc; line-height:1.5;">Aqui você encontra os produtos de melhor qualidade para o seu lar.</p>
+            <button class="btn-blue" style="margin-top:20px; width:100%;" onclick="App.closePopup()">OK</button>
+        </div>
+    </div>
+
     <div id="sc-loader" class="screen">
-        <div class="loader-circle"></div>
-        <p style="letter-spacing: 2px; font-size: 12px; color: var(--blue-main);">Sincronizando dados seguros...</p>
+        <div class="loader-spin"></div>
+        <p style="color:var(--blue-glow); margin-top:20px; font-size:12px; letter-spacing:2px;">SEGURANÇA ATIVA...</p>
     </div>
 
     <div id="sc-intro" class="screen screen-active" style="align-items:center; justify-content:center; text-align:center;">
-        <h1 id="txt-logo" style="font-size: 32px; color: var(--blue-main);">JEFTER MÓVEIS</h1>
-        <p id="txt-tagline" style="font-size: 13px; color: #666; margin: 15px 0 40px; max-width: 280px;">A melhor decisão para transformar o seu lar com alta qualidade e sofisticação.</p>
-        
-        <button class="btn-blue" onclick="App.go('sc-client-login')">ACESSAR COMO CLIENTE</button>
-        <button class="btn-blue btn-outline" onclick="App.toggleM(true)">PAINEL DO DONO</button>
+        <h1 style="font-size:35px; color:var(--blue-main);">JEFTER MÓVEIS</h1>
+        <p style="color:#555; margin:15px 0 40px;">Qualidade que você confia.</p>
+        <button class="btn-blue" onclick="App.go('sc-client-login')">ENTRAR COMO CLIENTE</button>
+        <button class="btn-blue" style="background:transparent; border:1px solid #222; color:#444;" onclick="App.toggleM(true)">ADMINISTRAÇÃO</button>
     </div>
 
     <div id="sc-client-login" class="screen" style="align-items:center; justify-content:center;">
         <h2 style="margin-bottom:20px;">Identificação</h2>
-        <input type="text" id="c-name" placeholder="Digite seu nome">
-        <input type="email" id="c-mail" placeholder="Digite seu e-mail">
-        
-        <button class="btn-blue" onclick="App.startClient()">ENTRAR NA LOJA</button>
-        
-        <div class="crypto-tag">
-            🔒 Estas informações estão protegidas por criptografia ponta a ponta.
-        </div>
-        <p onclick="App.go('sc-intro')" style="color:#444; font-size:11px; margin-top:20px;">Voltar</p>
+        <input type="text" id="c-name" placeholder="Como podemos te chamar?">
+        <button class="btn-blue" onclick="App.startClient()">ACESSAR LOJA</button>
+        <p style="font-size:10px; color:#333; margin-top:15px;">🔒 Conexão Criptografada</p>
     </div>
 
     <div id="sc-shop" class="screen">
         <header>
-            <div class="online-info"><span id="u-count">24</span> 👤</div>
-            <h3 style="letter-spacing: 2px; color: #fff;">LOJA ONLINE</h3>
+            <h2 style="font-size:18px;">JEFTER MÓVEIS</h2>
+            <div id="user-display" class="welcome-user">Olá, Cliente</div>
         </header>
         <div class="tabs-center">
             <div class="tab active" id="t-novos" onclick="App.filter('novos')">Novos</div>
             <div class="tab" id="t-usados" onclick="App.filter('usados')">Usados</div>
-            <div class="tab" id="t-seminovos" onclick="App.filter('seminovos')">Semi-novos</div>
+            <div class="tab" id="t-seminovos" onclick="App.filter('seminovos')">Semi</div>
         </div>
         <div id="shelf" class="shelf"></div>
     </div>
 
-    <div id="sc-post" class="screen" style="padding: 30px;">
-        <h2 style="color:var(--blue-main); text-align:center; margin-bottom:20px;">CADASTRAR MÓVEL</h2>
-        <input type="text" id="in-t" placeholder="Título">
-        <input type="text" id="in-p" placeholder="Preço">
-        <select id="in-c">
-            <option value="novos">Novos</option>
-            <option value="usados">Usados</option>
-            <option value="seminovos">Semi-novos</option>
-        </select>
-        <input type="file" id="in-f" accept="image/*">
-        <button class="btn-blue" onclick="App.save()">SALVAR NO BANCO</button>
+    <div id="sc-cart" class="screen" style="padding:20px;">
+        <h2 style="text-align:center; margin-bottom:20px; color:var(--blue-glow);">MEU CARRINHO</h2>
+        <div id="cart-list"></div>
+        <div id="cart-total" style="text-align:center; padding:25px; font-size:20px;">Total: R$ 0,00</div>
+        <button class="btn-blue" onclick="App.finishOrder()">FINALIZAR PEDIDO</button>
     </div>
 
-    <div id="sc-config" class="screen" style="padding: 30px;">
-        <h2 style="text-align:center; margin-bottom:20px;">CONFIGURAÇÕES</h2>
-        <input type="text" id="cfg-logo" placeholder="Nome do Site">
-        <input type="text" id="cfg-zap" placeholder="WhatsApp">
-        <input type="text" id="cfg-pix" placeholder="Chave PIX">
-        <button class="btn-blue" onclick="Admin.apply()">SALVAR ALTERAÇÕES</button>
-        <button class="btn-blue btn-outline" onclick="App.logout()">SAIR</button>
+    <div id="sc-post" class="screen" style="padding:30px;">
+        <h2 style="text-align:center; color:var(--blue-glow);">NOVO PRODUTO</h2>
+        <input type="text" id="in-t" placeholder="Nome do Móvel">
+        <input type="text" id="in-p" placeholder="Valor (Ex: 1.200)">
+        <select id="in-c" style="width:90%; padding:18px; background:#080808; border:1px solid #222; color:#fff; border-radius:8px; margin:10px auto; display:block;">
+            <option value="novos">Novos</option>
+            <option value="usados">Usados</option>
+            <option value="seminovos">Semi</option>
+        </select>
+        <input type="file" id="in-f" accept="image/*">
+        <button class="btn-blue" onclick="App.save()">PUBLICAR NO SITE</button>
     </div>
 
     <div id="m-login" class="modal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; display:none; align-items:center; justify-content:center; z-index:2000;">
         <div style="width:90%; text-align:center;">
-            <h2 style="color:var(--blue-main); margin-bottom:20px;">ADMIN</h2>
+            <h2 style="color:var(--blue-main); margin-bottom:20px;">ADM LOGIN</h2>
             <input type="text" id="l-u" placeholder="Usuário">
             <input type="password" id="l-p" placeholder="Senha">
             <button class="btn-blue" onclick="App.loginAdmin()">ENTRAR</button>
-            <p onclick="App.toggleM(false)" style="color:#444; margin-top:20px;">Fechar</p>
+            <p onclick="App.toggleM(false)" style="color:#222; margin-top:20px;">Voltar</p>
         </div>
     </div>
 
     <nav id="navbar">
-        <div class="nav-icon active" onclick="App.go('sc-shop')">🏠</div>
-        <div id="adm-1" class="nav-icon" style="display:none" onclick="App.go('sc-post')">➕</div>
-        <div id="adm-2" class="nav-icon" style="display:none" onclick="App.go('sc-config')">⚙️</div>
-        <div class="nav-icon" onclick="App.logout()">🚪</div>
+        <div class="nav-icon active" id="nav-home" onclick="App.go('sc-shop')">🏠</div>
+        <div class="nav-icon" id="nav-cart" onclick="App.go('sc-cart')">🛒<span class="badge" id="cart-count">0</span></div>
+        <div id="adm-btn" class="nav-icon" style="display:none" onclick="App.go('sc-post')">➕</div>
+        <div class="nav-icon" onclick="location.reload()">🚪</div>
     </nav>
 
     <script>
-        let db = JSON.parse(localStorage.getItem('JEFTER_V17')) || { items: [] };
-        let config = JSON.parse(localStorage.getItem('CFG_V17')) || { logo: "JEFTER MÓVEIS", zap: "559992057452", pix: "Sua Chave" };
+        let db = JSON.parse(localStorage.getItem('JEFTER_V19')) || { items: [] };
+        let cart = [];
+        let clientName = "";
         let imgBase64 = "";
 
         const App = {
             go: (id) => {
                 document.querySelectorAll('.screen').forEach(s => s.classList.remove('screen-active'));
                 document.getElementById(id).classList.add('screen-active');
+                document.querySelectorAll('.nav-icon').forEach(n => n.classList.remove('active'));
+                if(id === 'sc-shop') document.getElementById('nav-home').classList.add('active');
+                if(id === 'sc-cart') document.getElementById('nav-cart').classList.add('active');
             },
 
             toggleM: (s) => document.getElementById('m-login').style.display = s ? 'flex' : 'none',
 
             startClient: () => {
-                const name = document.getElementById('c-name').value;
-                if(!name) return alert("Por favor, digite seu nome.");
+                clientName = document.getElementById('c-name').value;
+                if(!clientName) return alert("Diga-nos seu nome!");
                 
                 App.go('sc-loader');
                 setTimeout(() => {
-                    document.getElementById('navbar').style.display = 'flex';
-                    App.go('sc-shop');
-                    App.render();
-                }, 5000); // 5 segundos de carregamento
+                    document.getElementById('popup-welcome').style.display = 'flex';
+                }, 5000);
+            },
+
+            closePopup: () => {
+                document.getElementById('popup-welcome').style.display = 'none';
+                document.getElementById('user-display').innerText = "Olá, " + clientName;
+                document.getElementById('navbar').style.display = 'flex';
+                document.getElementById('emoji-rain').style.display = 'block';
+                App.createEmojis();
+                App.go('sc-shop');
+                App.render();
             },
 
             loginAdmin: () => {
                 if(document.getElementById('l-u').value === "jefter_28" && document.getElementById('l-p').value === "Josue_2808") {
                     App.toggleM(false);
-                    document.getElementById('adm-1').style.display = 'block';
-                    document.getElementById('adm-2').style.display = 'block';
+                    document.getElementById('adm-btn').style.display = 'block';
                     document.getElementById('navbar').style.display = 'flex';
+                    document.getElementById('user-display').innerText = "MODO ADMINISTRADOR";
                     App.go('sc-shop');
                     App.render();
                 }
@@ -217,9 +200,9 @@
                 const t = document.getElementById('in-t').value;
                 const p = document.getElementById('in-p').value;
                 const c = document.getElementById('in-c').value;
-                db.items.push({ t, p, cat: c, img: imgBase64 });
-                localStorage.setItem('JEFTER_V17', JSON.stringify(db));
-                alert("Salvo!"); App.go('sc-shop'); App.render();
+                db.items.push({ id: Date.now(), t, p, cat: c, img: imgBase64 });
+                localStorage.setItem('JEFTER_V19', JSON.stringify(db));
+                alert("Móvel cadastrado!"); App.go('sc-shop'); App.render();
             },
 
             render: (filter = 'novos') => {
@@ -229,22 +212,60 @@
                     <div class="card">
                         <img src="${i.img}">
                         <p style="font-size:11px; margin:5px 0;">${i.t}</p>
-                        <p style="color:var(--blue-main); font-weight:600;">R$ ${i.p}</p>
+                        <p style="color:var(--blue-glow); font-weight:600;">R$ ${i.p}</p>
+                        <button class="btn-add-cart" onclick="App.addToCart(${i.id})">🛒 Adicionar</button>
                     </div>
                 `).join('');
             },
-            
-            logout: () => location.reload()
+
+            addToCart: (id) => {
+                const item = db.items.find(i => i.id === id);
+                cart.push(item);
+                document.getElementById('cart-count').innerText = cart.length;
+                App.updateCartUI();
+                alert("Adicionado ao carrinho!");
+            },
+
+            updateCartUI: () => {
+                const list = document.getElementById('cart-list');
+                let total = 0;
+                list.innerHTML = cart.map(i => {
+                    total += parseFloat(i.p.replace('.','').replace(',','.'));
+                    return `
+                    <div class="cart-item">
+                        <img src="${i.img}">
+                        <div style="flex:1">
+                            <p style="font-size:13px;">${i.t}</p>
+                            <p style="color:var(--blue-glow)">R$ ${i.p}</p>
+                        </div>
+                    </div>`;
+                }).join('');
+                document.getElementById('cart-total').innerText = "Total: R$ " + total.toLocaleString('pt-BR');
+            },
+
+            finishOrder: () => {
+                let msg = `Olá Jefter Móveis! Meu nome é ${clientName}.\nQuero encomendar:\n` + cart.map(i => `- ${i.t} (R$ ${i.p})`).join('\n');
+                window.open(`https://wa.me/559992057452?text=${encodeURIComponent(msg)}`);
+            },
+
+            createEmojis: () => {
+                const rain = document.getElementById('emoji-rain');
+                const icons = ['🛋️', '🪑', '🛌', '💡'];
+                for(let i=0; i<20; i++) {
+                    let e = document.createElement('div');
+                    e.className = 'floating-emoji';
+                    e.innerText = icons[Math.floor(Math.random()*icons.length)];
+                    e.style.left = Math.random()*100 + "vw";
+                    e.style.animationDuration = (Math.random()*10 + 5) + "s";
+                    e.style.animationDelay = Math.random()*5 + "s";
+                    rain.appendChild(e);
+                }
+            }
         };
 
         document.getElementById('in-f').addEventListener('change', function(e) {
-            const reader = new FileReader();
-            reader.onload = () => imgBase64 = reader.result;
-            reader.readAsDataURL(e.target.files[0]);
+            const r = new FileReader(); r.onload = () => imgBase64 = r.result; r.readAsDataURL(e.target.files[0]);
         });
-
-        // Aplica textos da config
-        document.getElementById('txt-logo').innerText = config.logo;
     </script>
 </body>
 </html>

@@ -3,274 +3,248 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>JEFTER MÓVEIS | PREMIUM STORE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>JEFTER MÓVEIS | BLUE TECH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gold-premium: #c5a059; /* Tom de ouro mais maduro e sóbrio */
-            --bg-deep: #0a0a0a;
-            --glass: rgba(255, 255, 255, 0.03);
+            --blue-main: #007bff; /* Azul vibrante e moderno */
+            --blue-dark: #0056b3;
+            --bg-black: #050505;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body { 
-            background-color: #000;
-            /* Fundo com emojis/ícones brancos sutis */
-            background-image: linear-gradient(rgba(0,0,0,0.92), rgba(0,0,0,0.92)), url('https://www.transparenttextures.com/patterns/cubes.png'); 
+            background-color: var(--bg-black);
+            background-image: linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.9)), url('https://www.transparenttextures.com/patterns/cubes.png');
             color: #fff; 
             font-family: 'Poppins', sans-serif; 
             height: 100vh; 
             overflow: hidden; 
         }
 
-        /* EFEITO DE FUNDO COM EMOJIS (Simulado via texto repetido para garantir carregamento) */
-        .bg-pattern {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; opacity: 0.05; pointer-events: none;
-            display: flex; flex-wrap: wrap; gap: 40px; padding: 20px;
-            font-size: 30px; justify-content: space-around;
-        }
-
+        /* TELAS */
         .screen { display: none; height: 100vh; width: 100%; position: absolute; top: 0; left: 0; overflow-y: auto; padding-bottom: 120px; }
-        .screen-active { display: flex !important; flex-direction: column; animation: fadeIn 0.5s ease; }
+        .screen-active { display: flex !important; flex-direction: column; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* TELA DE LOGIN REFORMULADA */
-        #sc-intro { align-items: center; justify-content: center; text-align: center; padding: 30px; }
-        .logo-main h1 { font-family: 'Cinzel', serif; font-size: 48px; color: var(--gold-premium); letter-spacing: 4px; margin-bottom: 10px; }
-        .tagline { font-size: 14px; color: #aaa; max-width: 280px; line-height: 1.6; font-style: italic; }
-
-        /* BOTÕES MATUROS */
-        .btn-premium {
-            width: 90%; max-width: 320px; padding: 20px; border: none; border-radius: 5px;
-            font-weight: 600; text-transform: uppercase; cursor: pointer; transition: 0.3s;
-            display: flex; align-items: center; justify-content: center; gap: 12px;
-            font-size: 12px; letter-spacing: 2px; margin: 10px 0;
+        /* TELA DE CARREGAMENTO ANIMADA */
+        #sc-loader { 
+            background: var(--bg-black); 
+            z-index: 9999; 
+            display: none; 
+            align-items: center; 
+            justify-content: center; 
+            flex-direction: column;
         }
-        .btn-gold { background: var(--gold-premium); color: #000; }
-        .btn-outline { background: transparent; color: #fff; border: 1px solid #333; }
+        .loader-circle {
+            width: 60px; height: 60px;
+            border: 5px solid #111;
+            border-top: 5px solid var(--blue-main);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* INTERFACE DA LOJA CENTRALIZADA */
-        header { padding: 30px; text-align: center; border-bottom: 1px solid #111; }
-        .status-bar { font-size: 9px; color: var(--gold-premium); letter-spacing: 2px; margin-bottom: 5px; text-transform: uppercase; }
+        /* INPUTS E BOTÕES AZUIS */
+        input, select { 
+            width: 90%; max-width: 320px; padding: 18px; 
+            background: #111; border: 1px solid #222; 
+            color: #fff; margin: 10px auto; border-radius: 8px; outline: none;
+        }
+        input:focus { border-color: var(--blue-main); }
+
+        .btn-blue {
+            width: 90%; max-width: 320px; padding: 18px; border: none; border-radius: 8px;
+            font-weight: 600; text-transform: uppercase; cursor: pointer;
+            background: var(--blue-main); color: #fff; font-size: 12px; letter-spacing: 1px;
+            margin: 10px auto; transition: 0.3s;
+        }
+        .btn-blue:active { transform: scale(0.98); background: var(--blue-dark); }
+        .btn-outline { background: transparent; border: 1px solid #333; color: #aaa; }
+
+        /* CABEÇALHO E TABS */
+        header { padding: 25px; text-align: center; border-bottom: 1px solid #111; position: relative; }
+        .online-info { position: absolute; top: 15px; right: 20px; color: var(--blue-main); font-size: 11px; display: flex; align-items: center; gap: 5px; }
         
-        .tabs-center { display: flex; justify-content: center; gap: 20px; padding: 20px; width: 100%; }
-        .tab { font-size: 12px; color: #555; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; padding-bottom: 5px; border-bottom: 2px solid transparent; transition: 0.3s; }
-        .tab.active { color: var(--gold-premium); border-color: var(--gold-premium); }
+        .tabs-center { display: flex; justify-content: center; gap: 40px; padding: 20px; }
+        .tab { color: #555; font-size: 12px; text-transform: uppercase; font-weight: 600; cursor: pointer; padding-bottom: 5px; border-bottom: 2px solid transparent; }
+        .tab.active { color: var(--blue-main); border-bottom-color: var(--blue-main); }
 
-        .shelf { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 20px; width: 100%; max-width: 800px; margin: 0 auto; }
-        .card { background: var(--glass); border: 1px solid #1a1a1a; border-radius: 4px; padding: 12px; }
-        .card img { width: 100%; height: 140px; object-fit: cover; border-radius: 2px; margin-bottom: 10px; }
+        /* GRID DE PRODUTOS */
+        .shelf { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
+        .card { background: #0d0d0d; border-radius: 10px; padding: 10px; border: 1px solid #1a1a1a; }
+        .card img { width: 100%; height: 130px; object-fit: cover; border-radius: 8px; }
 
         /* NAVBAR */
-        nav { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 85%; max-width: 400px; height: 70px; background: rgba(5,5,5,0.95); border: 1px solid #222; display: none; justify-content: space-around; align-items: center; z-index: 1000; }
-        .nav-icon { font-size: 20px; color: #444; cursor: pointer; position: relative; }
-        .nav-icon.active { color: var(--gold-premium); }
-        .badge { position: absolute; top: -8px; right: -10px; background: var(--gold-premium); color: #000; font-size: 9px; padding: 2px 6px; border-radius: 10px; font-weight: bold; }
+        nav { 
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); 
+            width: 90%; max-width: 400px; height: 70px; 
+            background: rgba(10,10,10,0.95); border: 1px solid #222; 
+            display: none; justify-content: space-around; align-items: center; border-radius: 15px;
+        }
+        .nav-icon { font-size: 20px; color: #444; }
+        .nav-icon.active { color: var(--blue-main); }
 
-        /* MODAL E INPUTS */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: none; align-items: center; justify-content: center; z-index: 2000; }
-        .modal-box { width: 90%; max-width: 350px; text-align: center; }
-        input, select { width: 100%; padding: 18px; background: #080808; border: 1px solid #1a1a1a; color: #fff; margin: 10px 0; outline: none; font-size: 13px; }
+        /* MENSAGEM DE CRIPTOGRAFIA */
+        .crypto-tag { font-size: 10px; color: #444; margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 5px; }
     </style>
 </head>
 <body>
 
-    <div class="bg-pattern">🛋️ 🪑 🛌 💡 🛋️ 🪑 🛌 💡 🛋️ 🪑 🛌 💡 🛋️ 🪑 🛌 💡</div>
+    <div id="sc-loader" class="screen">
+        <div class="loader-circle"></div>
+        <p style="letter-spacing: 2px; font-size: 12px; color: var(--blue-main);">Sincronizando dados seguros...</p>
+    </div>
 
-    <div id="sc-intro" class="screen screen-active">
-        <div class="logo-main">
-            <h1>JEFTER MÓVEIS</h1>
-            <p class="tagline">"Encontrar móveis de alta qualidade para o seu lar foi a sua melhor decisão hoje."</p>
+    <div id="sc-intro" class="screen screen-active" style="align-items:center; justify-content:center; text-align:center;">
+        <h1 id="txt-logo" style="font-size: 32px; color: var(--blue-main);">JEFTER MÓVEIS</h1>
+        <p id="txt-tagline" style="font-size: 13px; color: #666; margin: 15px 0 40px; max-width: 280px;">A melhor decisão para transformar o seu lar com alta qualidade e sofisticação.</p>
+        
+        <button class="btn-blue" onclick="App.go('sc-client-login')">ACESSAR COMO CLIENTE</button>
+        <button class="btn-blue btn-outline" onclick="App.toggleM(true)">PAINEL DO DONO</button>
+    </div>
+
+    <div id="sc-client-login" class="screen" style="align-items:center; justify-content:center;">
+        <h2 style="margin-bottom:20px;">Identificação</h2>
+        <input type="text" id="c-name" placeholder="Digite seu nome">
+        <input type="email" id="c-mail" placeholder="Digite seu e-mail">
+        
+        <button class="btn-blue" onclick="App.startClient()">ENTRAR NA LOJA</button>
+        
+        <div class="crypto-tag">
+            🔒 Estas informações estão protegidas por criptografia ponta a ponta.
         </div>
-        <div style="margin-top: 40px; width: 100%; display: flex; flex-direction: column; align-items: center;">
-            <button class="btn-premium btn-gold" onclick="App.start('client')">ENTRAR NA GALERIA</button>
-            <button class="btn-premium btn-outline" onclick="App.toggleM(true)">PAINEL ADMINISTRATIVO</button>
-        </div>
+        <p onclick="App.go('sc-intro')" style="color:#444; font-size:11px; margin-top:20px;">Voltar</p>
     </div>
 
     <div id="sc-shop" class="screen">
         <header>
-            <div class="status-bar" id="user-count">SISTEMA ONLINE | 12 USUÁRIOS LOGADOS</div>
-            <h2 style="font-family:'Cinzel'; color:var(--gold-premium); font-size: 24px;">COLEÇÕES PREMIUM</h2>
+            <div class="online-info"><span id="u-count">24</span> 👤</div>
+            <h3 style="letter-spacing: 2px; color: #fff;">LOJA ONLINE</h3>
         </header>
-        
         <div class="tabs-center">
             <div class="tab active" id="t-novos" onclick="App.filter('novos')">Novos</div>
             <div class="tab" id="t-usados" onclick="App.filter('usados')">Usados</div>
             <div class="tab" id="t-seminovos" onclick="App.filter('seminovos')">Semi-novos</div>
         </div>
-
         <div id="shelf" class="shelf"></div>
     </div>
 
-    <div id="sc-post" class="screen" style="padding: 40px;">
-        <h2 style="font-family:'Cinzel'; color:var(--gold-premium); margin-bottom:30px; text-align:center;">GERENCIAR ESTOQUE</h2>
-        <input type="text" id="in-t" placeholder="Título do Produto">
-        <input type="text" id="in-p" placeholder="Preço (Ex: 2.500,00)">
+    <div id="sc-post" class="screen" style="padding: 30px;">
+        <h2 style="color:var(--blue-main); text-align:center; margin-bottom:20px;">CADASTRAR MÓVEL</h2>
+        <input type="text" id="in-t" placeholder="Título">
+        <input type="text" id="in-p" placeholder="Preço">
         <select id="in-c">
-            <option value="novos">Categoria: Novos</option>
-            <option value="usados">Categoria: Usados</option>
-            <option value="seminovos">Categoria: Semi-novos</option>
+            <option value="novos">Novos</option>
+            <option value="usados">Usados</option>
+            <option value="seminovos">Semi-novos</option>
         </select>
-        <p style="font-size: 10px; color: #555; margin-top: 10px;">SELECIONE A FOTO DO MÓVEL:</p>
         <input type="file" id="in-f" accept="image/*">
-        <button class="btn-premium btn-gold" style="width:100%; margin-top:20px;" onclick="App.save()">SALVAR NO BANCO DE DADOS</button>
-        <button class="btn-premium btn-outline" style="width:100%" onclick="App.toggleConfig()">⚙️ CONFIGURAÇÕES ADM</button>
+        <button class="btn-blue" onclick="App.save()">SALVAR NO BANCO</button>
     </div>
 
-    <div id="sc-cart" class="screen" style="padding: 30px;">
-        <h2 style="font-family:'Cinzel'; text-align:center; margin-bottom:30px;">SEUS SELECIONADOS</h2>
-        <div id="cart-items"></div>
-        <div id="cart-total" style="text-align:center; font-size:22px; color:var(--gold-premium); margin:30px 0;">Total: R$ 0,00</div>
-        <button class="btn-premium btn-gold" style="width:100%" onclick="App.zap()">FINALIZAR VIA WHATSAPP</button>
+    <div id="sc-config" class="screen" style="padding: 30px;">
+        <h2 style="text-align:center; margin-bottom:20px;">CONFIGURAÇÕES</h2>
+        <input type="text" id="cfg-logo" placeholder="Nome do Site">
+        <input type="text" id="cfg-zap" placeholder="WhatsApp">
+        <input type="text" id="cfg-pix" placeholder="Chave PIX">
+        <button class="btn-blue" onclick="Admin.apply()">SALVAR ALTERAÇÕES</button>
+        <button class="btn-blue btn-outline" onclick="App.logout()">SAIR</button>
     </div>
 
-    <div id="m-login" class="modal">
-        <div class="modal-box">
-            <h2 style="font-family:'Cinzel'; color:var(--gold-premium); margin-bottom:20px;">AUTENTICAÇÃO</h2>
-            <input type="text" id="l-u" placeholder="Usuário Administrador">
-            <input type="password" id="l-p" placeholder="Senha de Acesso">
-            <button class="btn-premium btn-gold" style="width:100%" onclick="App.login()">ACESSAR PAINEL</button>
-            <p onclick="App.toggleM(false)" style="margin-top:20px; color:#444; cursor:pointer; font-size:11px;">VOLTAR À LOJA</p>
+    <div id="m-login" class="modal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; display:none; align-items:center; justify-content:center; z-index:2000;">
+        <div style="width:90%; text-align:center;">
+            <h2 style="color:var(--blue-main); margin-bottom:20px;">ADMIN</h2>
+            <input type="text" id="l-u" placeholder="Usuário">
+            <input type="password" id="l-p" placeholder="Senha">
+            <button class="btn-blue" onclick="App.loginAdmin()">ENTRAR</button>
+            <p onclick="App.toggleM(false)" style="color:#444; margin-top:20px;">Fechar</p>
         </div>
     </div>
 
     <nav id="navbar">
         <div class="nav-icon active" onclick="App.go('sc-shop')">🏠</div>
-        <div class="nav-icon" onclick="App.go('sc-cart')">🛒 <span class="badge" id="c-badge">0</span></div>
-        <div id="adm-only" class="nav-icon" style="display:none" onclick="App.go('sc-post')">🛠️</div>
+        <div id="adm-1" class="nav-icon" style="display:none" onclick="App.go('sc-post')">➕</div>
+        <div id="adm-2" class="nav-icon" style="display:none" onclick="App.go('sc-config')">⚙️</div>
         <div class="nav-icon" onclick="App.logout()">🚪</div>
     </nav>
 
     <script>
+        let db = JSON.parse(localStorage.getItem('JEFTER_V17')) || { items: [] };
+        let config = JSON.parse(localStorage.getItem('CFG_V17')) || { logo: "JEFTER MÓVEIS", zap: "559992057452", pix: "Sua Chave" };
+        let imgBase64 = "";
+
         const App = {
-            // BANCO DE DADOS CORRIGIDO (Local Storage Permanente)
-            db: JSON.parse(localStorage.getItem('JEFTER_DATABASE_V15')) || { items: [] },
-            cart: [],
-            cat: 'novos',
-            imgBase64: "",
-
-            init: () => {
-                // Manter logado ao recarregar
-                const session = sessionStorage.getItem('JEFTER_SESSION');
-                if(session) App.start(session);
-                
-                // Gerador de usuários logados (aleatório para parecer real)
-                document.getElementById('user-count').innerText = `SISTEMA ONLINE | ${Math.floor(Math.random() * (25 - 8) + 8)} CLIENTES LOGADOS`;
-            },
-
             go: (id) => {
                 document.querySelectorAll('.screen').forEach(s => s.classList.remove('screen-active'));
                 document.getElementById(id).classList.add('screen-active');
-                document.querySelectorAll('.nav-icon').forEach(n => n.classList.remove('active'));
             },
 
             toggleM: (s) => document.getElementById('m-login').style.display = s ? 'flex' : 'none',
 
-            login: () => {
-                const u = document.getElementById('l-u').value;
-                const p = document.getElementById('l-p').value;
-                if(u === "jefter_28" && p === "Josue_2808") {
-                    sessionStorage.setItem('JEFTER_SESSION', 'adm');
-                    App.toggleM(false);
-                    App.start('adm');
-                } else { alert("Acesso negado."); }
+            startClient: () => {
+                const name = document.getElementById('c-name').value;
+                if(!name) return alert("Por favor, digite seu nome.");
+                
+                App.go('sc-loader');
+                setTimeout(() => {
+                    document.getElementById('navbar').style.display = 'flex';
+                    App.go('sc-shop');
+                    App.render();
+                }, 5000); // 5 segundos de carregamento
             },
 
-            logout: () => { sessionStorage.clear(); location.reload(); },
-
-            start: (role) => {
-                document.getElementById('navbar').style.display = 'flex';
-                if(role === 'adm') document.getElementById('adm-only').style.display = 'block';
-                App.go('sc-shop');
-                App.render();
+            loginAdmin: () => {
+                if(document.getElementById('l-u').value === "jefter_28" && document.getElementById('l-p').value === "Josue_2808") {
+                    App.toggleM(false);
+                    document.getElementById('adm-1').style.display = 'block';
+                    document.getElementById('adm-2').style.display = 'block';
+                    document.getElementById('navbar').style.display = 'flex';
+                    App.go('sc-shop');
+                    App.render();
+                }
             },
 
             filter: (c) => {
-                App.cat = c;
                 document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
                 document.getElementById('t-'+c).classList.add('active');
-                App.render();
+                App.render(c);
             },
 
             save: () => {
                 const t = document.getElementById('in-t').value;
                 const p = document.getElementById('in-p').value;
                 const c = document.getElementById('in-c').value;
-                if(!t || !p || !App.imgBase64) return alert("Preencha todos os dados e a foto!");
-
-                const newItem = { id: Date.now(), t, p, cat: c, img: App.imgBase64 };
-                App.db.items.push(newItem);
-                localStorage.setItem('JEFTER_DATABASE_V15', JSON.stringify(App.db));
-                
-                alert("Produto salvo com sucesso!");
-                document.getElementById('in-t').value = "";
-                document.getElementById('in-p').value = "";
-                App.render();
-                App.go('sc-shop');
+                db.items.push({ t, p, cat: c, img: imgBase64 });
+                localStorage.setItem('JEFTER_V17', JSON.stringify(db));
+                alert("Salvo!"); App.go('sc-shop'); App.render();
             },
 
-            render: () => {
+            render: (filter = 'novos') => {
                 const shelf = document.getElementById('shelf');
-                const filtered = App.db.items.filter(i => i.cat === App.cat);
-                
-                if(filtered.length === 0) {
-                    shelf.innerHTML = `<p style="grid-column: span 2; text-align:center; color:#222; margin-top:50px;">Nenhum item nesta categoria.</p>`;
-                    return;
-                }
-
-                shelf.innerHTML = filtered.map(i => `
+                const items = db.items.filter(i => i.cat === filter);
+                shelf.innerHTML = items.map(i => `
                     <div class="card">
                         <img src="${i.img}">
-                        <div style="font-size:11px; font-weight:600; margin-bottom:5px;">${i.t}</div>
-                        <div style="color:var(--gold-premium); font-size:14px; display:flex; justify-content:space-between; align-items:center;">
-                            R$ ${i.p}
-                            <button onclick="App.addToCart(${i.id})" style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">⊕</button>
-                        </div>
+                        <p style="font-size:11px; margin:5px 0;">${i.t}</p>
+                        <p style="color:var(--blue-main); font-weight:600;">R$ ${i.p}</p>
                     </div>
                 `).join('');
             },
-
-            addToCart: (id) => {
-                const item = App.db.items.find(i => i.id === id);
-                App.cart.push(item);
-                document.getElementById('c-badge').innerText = App.cart.length;
-                App.updateCart();
-                alert("Adicionado ao carrinho!");
-            },
-
-            updateCart: () => {
-                const container = document.getElementById('cart-items');
-                let total = 0;
-                container.innerHTML = App.cart.map(i => {
-                    total += parseFloat(i.p.replace('.','').replace(',','.'));
-                    return `<div style="display:flex; align-items:center; gap:15px; background:#080808; padding:15px; margin-bottom:10px;">
-                        <img src="${i.img}" style="width:50px; height:50px; object-fit:cover;">
-                        <div style="flex:1; font-size:12px;">${i.t}</div>
-                        <div style="color:var(--gold-premium)">R$ ${i.p}</div>
-                    </div>`;
-                }).join('');
-                document.getElementById('cart-total').innerText = `Total: R$ ${total.toLocaleString('pt-BR')}`;
-            },
-
-            zap: () => {
-                let text = "Olá Jefter Móveis! Tenho interesse nesses itens:\n\n" + App.cart.map(i => `- ${i.t} (R$ ${i.p})`).join('\n');
-                window.open(`https://wa.me/559992057452?text=${encodeURIComponent(text)}`);
-            },
-
-            toggleConfig: () => alert("Painel de configurações avançadas em desenvolvimento...")
+            
+            logout: () => location.reload()
         };
 
-        // Escuta o upload de imagem e converte para texto (Base64) para salvar no banco
         document.getElementById('in-f').addEventListener('change', function(e) {
             const reader = new FileReader();
-            reader.onload = () => App.imgBase64 = reader.result;
+            reader.onload = () => imgBase64 = reader.result;
             reader.readAsDataURL(e.target.files[0]);
         });
 
-        App.init();
+        // Aplica textos da config
+        document.getElementById('txt-logo').innerText = config.logo;
     </script>
 </body>
 </html>

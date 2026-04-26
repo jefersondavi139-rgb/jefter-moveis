@@ -6,329 +6,146 @@
     <title>JEFTER MÓVEIS | V21</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --blue-glow: #00f2ff;
-            --blue-main: #007bff;
-            --bg-deep: #000000;
-        }
-
+        :root { --blue-glow: #00f2ff; --blue-main: #007bff; --bg-deep: #000000; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg-deep); color: #fff; font-family: 'Poppins', sans-serif; height: 100vh; overflow: hidden; }
-
         .screen { display: none; height: 100vh; width: 100%; position: absolute; top: 0; left: 0; overflow-y: auto; padding-bottom: 120px; background: var(--bg-deep); }
         .screen-active { display: flex !important; flex-direction: column; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* LOADER */
-        #sc-loader { z-index: 9999; display: none; align-items: center; justify-content: center; flex-direction: column; background: var(--bg-deep); }
-        .loader-spin { width: 60px; height: 60px; border: 4px solid #111; border-top: 4px solid var(--blue-glow); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        /* INPUTS E BOTÕES */
         input, select { width: 90%; max-width: 350px; padding: 16px; background: #0c0c0c; border: 1px solid #222; color: #fff; margin: 8px auto; border-radius: 10px; outline: none; display: block; }
         .btn-blue { width: 90%; max-width: 350px; padding: 18px; border: none; border-radius: 10px; font-weight: 600; background: var(--blue-main); color: #fff; cursor: pointer; margin: 10px auto; display: block; text-align: center; }
-        
-        /* EMOJIS FLUTUANTES */
-        #emoji-rain { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; display: none; }
-        .floating-emoji { position: absolute; color: rgba(255, 255, 255, 0.4); font-size: 26px; animation: float linear infinite; }
-        @keyframes float { 0% { transform: translateY(110vh); } 100% { transform: translateY(-10vh); } }
-
         header { padding: 25px; text-align: center; border-bottom: 1px solid #111; z-index: 10; }
         .welcome-user { font-size: 13px; color: var(--blue-glow); margin-top: 5px; }
         .tabs-center { display: flex; justify-content: center; gap: 30px; padding: 20px; }
         .tab { color: #444; font-size: 12px; text-transform: uppercase; cursor: pointer; font-weight: 600; }
         .tab.active { color: var(--blue-glow); border-bottom: 2px solid var(--blue-glow); }
-        
         .shelf { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
         .card { background: rgba(15,15,15,0.8); border-radius: 12px; padding: 12px; border: 1px solid #1a1a1a; }
         .card img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; }
-
         .popup-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); display:none; align-items:center; justify-content:center; z-index:10000; }
         .popup-box { width: 85%; max-width: 320px; background: #0d0d0d; border: 1px solid var(--blue-main); padding: 35px; border-radius: 20px; text-align: center; }
-
         nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 85%; height: 75px; background: rgba(8,8,8,0.98); border: 1px solid #222; display: none; justify-content: space-around; align-items: center; border-radius: 20px; z-index: 1000; }
-        .nav-icon { font-size: 24px; color: #333; position: relative; cursor: pointer; }
+        .nav-icon { font-size: 24px; color: #333; cursor: pointer; }
         .nav-icon.active { color: var(--blue-glow); }
-        .badge { position: absolute; top: -5px; right: -8px; background: var(--blue-glow); color: #000; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: bold; }
     </style>
 </head>
 <body onload="App.checkSession()">
-
-    <div id="emoji-rain"></div>
 
     <div id="popup-welcome" class="popup-overlay">
         <div class="popup-box">
             <h3 style="color:var(--blue-glow); margin-bottom:15px;">Bem-vindo!</h3>
             <p id="pop-text" style="font-size:13px; color:#ccc; line-height:1.5;"></p>
-            <button class="btn-blue" style="margin-top:20px; width:100%;" onclick="App.closePopup()">OK</button>
+            <button class="btn-blue" onclick="App.closePopup()">OK</button>
         </div>
-    </div>
-
-    <div id="sc-loader" class="screen">
-        <div class="loader-spin"></div>
-        <p style="color:var(--blue-glow); margin-top:20px; font-size:11px; letter-spacing:3px;">SINCRONIZANDO...</p>
     </div>
 
     <div id="sc-intro" class="screen screen-active" style="align-items:center; justify-content:center; text-align:center;">
         <h1 style="font-size:38px; color:var(--blue-main);">JEFTER MÓVEIS</h1>
-        <p style="color:#444; margin-bottom:40px;">Qualidade em cada detalhe.</p>
-        <button class="btn-blue" onclick="App.go('sc-client-login')">ENTRAR COMO CLIENTE</button>
-        <button class="btn-blue" style="background:transparent; border:1px solid #222; color:#333;" onclick="App.toggleM(true)">ADMINISTRAÇÃO</button>
+        <button class="btn-blue" onclick="App.go('sc-client-login')">ENTRAR</button>
+        <button class="btn-blue" style="background:transparent; border:1px solid #222;" onclick="App.toggleM(true)">ADMIN</button>
     </div>
 
     <div id="sc-client-login" class="screen" style="align-items:center; justify-content:center;">
-        <h2 style="margin-bottom:30px;">Identificação</h2>
-        <input type="text" id="c-name" placeholder="Digite seu nome">
+        <input type="text" id="c-name" placeholder="Seu nome">
         <button class="btn-blue" onclick="App.startClient()">ACESSAR LOJA</button>
-        <p onclick="App.go('sc-intro')" style="color:#222; margin-top:20px; font-size:12px;">Voltar</p>
     </div>
 
     <div id="sc-shop" class="screen">
-        <header>
-            <h2 style="font-size:18px;">JEFTER MÓVEIS</h2>
-            <div id="user-display" class="welcome-user">Olá, Cliente</div>
-            <div style="font-size:10px; color:#444; margin-top:5px;"><span id="u-count-display">0</span> Pessoas Online 👤</div>
-        </header>
-        <div class="tabs-center">
-            <div class="tab active" id="t-novos" onclick="App.filter('novos')">Novos</div>
-            <div class="tab" id="t-usados" onclick="App.filter('usados')">Usados</div>
-            <div class="tab" id="t-seminovos" onclick="App.filter('seminovos')">Semi</div>
-        </div>
+        <header><h2 style="font-size:18px;">JEFTER MÓVEIS</h2><div id="user-display" class="welcome-user"></div></header>
+        <div class="tabs-center"><div class="tab active" id="t-novos" onclick="App.filter('novos')">Novos</div><div class="tab" id="t-usados" onclick="App.filter('usados')">Usados</div></div>
         <div id="shelf" class="shelf"></div>
     </div>
 
-    <div id="sc-cart" class="screen" style="padding:20px;">
-        <h2 style="text-align:center; margin-bottom:20px; color:var(--blue-glow);">MEU CARRINHO</h2>
-        <div id="cart-list"></div>
-        <div id="cart-total" style="text-align:center; padding:25px; font-size:20px;">Total: R$ 0,00</div>
-        <button class="btn-blue" onclick="App.finishOrder()">PEDIR NO WHATSAPP</button>
-    </div>
-
-    <div id="sc-post" class="screen" style="padding:30px;">
-        <h2 style="text-align:center; color:var(--blue-glow); margin-bottom:20px;">POSTAR MÓVEL</h2>
-        <input type="text" id="in-t" placeholder="Nome do Produto">
-        <input type="text" id="in-p" placeholder="Preço (Ex: 1.200)">
-        <select id="in-c">
-            <option value="novos">Novos</option>
-            <option value="usados">Usados</option>
-            <option value="seminovos">Semi</option>
-        </select>
-        <input type="file" id="in-f" accept="image/*">
-        <button class="btn-blue" onclick="App.save()">PUBLICAR AGORA</button>
+    <div id="sc-pay" class="screen" style="padding:20px; text-align:center;">
+        <h2 style="color:var(--blue-glow);">PAGAMENTO PIX</h2>
+        <div style="background:#111; padding:20px; border-radius:10px; margin:20px 0;">
+            <p id="pix-key-display" style="word-break:break-all;"></p>
+        </div>
+        <button class="btn-blue" onclick="App.go('sc-shop')">VOLTAR</button>
     </div>
 
     <div id="sc-config" class="screen" style="padding:30px;">
-        <h2 style="text-align:center; color:var(--blue-glow); margin-bottom:25px;">CONFIGURAÇÕES ADM</h2>
-        <label>CLIENTES ONLINE (FAKE)</label>
-        <input type="number" id="cfg-users">
-        <label>WHATSAPP (SUPORTE)</label>
-        <input type="text" id="cfg-zap">
-        <label>CHAVE PIX</label>
-        <input type="text" id="cfg-pix">
-        <label>TEXTO BOAS-VINDAS</label>
-        <input type="text" id="cfg-pop-text">
-        <button class="btn-blue" onclick="Admin.saveConfigs()">SALVAR TUDO</button>
+        <input type="text" id="cfg-pix" placeholder="Chave Pix">
+        <button class="btn-blue" onclick="Admin.saveConfigs()">SALVAR COM SENHA</button>
     </div>
 
-    <div id="m-login" class="modal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; display:none; align-items:center; justify-content:center; z-index:10000;">
-        <div style="width:90%; text-align:center;">
-            <h2 style="color:var(--blue-main); margin-bottom:20px;">ADMINISTRADOR</h2>
-            <input type="text" id="l-u" placeholder="Login">
-            <input type="password" id="l-p" placeholder="Senha">
-            <button class="btn-blue" onclick="App.loginAdmin()">ACESSAR</button>
-            <p onclick="App.toggleM(false)" style="color:#222; margin-top:20px;">Cancelar</p>
-        </div>
+    <div id="m-login" class="modal" style="position:fixed; display:none; align-items:center; justify-content:center; background:#000; width:100%; height:100%; z-index:10000;">
+        <div><input type="text" id="l-u" placeholder="Login"><input type="password" id="l-p" placeholder="Senha"><button class="btn-blue" onclick="App.loginAdmin()">ACESSAR</button></div>
     </div>
 
     <nav id="navbar">
         <div class="nav-icon active" id="nav-home" onclick="App.go('sc-shop')">🏠</div>
-        <div class="nav-icon" id="nav-cart" onclick="App.go('sc-cart')">🛒<span class="badge" id="cart-count">0</span></div>
-        <div id="adm-post" class="nav-icon" style="display:none" onclick="App.go('sc-post')">➕</div>
-        <div id="adm-cfg" class="nav-icon" style="display:none" onclick="App.go('sc-config')">⚙️</div>
+        <div class="nav-icon" id="adm-cfg" style="display:none" onclick="App.go('sc-config')">⚙️</div>
         <div class="nav-icon" onclick="App.logout()">🚪</div>
     </nav>
 
     <script>
-        const API_URL = "https://jefter-moveis.onrender.com"; // Link do seu servidor
-        let db = { items: [] }; // Começa vazio, carrega do servidor
-        let config = JSON.parse(localStorage.getItem('JEF_V21_CFG')) || { 
-            users: "42", zap: "559992057452", pix: "Sua Chave", pop: "Aqui você encontra o produto de melhor qualidade" 
-        };
-        let cart = [];
-        let imgBase64 = "";
-
+        const API_URL = "https://jefter-moveis.onrender.com";
+        let db = { items: [] };
+        let config = JSON.parse(localStorage.getItem('JEF_V21_CFG')) || { pix: "Chave Exemplo" };
+        
         const App = {
             checkSession: async () => {
-                const res = await fetch(`${API_URL}/api/items`); // Busca itens do servidor
+                const res = await fetch(`${API_URL}/api/items`);
                 db.items = await res.json();
-
                 const session = localStorage.getItem('JEF_SESSION');
-                if(session === 'admin') {
-                    App.showAdminUI();
-                    App.go('sc-shop');
-                    App.render();
-                } else if(session) {
-                    App.showClientUI(session);
+                if(session) {
+                    session === 'admin' ? App.showAdminUI() : App.showClientUI(session);
                     App.go('sc-shop');
                     App.render();
                 }
             },
-
             go: (id) => {
                 document.querySelectorAll('.screen').forEach(s => s.classList.remove('screen-active'));
                 document.getElementById(id).classList.add('screen-active');
-                document.querySelectorAll('.nav-icon').forEach(n => n.classList.remove('active'));
-                if(id === 'sc-shop') document.getElementById('nav-home').classList.add('active');
-                if(id === 'sc-cart') document.getElementById('nav-cart').classList.add('active');
             },
-
-            toggleM: (s) => document.getElementById('m-login').style.display = s ? 'flex' : 'none',
-
             startClient: () => {
                 const name = document.getElementById('c-name').value;
                 if(!name) return alert("Digite seu nome!");
                 localStorage.setItem('JEF_SESSION', name);
-                App.go('sc-loader');
-                setTimeout(() => {
-                    document.getElementById('pop-text').innerText = config.pop;
-                    document.getElementById('popup-welcome').style.display = 'flex';
-                }, 5000);
-            },
-
-            closePopup: () => {
-                document.getElementById('popup-welcome').style.display = 'none';
-                App.showClientUI(localStorage.getItem('JEF_SESSION'));
+                App.showClientUI(name);
                 App.go('sc-shop');
                 App.render();
             },
-
             showClientUI: (name) => {
                 document.getElementById('user-display').innerText = "Olá, " + name;
-                document.getElementById('u-count-display').innerText = config.users;
                 document.getElementById('navbar').style.display = 'flex';
-                document.getElementById('emoji-rain').style.display = 'block';
-                App.createEmojis();
             },
-
             loginAdmin: () => {
                 if(document.getElementById('l-u').value === "jefter_28" && document.getElementById('l-p').value === "Josue_2808") {
                     localStorage.setItem('JEF_SESSION', 'admin');
-                    App.toggleM(false);
-                    App.showAdminUI();
-                    App.go('sc-shop');
-                    App.render();
-                } else { alert("Senha incorreta!"); }
-            },
-
-            showAdminUI: () => {
-                document.getElementById('adm-post').style.display = 'block';
-                document.getElementById('adm-cfg').style.display = 'block';
-                document.getElementById('nav-cart').style.display = 'none';
-                document.getElementById('navbar').style.display = 'flex';
-                document.getElementById('user-display').innerText = "PAINEL ADM";
-                // Carrega campos das configs
-                document.getElementById('cfg-users').value = config.users;
-                document.getElementById('cfg-zap').value = config.zap;
-                document.getElementById('cfg-pix').value = config.pix;
-                document.getElementById('cfg-pop-text').value = config.pop;
-            },
-
-            logout: () => {
-                if(confirm("Deseja sair da conta?")) {
-                    localStorage.removeItem('JEF_SESSION');
                     location.reload();
                 }
             },
-
-            filter: (c) => {
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                document.getElementById('t-'+c).classList.add('active');
-                App.render(c);
+            showAdminUI: () => {
+                document.getElementById('adm-cfg').style.display = 'block';
+                document.getElementById('navbar').style.display = 'flex';
+                document.getElementById('cfg-pix').value = config.pix;
             },
-
-            save: async () => {
-                const t = document.getElementById('in-t').value;
-                const p = document.getElementById('in-p').value;
-                const c = document.getElementById('in-c').value;
-                
-                const item = { t, p, cat: c, img: imgBase64 };
-                
-                // Envia para o servidor
-                await fetch(`${API_URL}/api/add`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(item)
-                });
-                
-                alert("Móvel cadastrado no servidor!"); 
-                App.checkSession(); // Recarrega os itens do servidor
-                App.go('sc-shop'); 
-                App.render();
+            initiatePayment: () => {
+                document.getElementById('pix-key-display').innerText = config.pix;
+                App.go('sc-pay');
             },
-
-            render: (filter = 'novos') => {
-                const shelf = document.getElementById('shelf');
-                const items = db.items.filter(i => i.cat === filter);
-                shelf.innerHTML = items.map(i => `
+            logout: () => { localStorage.removeItem('JEF_SESSION'); location.reload(); },
+            render: () => {
+                document.getElementById('shelf').innerHTML = db.items.map(i => `
                     <div class="card">
-                        <img src="${i.img}">
-                        <p style="font-size:11px; margin:5px 0;">${i.t}</p>
-                        <p style="color:var(--blue-glow); font-weight:600;">R$ ${i.p}</p>
-                        <button style="background:var(--blue-main); border:none; color:#fff; width:100%; padding:8px; border-radius:5px; margin-top:10px; font-size:11px;" onclick="App.addToCart(${i.id})">ADICIONAR</button>
+                        <p>${i.t}</p><p>R$ ${i.p}</p>
+                        <button class="btn-blue" onclick="App.initiatePayment()">COMPRAR AGORA</button>
                     </div>
                 `).join('');
-            },
-
-            addToCart: (id) => {
-                cart.push(db.items.find(i => i.id === id));
-                document.getElementById('cart-count').innerText = cart.length;
-                App.updateCartUI();
-            },
-
-            updateCartUI: () => {
-                const list = document.getElementById('cart-list');
-                let total = 0;
-                list.innerHTML = cart.map(i => {
-                    total += parseFloat(i.p.replace('.','').replace(',','.'));
-                    return `<div style="display:flex; align-items:center; gap:10px; padding:10px; border-bottom:1px solid #111;"><img src="${i.img}" style="width:40px; height:40px; border-radius:5px;"><p style="font-size:12px; flex:1;">${i.t}</p><p style="color:var(--blue-glow)">R$ ${i.p}</p></div>`;
-                }).join('');
-                document.getElementById('cart-total').innerText = "Total: R$ " + total.toLocaleString('pt-BR');
-            },
-
-            finishOrder: () => {
-                let msg = `Olá Jefter! Me chamo ${localStorage.getItem('JEF_SESSION')}.\nQuero comprar:\n` + cart.map(i => `- ${i.t} (R$ ${i.p})`).join('\n') + `\n\nChave Pix: ${config.pix}`;
-                window.open(`https://wa.me/${config.zap}?text=${encodeURIComponent(msg)}`);
-            },
-
-            createEmojis: () => {
-                const rain = document.getElementById('emoji-rain');
-                rain.innerHTML = "";
-                const icons = ['🛋️', '🪑', '🛌', '🕯️'];
-                for(let i=0; i<15; i++) {
-                    let e = document.createElement('div'); e.className = 'floating-emoji';
-                    e.innerText = icons[Math.floor(Math.random()*icons.length)];
-                    e.style.left = Math.random()*100 + "vw";
-                    e.style.animationDuration = (Math.random()*10 + 7) + "s";
-                    rain.appendChild(e);
-                }
             }
         };
-
         const Admin = {
             saveConfigs: () => {
-                config.users = document.getElementById('cfg-users').value;
-                config.zap = document.getElementById('cfg-zap').value;
-                config.pix = document.getElementById('cfg-pix').value;
-                config.pop = document.getElementById('cfg-pop-text').value;
-                localStorage.setItem('JEF_V21_CFG', JSON.stringify(config));
-                alert("Configurações atualizadas!");
-                App.go('sc-shop');
+                const senha = prompt("Digite a senha de segurança:");
+                if(senha === "JEFTER_SEMNHA") {
+                    config.pix = document.getElementById('cfg-pix').value;
+                    localStorage.setItem('JEF_V21_CFG', JSON.stringify(config));
+                    alert("Salvo!");
+                } else { alert("Senha incorreta!"); }
             }
         };
-
-        document.getElementById('in-f').addEventListener('change', function(e) {
-            const r = new FileReader(); r.onload = () => imgBase64 = r.result; r.readAsDataURL(e.target.files[0]);
-        });
     </script>
 </body>
 </html>

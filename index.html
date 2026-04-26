@@ -12,90 +12,148 @@
         .screen { display: none; height: 100vh; width: 100%; position: absolute; top: 0; left: 0; overflow-y: auto; padding-bottom: 120px; background: var(--bg-deep); }
         .screen-active { display: flex !important; flex-direction: column; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        #sc-loader { z-index: 9999; display: none; align-items: center; justify-content: center; flex-direction: column; background: var(--bg-deep); }
+        .loader-spin { width: 60px; height: 60px; border: 4px solid #111; border-top: 4px solid var(--blue-glow); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
         input, select, textarea { width: 90%; max-width: 350px; padding: 16px; background: #0c0c0c; border: 1px solid #222; color: #fff; margin: 8px auto; border-radius: 10px; outline: none; display: block; }
         .btn-blue { width: 90%; max-width: 350px; padding: 18px; border: none; border-radius: 10px; font-weight: 600; background: var(--blue-main); color: #fff; cursor: pointer; margin: 10px auto; display: block; text-align: center; }
-        header { padding: 25px; text-align: center; border-bottom: 1px solid #111; }
-        .tabs-center { display: flex; justify-content: center; gap: 20px; padding: 20px; }
-        .tab { color: #444; font-size: 12px; cursor: pointer; }
+        header { padding: 25px; text-align: center; border-bottom: 1px solid #111; z-index: 10; }
+        .welcome-user { font-size: 13px; color: var(--blue-glow); margin-top: 5px; }
+        .tabs-center { display: flex; justify-content: center; gap: 30px; padding: 20px; }
+        .tab { color: #444; font-size: 12px; text-transform: uppercase; cursor: pointer; font-weight: 600; }
         .tab.active { color: var(--blue-glow); border-bottom: 2px solid var(--blue-glow); }
         .shelf { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
-        .card { background: #0a0a0a; border-radius: 12px; padding: 10px; border: 1px solid #1a1a1a; }
-        .card img { width: 100%; height: 100px; object-fit: cover; border-radius: 8px; }
-        nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 85%; height: 75px; background: #080808; border: 1px solid #222; display: flex; justify-content: space-around; align-items: center; border-radius: 20px; z-index: 1000; }
-        .nav-icon { font-size: 20px; cursor: pointer; }
+        .card { background: rgba(15,15,15,0.8); border-radius: 12px; padding: 12px; border: 1px solid #1a1a1a; }
+        .card img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; }
+        .popup-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); display:none; align-items:center; justify-content:center; z-index:10000; }
+        .popup-box { width: 85%; max-width: 320px; background: #0d0d0d; border: 1px solid var(--blue-main); padding: 35px; border-radius: 20px; text-align: center; }
+        nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 85%; height: 75px; background: rgba(8,8,8,0.98); border: 1px solid #222; display: none; justify-content: space-around; align-items: center; border-radius: 20px; z-index: 1000; }
+        .nav-icon { font-size: 24px; color: #333; position: relative; cursor: pointer; }
+        .nav-icon.active { color: var(--blue-glow); }
     </style>
 </head>
-<body onload="App.init()">
+<body onload="App.checkSession()">
 
-    <div id="sc-shop" class="screen screen-active">
-        <header><h2>JEFTER MÓVEIS</h2></header>
+    <div id="sc-intro" class="screen screen-active" style="align-items:center; justify-content:center; text-align:center;">
+        <h1 style="font-size:38px; color:var(--blue-main);">JEFTER MÓVEIS</h1>
+        <button class="btn-blue" onclick="App.go('sc-client-login')">ENTRAR COMO CLIENTE</button>
+        <button class="btn-blue" style="background:transparent; border:1px solid #222; color:#333;" onclick="App.toggleM(true)">ADMINISTRAÇÃO</button>
+    </div>
+
+    <div id="sc-client-login" class="screen" style="align-items:center; justify-content:center;">
+        <input type="text" id="c-name" placeholder="Digite seu nome">
+        <button class="btn-blue" onclick="App.startClient()">ACESSAR LOJA</button>
+    </div>
+
+    <div id="sc-shop" class="screen">
+        <header><h2>JEFTER MÓVEIS</h2><div id="user-display" class="welcome-user"></div></header>
         <div class="tabs-center">
-            <div class="tab active" onclick="App.render('novos')">NOVOS</div>
-            <div class="tab" onclick="App.render('usados')">USADOS</div>
-            <div class="tab" onclick="App.render('seminovos')">SEMI</div>
+            <div class="tab active" id="t-novos" onclick="App.filter('novos')">Novos</div>
+            <div class="tab" id="t-usados" onclick="App.filter('usados')">Usados</div>
+            <div class="tab" id="t-seminovos" onclick="App.filter('seminovos')">Semi</div>
         </div>
         <div id="shelf" class="shelf"></div>
     </div>
 
     <div id="sc-cart" class="screen" style="padding:20px;">
-        <h2>MEU CARRINHO</h2>
+        <h2 style="text-align:center; color:var(--blue-glow);">MEU CARRINHO</h2>
         <div id="cart-list"></div>
-        <button class="btn-blue" onclick="App.go('sc-pix')">GERAR PIX</button>
+        <button class="btn-blue" onclick="App.showPix()">GERAR PIX AUTOMÁTICO</button>
     </div>
 
-    <div id="sc-pix" class="screen" style="align-items:center; justify-content:center;">
-        <h2>CHAVE PIX</h2>
-        <div style="padding:20px; border:1px solid var(--blue-glow); border-radius:10px;">
-            <p id="pix-key-display"></p>
-        </div>
-        <button class="btn-blue" onclick="App.go('sc-shop')">VOLTAR</button>
+    <div id="sc-pix" class="screen" style="padding:30px; text-align:center;">
+        <h2 style="color:var(--blue-glow);">CHAVE PIX</h2>
+        <p id="pix-display" style="padding:20px; border:1px solid var(--blue-main); margin:20px 0;"></p>
+        <button class="btn-blue" onclick="App.go('sc-cart')">VOLTAR</button>
     </div>
 
-    <div id="sc-evaluate" class="screen" style="padding:20px;">
+    <div id="sc-evaluate" class="screen" style="padding:30px;">
         <h2>AVALIAR PRODUTO</h2>
-        <input type="number" id="star-count" placeholder="Estrelas (1-5)" min="1" max="5">
-        <textarea id="eval-text" placeholder="Sua opinião..."></textarea>
-        <button class="btn-blue" onclick="alert('Avaliação enviada!')">ENVIAR</button>
+        <input type="number" id="e-stars" placeholder="Estrelas (1-5)">
+        <textarea id="e-text" placeholder="Sua opinião..."></textarea>
+        <button class="btn-blue" onclick="alert('Avaliado com sucesso!')">ENVIAR</button>
     </div>
 
-    <div id="sc-sales" class="screen" style="padding:20px;">
-        <h2>VENDAS💸</h2>
-        <div id="sales-list"></div>
+    <div id="sc-sales" class="screen" style="padding:30px;">
+        <h2 style="color:var(--blue-glow);">VENDAS💸</h2>
+    </div>
+
+    <div id="sc-post" class="screen" style="padding:30px;">
+        <input type="text" id="in-t" placeholder="Nome">
+        <input type="text" id="in-p" placeholder="Preço">
+        <select id="in-c"><option value="novos">Novos</option><option value="usados">Usados</option><option value="seminovos">Semi</option></select>
+        <button class="btn-blue" onclick="App.save()">PUBLICAR</button>
+    </div>
+
+    <div id="sc-config" class="screen" style="padding:30px;">
+        <input type="text" id="cfg-pix" placeholder="Alterar Chave Pix">
+        <button class="btn-blue" onclick="Admin.saveConfigs()">SALVAR</button>
+    </div>
+
+    <div id="m-login" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; display:none; align-items:center; justify-content:center; z-index:10000;">
+        <div style="width:90%; text-align:center;">
+            <input type="text" id="l-u" placeholder="Login"><input type="password" id="l-p" placeholder="Senha">
+            <button class="btn-blue" onclick="App.loginAdmin()">ACESSAR</button>
+            <p onclick="App.toggleM(false)" style="margin-top:20px;">Cancelar</p>
+        </div>
     </div>
 
     <nav id="navbar">
-        <div class="nav-icon" onclick="App.go('sc-shop')">🏠</div>
+        <div class="nav-icon" id="nav-home" onclick="App.go('sc-shop')">🏠</div>
         <div class="nav-icon" id="nav-cart" onclick="App.go('sc-cart')">🛒</div>
-        <div class="nav-icon" id="nav-sales" onclick="App.go('sc-sales')" style="display:none">💸</div>
+        <div id="adm-sales" class="nav-icon" style="display:none" onclick="App.go('sc-sales')">💸</div>
+        <div id="adm-cfg" class="nav-icon" style="display:none" onclick="App.go('sc-config')">⚙️</div>
         <div class="nav-icon" onclick="App.logout()">🚪</div>
     </nav>
 
     <script>
-        let db = { items: [] }; 
-        let cart = [];
+        const API_URL = "https://jefter-moveis.onrender.com";
+        let db = { items: [] };
+        let config = JSON.parse(localStorage.getItem('JEF_V21_CFG')) || { pix: "Sua Chave" };
         let isAdmin = localStorage.getItem('JEF_SESSION') === 'admin';
 
         const App = {
-            init: async () => {
-                // Simulação de carregamento de banco
-                App.render('novos');
+            checkSession: async () => {
+                const res = await fetch(`${API_URL}/api/items`); db.items = await res.json();
                 if(isAdmin) {
                     document.getElementById('nav-cart').style.display = 'none';
-                    document.getElementById('nav-sales').style.display = 'block';
+                    document.getElementById('adm-sales').style.display = 'block';
+                    document.getElementById('adm-cfg').style.display = 'block';
                 }
+                document.getElementById('navbar').style.display = 'flex';
+                App.render();
             },
             go: (id) => {
                 document.querySelectorAll('.screen').forEach(s => s.classList.remove('screen-active'));
                 document.getElementById(id).classList.add('screen-active');
             },
-            render: (cat) => {
+            filter: (c) => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.getElementById('t-'+c).classList.add('active');
+                App.render(c);
+            },
+            render: (cat = 'novos') => {
                 const shelf = document.getElementById('shelf');
-                shelf.innerHTML = `<div class="card">Produto Exemplo <button class="btn-blue" style="font-size:10px" onclick="${isAdmin ? "alert('Marcado como vendido!')" : "App.go('sc-evaluate')"}">${isAdmin ? "VENDIDO" : "🛒 ADICIONAR"}</button></div>`;
+                shelf.innerHTML = db.items.filter(i => i.cat === cat).map(i => `
+                    <div class="card">
+                        <img src="${i.img}"><p>${i.t}</p><p>R$ ${i.p}</p>
+                        ${isAdmin ? `<button class="btn-blue" onclick="alert('Vendido!')">VENDIDO</button>` : 
+                        `<button class="btn-blue" onclick="alert('Adicionado!')">🛒 ADICIONAR</button>
+                         <button class="btn-blue" onclick="App.go('sc-evaluate')">AVALIAR</button>`}
+                    </div>
+                `).join('');
+            },
+            showPix: () => {
+                document.getElementById('pix-display').innerText = config.pix;
+                App.go('sc-pix');
             },
             logout: () => {
-                if(confirm("Deseja realmente sair?")) { localStorage.removeItem('JEF_SESSION'); location.reload(); }
-            }
+                if(confirm("Deseja mesmo sair da conta?")) { localStorage.removeItem('JEF_SESSION'); location.reload(); }
+            },
+            toggleM: (s) => document.getElementById('m-login').style.display = s ? 'flex' : 'none',
+            loginAdmin: () => { if(document.getElementById('l-u').value === "jefter_28") { localStorage.setItem('JEF_SESSION', 'admin'); location.reload(); } }
         };
+        const Admin = { saveConfigs: () => { config.pix = document.getElementById('cfg-pix').value; localStorage.setItem('JEF_V21_CFG', JSON.stringify(config)); alert("Salvo!"); } };
     </script>
 </body>
 </html>

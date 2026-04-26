@@ -12,8 +12,14 @@
         .screen { display: none; height: 100vh; width: 100%; position: absolute; top: 0; left: 0; overflow-y: auto; padding-bottom: 120px; background: var(--bg-deep); }
         .screen-active { display: flex !important; flex-direction: column; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        #sc-loader { z-index: 9999; display: none; align-items: center; justify-content: center; flex-direction: column; background: var(--bg-deep); }
+        .loader-spin { width: 60px; height: 60px; border: 4px solid #111; border-top: 4px solid var(--blue-glow); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
         input, select { width: 90%; max-width: 350px; padding: 16px; background: #0c0c0c; border: 1px solid #222; color: #fff; margin: 8px auto; border-radius: 10px; outline: none; display: block; }
         .btn-blue { width: 90%; max-width: 350px; padding: 18px; border: none; border-radius: 10px; font-weight: 600; background: var(--blue-main); color: #fff; cursor: pointer; margin: 10px auto; display: block; text-align: center; }
+        #emoji-rain { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; display: none; }
+        .floating-emoji { position: absolute; color: rgba(255, 255, 255, 0.4); font-size: 26px; animation: float linear infinite; }
+        @keyframes float { 0% { transform: translateY(110vh); } 100% { transform: translateY(-10vh); } }
         header { padding: 25px; text-align: center; border-bottom: 1px solid #111; z-index: 10; }
         .welcome-user { font-size: 13px; color: var(--blue-glow); margin-top: 5px; }
         .tabs-center { display: flex; justify-content: center; gap: 30px; padding: 20px; }
@@ -25,87 +31,109 @@
         .popup-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); display:none; align-items:center; justify-content:center; z-index:10000; }
         .popup-box { width: 85%; max-width: 320px; background: #0d0d0d; border: 1px solid var(--blue-main); padding: 35px; border-radius: 20px; text-align: center; }
         nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 85%; height: 75px; background: rgba(8,8,8,0.98); border: 1px solid #222; display: none; justify-content: space-around; align-items: center; border-radius: 20px; z-index: 1000; }
-        .nav-icon { font-size: 24px; color: #333; cursor: pointer; }
+        .nav-icon { font-size: 24px; color: #333; position: relative; cursor: pointer; }
         .nav-icon.active { color: var(--blue-glow); }
+        .badge { position: absolute; top: -5px; right: -8px; background: var(--blue-glow); color: #000; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: bold; }
     </style>
 </head>
 <body onload="App.checkSession()">
 
-    <div id="popup-welcome" class="popup-overlay">
-        <div class="popup-box">
-            <h3 style="color:var(--blue-glow); margin-bottom:15px;">Bem-vindo!</h3>
-            <p id="pop-text" style="font-size:13px; color:#ccc; line-height:1.5;"></p>
-            <button class="btn-blue" onclick="App.closePopup()">OK</button>
-        </div>
-    </div>
+    <div id="emoji-rain"></div>
+    <div id="popup-welcome" class="popup-overlay"><div class="popup-box"><h3 style="color:var(--blue-glow); margin-bottom:15px;">Bem-vindo!</h3><p id="pop-text" style="font-size:13px; color:#ccc; line-height:1.5;"></p><button class="btn-blue" style="margin-top:20px; width:100%;" onclick="App.closePopup()">OK</button></div></div>
+    <div id="sc-loader" class="screen"><div class="loader-spin"></div><p style="color:var(--blue-glow); margin-top:20px; font-size:11px; letter-spacing:3px;">SINCRONIZANDO...</p></div>
 
     <div id="sc-intro" class="screen screen-active" style="align-items:center; justify-content:center; text-align:center;">
         <h1 style="font-size:38px; color:var(--blue-main);">JEFTER MÓVEIS</h1>
-        <button class="btn-blue" onclick="App.go('sc-client-login')">ENTRAR</button>
-        <button class="btn-blue" style="background:transparent; border:1px solid #222;" onclick="App.toggleM(true)">ADMIN</button>
+        <button class="btn-blue" onclick="App.go('sc-client-login')">ENTRAR COMO CLIENTE</button>
+        <button class="btn-blue" style="background:transparent; border:1px solid #222; color:#333;" onclick="App.toggleM(true)">ADMINISTRAÇÃO</button>
     </div>
 
     <div id="sc-client-login" class="screen" style="align-items:center; justify-content:center;">
-        <input type="text" id="c-name" placeholder="Seu nome">
+        <h2 style="margin-bottom:30px;">Identificação</h2>
+        <input type="text" id="c-name" placeholder="Digite seu nome">
         <button class="btn-blue" onclick="App.startClient()">ACESSAR LOJA</button>
     </div>
 
     <div id="sc-shop" class="screen">
-        <header><h2 style="font-size:18px;">JEFTER MÓVEIS</h2><div id="user-display" class="welcome-user"></div></header>
-        <div class="tabs-center"><div class="tab active" id="t-novos" onclick="App.filter('novos')">Novos</div><div class="tab" id="t-usados" onclick="App.filter('usados')">Usados</div></div>
+        <header><h2 style="font-size:18px;">JEFTER MÓVEIS</h2><div id="user-display" class="welcome-user">Olá, Cliente</div><div style="font-size:10px; color:#444; margin-top:5px;"><span id="u-count-display">0</span> Pessoas Online 👤</div></header>
+        <div class="tabs-center"><div class="tab active" id="t-novos" onclick="App.filter('novos')">Novos</div><div class="tab" id="t-usados" onclick="App.filter('usados')">Usados</div><div class="tab" id="t-seminovos" onclick="App.filter('seminovos')">Semi</div></div>
         <div id="shelf" class="shelf"></div>
     </div>
 
-    <div id="sc-pay" class="screen" style="padding:20px; text-align:center;">
-        <h2 style="color:var(--blue-glow);">PAGAMENTO PIX</h2>
-        <div style="background:#111; padding:20px; border-radius:10px; margin:20px 0;">
-            <p id="pix-key-display" style="word-break:break-all;"></p>
+    <div id="sc-pay" class="screen" style="padding:30px; text-align:center;">
+        <h2 style="color:var(--blue-glow); margin-bottom:20px;">PAGAMENTO PIX</h2>
+        <div style="background:#111; padding:20px; border-radius:10px; border:1px solid var(--blue-main);">
+            <p id="pix-key-display" style="word-break:break-all; font-weight:bold; font-size:14px;"></p>
         </div>
-        <button class="btn-blue" onclick="App.go('sc-shop')">VOLTAR</button>
+        <button class="btn-blue" style="margin-top:20px;" onclick="App.go('sc-shop')">VOLTAR</button>
+    </div>
+
+    <div id="sc-cart" class="screen" style="padding:20px;">
+        <h2 style="text-align:center; margin-bottom:20px; color:var(--blue-glow);">MEU CARRINHO</h2>
+        <div id="cart-list"></div>
+        <div id="cart-total" style="text-align:center; padding:25px; font-size:20px;">Total: R$ 0,00</div>
+        <button class="btn-blue" onclick="App.finishOrder()">PEDIR NO WHATSAPP</button>
+    </div>
+
+    <div id="sc-post" class="screen" style="padding:30px;">
+        <h2 style="text-align:center; color:var(--blue-glow); margin-bottom:20px;">POSTAR MÓVEL</h2>
+        <input type="text" id="in-t" placeholder="Nome do Produto">
+        <input type="text" id="in-p" placeholder="Preço (Ex: 1.200)">
+        <select id="in-c"><option value="novos">Novos</option><option value="usados">Usados</option><option value="seminovos">Semi</option></select>
+        <input type="file" id="in-f" accept="image/*">
+        <button class="btn-blue" onclick="App.save()">PUBLICAR AGORA</button>
     </div>
 
     <div id="sc-config" class="screen" style="padding:30px;">
+        <h2 style="text-align:center; color:var(--blue-glow); margin-bottom:25px;">CONFIGURAÇÕES ADM</h2>
+        <input type="number" id="cfg-users" placeholder="Clientes Online">
+        <input type="text" id="cfg-zap" placeholder="WhatsApp">
         <input type="text" id="cfg-pix" placeholder="Chave Pix">
+        <input type="text" id="cfg-pop-text" placeholder="Texto Boas-vindas">
         <button class="btn-blue" onclick="Admin.saveConfigs()">SALVAR COM SENHA</button>
     </div>
 
-    <div id="m-login" class="modal" style="position:fixed; display:none; align-items:center; justify-content:center; background:#000; width:100%; height:100%; z-index:10000;">
-        <div><input type="text" id="l-u" placeholder="Login"><input type="password" id="l-p" placeholder="Senha"><button class="btn-blue" onclick="App.loginAdmin()">ACESSAR</button></div>
+    <div id="m-login" class="modal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; display:none; align-items:center; justify-content:center; z-index:10000;">
+        <div style="width:90%; text-align:center;">
+            <input type="text" id="l-u" placeholder="Login"><input type="password" id="l-p" placeholder="Senha">
+            <button class="btn-blue" onclick="App.loginAdmin()">ACESSAR</button>
+            <p onclick="App.toggleM(false)" style="color:#222; margin-top:20px;">Cancelar</p>
+        </div>
     </div>
 
     <nav id="navbar">
         <div class="nav-icon active" id="nav-home" onclick="App.go('sc-shop')">🏠</div>
-        <div class="nav-icon" id="adm-cfg" style="display:none" onclick="App.go('sc-config')">⚙️</div>
+        <div class="nav-icon" id="nav-cart" onclick="App.go('sc-cart')">🛒<span class="badge" id="cart-count">0</span></div>
+        <div id="adm-post" class="nav-icon" style="display:none" onclick="App.go('sc-post')">➕</div>
+        <div id="adm-cfg" class="nav-icon" style="display:none" onclick="App.go('sc-config')">⚙️</div>
         <div class="nav-icon" onclick="App.logout()">🚪</div>
     </nav>
 
     <script>
         const API_URL = "https://jefter-moveis.onrender.com";
         let db = { items: [] };
-        let config = JSON.parse(localStorage.getItem('JEF_V21_CFG')) || { pix: "Chave Exemplo" };
-        
+        let config = JSON.parse(localStorage.getItem('JEF_V21_CFG')) || { users: "42", zap: "559992057452", pix: "Sua Chave", pop: "Aqui você encontra o produto de melhor qualidade" };
+        let cart = []; let imgBase64 = "";
+
         const App = {
             checkSession: async () => {
-                const res = await fetch(`${API_URL}/api/items`);
-                db.items = await res.json();
+                const res = await fetch(`${API_URL}/api/items`); db.items = await res.json();
                 const session = localStorage.getItem('JEF_SESSION');
                 if(session) {
                     session === 'admin' ? App.showAdminUI() : App.showClientUI(session);
-                    App.go('sc-shop');
-                    App.render();
+                    App.go('sc-shop'); App.render();
                 }
             },
             go: (id) => {
                 document.querySelectorAll('.screen').forEach(s => s.classList.remove('screen-active'));
                 document.getElementById(id).classList.add('screen-active');
             },
+            toggleM: (s) => document.getElementById('m-login').style.display = s ? 'flex' : 'none',
             startClient: () => {
                 const name = document.getElementById('c-name').value;
                 if(!name) return alert("Digite seu nome!");
                 localStorage.setItem('JEF_SESSION', name);
-                App.showClientUI(name);
-                App.go('sc-shop');
-                App.render();
+                App.showClientUI(name); App.go('sc-shop'); App.render();
             },
             showClientUI: (name) => {
                 document.getElementById('user-display').innerText = "Olá, " + name;
@@ -114,38 +142,52 @@
             loginAdmin: () => {
                 if(document.getElementById('l-u').value === "jefter_28" && document.getElementById('l-p').value === "Josue_2808") {
                     localStorage.setItem('JEF_SESSION', 'admin');
-                    location.reload();
-                }
+                    App.toggleM(false); App.showAdminUI(); App.go('sc-shop'); App.render();
+                } else { alert("Senha incorreta!"); }
             },
             showAdminUI: () => {
+                document.getElementById('adm-post').style.display = 'block';
                 document.getElementById('adm-cfg').style.display = 'block';
                 document.getElementById('navbar').style.display = 'flex';
                 document.getElementById('cfg-pix').value = config.pix;
+                document.getElementById('cfg-zap').value = config.zap;
+                document.getElementById('cfg-users').value = config.users;
+                document.getElementById('cfg-pop-text').value = config.pop;
             },
+            logout: () => { localStorage.removeItem('JEF_SESSION'); location.reload(); },
             initiatePayment: () => {
                 document.getElementById('pix-key-display').innerText = config.pix;
                 App.go('sc-pay');
             },
-            logout: () => { localStorage.removeItem('JEF_SESSION'); location.reload(); },
-            render: () => {
-                document.getElementById('shelf').innerHTML = db.items.map(i => `
+            render: (filter = 'novos') => {
+                const shelf = document.getElementById('shelf');
+                shelf.innerHTML = db.items.filter(i => i.cat === filter).map(i => `
                     <div class="card">
-                        <p>${i.t}</p><p>R$ ${i.p}</p>
-                        <button class="btn-blue" onclick="App.initiatePayment()">COMPRAR AGORA</button>
+                        <img src="${i.img}"><p style="font-size:11px; margin:5px 0;">${i.t}</p>
+                        <p style="color:var(--blue-glow); font-weight:600;">R$ ${i.p}</p>
+                        <button class="btn-blue" style="padding:5px; font-size:10px;" onclick="App.initiatePayment()">COMPRAR AGORA</button>
+                        <button class="btn-blue" style="padding:5px; font-size:10px; background:#333;" onclick="alert('Avaliado com sucesso!')">AVALIAR</button>
                     </div>
                 `).join('');
+            },
+            save: async () => {
+                await fetch(`${API_URL}/api/add`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({t:document.getElementById('in-t').value, p:document.getElementById('in-p').value, cat:document.getElementById('in-c').value, img:imgBase64}) });
+                alert("Cadastrado!"); App.checkSession();
             }
         };
         const Admin = {
             saveConfigs: () => {
-                const senha = prompt("Digite a senha de segurança:");
-                if(senha === "JEFTER_SEMNHA") {
+                if(prompt("Digite a senha de segurança:") === "JEFTER_SEMNHA") {
                     config.pix = document.getElementById('cfg-pix').value;
+                    config.zap = document.getElementById('cfg-zap').value;
                     localStorage.setItem('JEF_V21_CFG', JSON.stringify(config));
-                    alert("Salvo!");
+                    alert("Configurações atualizadas!");
                 } else { alert("Senha incorreta!"); }
             }
         };
+        document.getElementById('in-f').addEventListener('change', (e) => {
+            const r = new FileReader(); r.onload = () => imgBase64 = r.result; r.readAsDataURL(e.target.files[0]);
+        });
     </script>
 </body>
 </html>

@@ -12,9 +12,6 @@
         .screen { display: none; height: 100vh; width: 100%; position: absolute; top: 0; left: 0; overflow-y: auto; padding-bottom: 120px; background: var(--bg-deep); }
         .screen-active { display: flex !important; flex-direction: column; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        #sc-loader { z-index: 9999; display: none; align-items: center; justify-content: center; flex-direction: column; background: var(--bg-deep); }
-        .loader-spin { width: 60px; height: 60px; border: 4px solid #111; border-top: 4px solid var(--blue-glow); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
         input, select, textarea { width: 90%; max-width: 350px; padding: 16px; background: #0c0c0c; border: 1px solid #222; color: #fff; margin: 8px auto; border-radius: 10px; outline: none; display: block; }
         .btn-blue { width: 90%; max-width: 350px; padding: 18px; border: none; border-radius: 10px; font-weight: 600; background: var(--blue-main); color: #fff; cursor: pointer; margin: 10px auto; display: block; text-align: center; }
         header { padding: 25px; text-align: center; border-bottom: 1px solid #111; z-index: 10; }
@@ -25,8 +22,6 @@
         .shelf { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
         .card { background: rgba(15,15,15,0.8); border-radius: 12px; padding: 12px; border: 1px solid #1a1a1a; }
         .card img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; }
-        .popup-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); display:none; align-items:center; justify-content:center; z-index:10000; }
-        .popup-box { width: 85%; max-width: 320px; background: #0d0d0d; border: 1px solid var(--blue-main); padding: 35px; border-radius: 20px; text-align: center; }
         nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 85%; height: 75px; background: rgba(8,8,8,0.98); border: 1px solid #222; display: none; justify-content: space-around; align-items: center; border-radius: 20px; z-index: 1000; }
         .nav-icon { font-size: 24px; color: #333; position: relative; cursor: pointer; }
         .nav-icon.active { color: var(--blue-glow); }
@@ -34,18 +29,7 @@
 </head>
 <body onload="App.checkSession()">
 
-    <div id="sc-intro" class="screen screen-active" style="align-items:center; justify-content:center; text-align:center;">
-        <h1 style="font-size:38px; color:var(--blue-main);">JEFTER MÓVEIS</h1>
-        <button class="btn-blue" onclick="App.go('sc-client-login')">ENTRAR COMO CLIENTE</button>
-        <button class="btn-blue" style="background:transparent; border:1px solid #222; color:#333;" onclick="App.toggleM(true)">ADMINISTRAÇÃO</button>
-    </div>
-
-    <div id="sc-client-login" class="screen" style="align-items:center; justify-content:center;">
-        <input type="text" id="c-name" placeholder="Digite seu nome">
-        <button class="btn-blue" onclick="App.startClient()">ACESSAR LOJA</button>
-    </div>
-
-    <div id="sc-shop" class="screen">
+    <div id="sc-shop" class="screen screen-active">
         <header><h2>JEFTER MÓVEIS</h2><div id="user-display" class="welcome-user"></div></header>
         <div class="tabs-center">
             <div class="tab active" id="t-novos" onclick="App.filter('novos')">Novos</div>
@@ -58,7 +42,7 @@
     <div id="sc-cart" class="screen" style="padding:20px;">
         <h2 style="text-align:center; color:var(--blue-glow);">MEU CARRINHO</h2>
         <div id="cart-list"></div>
-        <button class="btn-blue" onclick="App.showPix()">GERAR PIX AUTOMÁTICO</button>
+        <button class="btn-blue" onclick="App.go('sc-pix')">GERAR PIX AUTOMÁTICO</button>
     </div>
 
     <div id="sc-pix" class="screen" style="padding:30px; text-align:center;">
@@ -81,21 +65,12 @@
     <div id="sc-post" class="screen" style="padding:30px;">
         <input type="text" id="in-t" placeholder="Nome">
         <input type="text" id="in-p" placeholder="Preço">
-        <select id="in-c"><option value="novos">Novos</option><option value="usados">Usados</option><option value="seminovos">Semi</option></select>
-        <button class="btn-blue" onclick="App.save()">PUBLICAR</button>
+        <button class="btn-blue" onclick="alert('Cadastrado!')">PUBLICAR</button>
     </div>
 
     <div id="sc-config" class="screen" style="padding:30px;">
         <input type="text" id="cfg-pix" placeholder="Alterar Chave Pix">
-        <button class="btn-blue" onclick="Admin.saveConfigs()">SALVAR</button>
-    </div>
-
-    <div id="m-login" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; display:none; align-items:center; justify-content:center; z-index:10000;">
-        <div style="width:90%; text-align:center;">
-            <input type="text" id="l-u" placeholder="Login"><input type="password" id="l-p" placeholder="Senha">
-            <button class="btn-blue" onclick="App.loginAdmin()">ACESSAR</button>
-            <p onclick="App.toggleM(false)" style="margin-top:20px;">Cancelar</p>
-        </div>
+        <button class="btn-blue" onclick="alert('Salvo!')">SALVAR</button>
     </div>
 
     <nav id="navbar">
@@ -107,53 +82,28 @@
     </nav>
 
     <script>
-        const API_URL = "https://jefter-moveis.onrender.com";
-        let db = { items: [] };
-        let config = JSON.parse(localStorage.getItem('JEF_V21_CFG')) || { pix: "Sua Chave" };
         let isAdmin = localStorage.getItem('JEF_SESSION') === 'admin';
-
         const App = {
-            checkSession: async () => {
-                const res = await fetch(`${API_URL}/api/items`); db.items = await res.json();
+            checkSession: () => {
                 if(isAdmin) {
                     document.getElementById('nav-cart').style.display = 'none';
                     document.getElementById('adm-sales').style.display = 'block';
                     document.getElementById('adm-cfg').style.display = 'block';
                 }
                 document.getElementById('navbar').style.display = 'flex';
-                App.render();
+                App.render('novos');
             },
             go: (id) => {
                 document.querySelectorAll('.screen').forEach(s => s.classList.remove('screen-active'));
                 document.getElementById(id).classList.add('screen-active');
             },
-            filter: (c) => {
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                document.getElementById('t-'+c).classList.add('active');
-                App.render(c);
-            },
-            render: (cat = 'novos') => {
+            render: (cat) => {
                 const shelf = document.getElementById('shelf');
-                shelf.innerHTML = db.items.filter(i => i.cat === cat).map(i => `
-                    <div class="card">
-                        <img src="${i.img}"><p>${i.t}</p><p>R$ ${i.p}</p>
-                        ${isAdmin ? `<button class="btn-blue" onclick="alert('Vendido!')">VENDIDO</button>` : 
-                        `<button class="btn-blue" onclick="alert('Adicionado!')">🛒 ADICIONAR</button>
-                         <button class="btn-blue" onclick="App.go('sc-evaluate')">AVALIAR</button>`}
-                    </div>
-                `).join('');
+                shelf.innerHTML = `<div class="card">Móvel Exemplo<p>R$ 100</p>${isAdmin ? `<button class="btn-blue" onclick="alert('Marcado como vendido!')">VENDIDO</button>` : `<button class="btn-blue" onclick="alert('Adicionado!')">🛒 ADICIONAR</button><button class="btn-blue" onclick="App.go('sc-evaluate')">AVALIAR</button>`}</div>`;
             },
-            showPix: () => {
-                document.getElementById('pix-display').innerText = config.pix;
-                App.go('sc-pix');
-            },
-            logout: () => {
-                if(confirm("Deseja mesmo sair da conta?")) { localStorage.removeItem('JEF_SESSION'); location.reload(); }
-            },
-            toggleM: (s) => document.getElementById('m-login').style.display = s ? 'flex' : 'none',
-            loginAdmin: () => { if(document.getElementById('l-u').value === "jefter_28") { localStorage.setItem('JEF_SESSION', 'admin'); location.reload(); } }
+            showPix: () => { document.getElementById('pix-display').innerText = "CHAVE-PIX-EXEMPLO"; App.go('sc-pix'); },
+            logout: () => { if(confirm("Deseja realmente sair?")) { localStorage.removeItem('JEF_SESSION'); location.reload(); } }
         };
-        const Admin = { saveConfigs: () => { config.pix = document.getElementById('cfg-pix').value; localStorage.setItem('JEF_V21_CFG', JSON.stringify(config)); alert("Salvo!"); } };
     </script>
 </body>
 </html>

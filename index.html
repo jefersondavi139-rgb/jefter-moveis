@@ -150,7 +150,7 @@
 
     <script>
         const API_URL = "https://jefter-moveis.onrender.com"; // Link do seu servidor
-        let db = JSON.parse(localStorage.getItem('JEF_V21_DB')) || { items: [] };
+        let db = { items: [] }; // Começa vazio, carrega do servidor
         let config = JSON.parse(localStorage.getItem('JEF_V21_CFG')) || { 
             users: "42", zap: "559992057452", pix: "Sua Chave", pop: "Aqui você encontra o produto de melhor qualidade" 
         };
@@ -158,7 +158,10 @@
         let imgBase64 = "";
 
         const App = {
-            checkSession: () => {
+            checkSession: async () => {
+                const res = await fetch(`${API_URL}/api/items`); // Busca itens do servidor
+                db.items = await res.json();
+
                 const session = localStorage.getItem('JEF_SESSION');
                 if(session === 'admin') {
                     App.showAdminUI();
@@ -223,6 +226,7 @@
                 document.getElementById('nav-cart').style.display = 'none';
                 document.getElementById('navbar').style.display = 'flex';
                 document.getElementById('user-display').innerText = "PAINEL ADM";
+                // Carrega campos das configs
                 document.getElementById('cfg-users').value = config.users;
                 document.getElementById('cfg-zap').value = config.zap;
                 document.getElementById('cfg-pix').value = config.pix;
@@ -242,13 +246,24 @@
                 App.render(c);
             },
 
-            save: () => {
+            save: async () => {
                 const t = document.getElementById('in-t').value;
                 const p = document.getElementById('in-p').value;
                 const c = document.getElementById('in-c').value;
-                db.items.push({ id: Date.now(), t, p, cat: c, img: imgBase64 });
-                localStorage.setItem('JEF_V21_DB', JSON.stringify(db));
-                alert("Móvel cadastrado!"); App.go('sc-shop'); App.render();
+                
+                const item = { t, p, cat: c, img: imgBase64 };
+                
+                // Envia para o servidor
+                await fetch(`${API_URL}/api/add`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(item)
+                });
+                
+                alert("Móvel cadastrado no servidor!"); 
+                App.checkSession(); // Recarrega os itens do servidor
+                App.go('sc-shop'); 
+                App.render();
             },
 
             render: (filter = 'novos') => {

@@ -149,6 +149,7 @@
     </nav>
 
     <script>
+        const API_URL = "https://jefter-moveis.onrender.com"; // Link do seu servidor
         let db = JSON.parse(localStorage.getItem('JEF_V21_DB')) || { items: [] };
         let config = JSON.parse(localStorage.getItem('JEF_V21_CFG')) || { 
             users: "42", zap: "559992057452", pix: "Sua Chave", pop: "Aqui você encontra o produto de melhor qualidade" 
@@ -157,7 +158,6 @@
         let imgBase64 = "";
 
         const App = {
-            // VERIFICA SE JÁ ESTAVA LOGADO AO CARREGAR PÁGINA
             checkSession: () => {
                 const session = localStorage.getItem('JEF_SESSION');
                 if(session === 'admin') {
@@ -223,7 +223,6 @@
                 document.getElementById('nav-cart').style.display = 'none';
                 document.getElementById('navbar').style.display = 'flex';
                 document.getElementById('user-display').innerText = "PAINEL ADM";
-                // Carrega campos das configs
                 document.getElementById('cfg-users').value = config.users;
                 document.getElementById('cfg-zap').value = config.zap;
                 document.getElementById('cfg-pix').value = config.pix;

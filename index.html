@@ -2,108 +2,92 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>JEFTER MÓVEIS | V21</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>JEFTER MOVEIS</title>
     <style>
-        :root { --blue-glow: #00f2ff; --blue-main: #007bff; --bg-deep: #000000; }
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-deep); color: #fff; font-family: 'Poppins', sans-serif; height: 100vh; overflow: hidden; }
-        .screen { display: none; height: 100vh; width: 100%; position: absolute; top: 0; left: 0; overflow-y: auto; padding-bottom: 120px; background: var(--bg-deep); }
-        .screen-active { display: flex !important; flex-direction: column; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        input, select, textarea { width: 90%; max-width: 350px; padding: 16px; background: #0c0c0c; border: 1px solid #222; color: #fff; margin: 8px auto; border-radius: 10px; outline: none; display: block; }
-        .btn-blue { width: 90%; max-width: 350px; padding: 18px; border: none; border-radius: 10px; font-weight: 600; background: var(--blue-main); color: #fff; cursor: pointer; margin: 10px auto; display: block; text-align: center; }
-        header { padding: 25px; text-align: center; border-bottom: 1px solid #111; z-index: 10; }
-        .welcome-user { font-size: 13px; color: var(--blue-glow); margin-top: 5px; }
-        .tabs-center { display: flex; justify-content: center; gap: 30px; padding: 20px; }
-        .tab { color: #444; font-size: 12px; text-transform: uppercase; cursor: pointer; font-weight: 600; }
-        .tab.active { color: var(--blue-glow); border-bottom: 2px solid var(--blue-glow); }
-        .shelf { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
-        .card { background: rgba(15,15,15,0.8); border-radius: 12px; padding: 12px; border: 1px solid #1a1a1a; }
-        .card img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; }
-        nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 85%; height: 75px; background: rgba(8,8,8,0.98); border: 1px solid #222; display: none; justify-content: space-around; align-items: center; border-radius: 20px; z-index: 1000; }
-        .nav-icon { font-size: 24px; color: #333; position: relative; cursor: pointer; }
-        .nav-icon.active { color: var(--blue-glow); }
+        :root { --bg: #121212; --roxo: #8A2BE2; --rosa: #FF00FF; }
+        body { background-color: var(--bg); color: white; font-family: sans-serif; margin: 0; padding: 20px; }
+        h1 { color: var(--rosa); text-align: center; margin-bottom: 30px; }
+        .nav { text-align: center; margin-bottom: 20px; }
+        button { background: var(--roxo); color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        button:hover { background: var(--rosa); }
+        
+        /* Estilo da Loja */
+        .container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+        .card { background: #1e1e1e; padding: 15px; border: 1px solid var(--roxo); border-radius: 10px; text-align: center; width: 200px; }
+        
+        /* Painel ADM */
+        #painel-adm { display: none; background: #252525; padding: 20px; border-radius: 10px; max-width: 400px; margin: auto; border: 1px solid var(--rosa); }
+        input { width: 90%; padding: 10px; margin: 5px 0; background: #333; border: 1px solid var(--roxo); color: white; border-radius: 4px; }
     </style>
 </head>
-<body onload="App.checkSession()">
+<body>
 
-    <div id="sc-shop" class="screen screen-active">
-        <header><h2>JEFTER MÓVEIS</h2><div id="user-display" class="welcome-user"></div></header>
-        <div class="tabs-center">
-            <div class="tab active" id="t-novos" onclick="App.filter('novos')">Novos</div>
-            <div class="tab" id="t-usados" onclick="App.filter('usados')">Usados</div>
-            <div class="tab" id="t-seminovos" onclick="App.filter('seminovos')">Semi</div>
-        </div>
-        <div id="shelf" class="shelf"></div>
+    <h1>JEFTER MOVEIS</h1>
+
+    <div class="nav">
+        <button onclick="mostrar('loja')">Ver Loja</button>
+        <button onclick="acessarADM()">Painel ADM</button>
     </div>
 
-    <div id="sc-cart" class="screen" style="padding:20px;">
-        <h2 style="text-align:center; color:var(--blue-glow);">MEU CARRINHO</h2>
-        <div id="cart-list"></div>
-        <button class="btn-blue" onclick="App.go('sc-pix')">GERAR PIX AUTOMÁTICO</button>
+    <div id="loja">
+        <div id="vitrine" class="container"></div>
     </div>
 
-    <div id="sc-pix" class="screen" style="padding:30px; text-align:center;">
-        <h2 style="color:var(--blue-glow);">CHAVE PIX</h2>
-        <p id="pix-display" style="padding:20px; border:1px solid var(--blue-main); margin:20px 0;"></p>
-        <button class="btn-blue" onclick="App.go('sc-cart')">VOLTAR</button>
+    <div id="painel-adm">
+        <h3>Painel Administrativo</h3>
+        <input type="text" id="nome" placeholder="Nome do Móvel">
+        <input type="text" id="preco" placeholder="Preço (ex: 999.00)">
+        <input type="text" id="img" placeholder="Link da Imagem (URL)">
+        <button onclick="adicionar()">Salvar Produto</button>
+        <p style="color: gray; font-size: 12px; margin-top: 10px;">Apenas para administradores.</p>
     </div>
-
-    <div id="sc-evaluate" class="screen" style="padding:30px;">
-        <h2>AVALIAR PRODUTO</h2>
-        <input type="number" id="e-stars" placeholder="Estrelas (1-5)">
-        <textarea id="e-text" placeholder="Sua opinião..."></textarea>
-        <button class="btn-blue" onclick="alert('Avaliado com sucesso!')">ENVIAR</button>
-    </div>
-
-    <div id="sc-sales" class="screen" style="padding:30px;">
-        <h2 style="color:var(--blue-glow);">VENDAS💸</h2>
-    </div>
-
-    <div id="sc-post" class="screen" style="padding:30px;">
-        <input type="text" id="in-t" placeholder="Nome">
-        <input type="text" id="in-p" placeholder="Preço">
-        <button class="btn-blue" onclick="alert('Cadastrado!')">PUBLICAR</button>
-    </div>
-
-    <div id="sc-config" class="screen" style="padding:30px;">
-        <input type="text" id="cfg-pix" placeholder="Alterar Chave Pix">
-        <button class="btn-blue" onclick="alert('Salvo!')">SALVAR</button>
-    </div>
-
-    <nav id="navbar">
-        <div class="nav-icon" id="nav-home" onclick="App.go('sc-shop')">🏠</div>
-        <div class="nav-icon" id="nav-cart" onclick="App.go('sc-cart')">🛒</div>
-        <div id="adm-sales" class="nav-icon" style="display:none" onclick="App.go('sc-sales')">💸</div>
-        <div id="adm-cfg" class="nav-icon" style="display:none" onclick="App.go('sc-config')">⚙️</div>
-        <div class="nav-icon" onclick="App.logout()">🚪</div>
-    </nav>
 
     <script>
-        let isAdmin = localStorage.getItem('JEF_SESSION') === 'admin';
-        const App = {
-            checkSession: () => {
-                if(isAdmin) {
-                    document.getElementById('nav-cart').style.display = 'none';
-                    document.getElementById('adm-sales').style.display = 'block';
-                    document.getElementById('adm-cfg').style.display = 'block';
-                }
-                document.getElementById('navbar').style.display = 'flex';
-                App.render('novos');
-            },
-            go: (id) => {
-                document.querySelectorAll('.screen').forEach(s => s.classList.remove('screen-active'));
-                document.getElementById(id).classList.add('screen-active');
-            },
-            render: (cat) => {
-                const shelf = document.getElementById('shelf');
-                shelf.innerHTML = `<div class="card">Móvel Exemplo<p>R$ 100</p>${isAdmin ? `<button class="btn-blue" onclick="alert('Marcado como vendido!')">VENDIDO</button>` : `<button class="btn-blue" onclick="alert('Adicionado!')">🛒 ADICIONAR</button><button class="btn-blue" onclick="App.go('sc-evaluate')">AVALIAR</button>`}</div>`;
-            },
-            showPix: () => { document.getElementById('pix-display').innerText = "CHAVE-PIX-EXEMPLO"; App.go('sc-pix'); },
-            logout: () => { if(confirm("Deseja realmente sair?")) { localStorage.removeItem('JEF_SESSION'); location.reload(); } }
-        };
+        let produtos = [];
+
+        function mostrar(aba) {
+            document.getElementById('loja').style.display = aba === 'loja' ? 'block' : 'none';
+            document.getElementById('painel-adm').style.display = aba === 'adm' ? 'block' : 'none';
+        }
+
+        function acessarADM() {
+            let senha = prompt("Digite a senha do administrador:");
+            if (senha === "JEFTER.123") {
+                mostrar('adm');
+            } else {
+                alert("Senha incorreta!");
+            }
+        }
+
+        function adicionar() {
+            let nome = document.getElementById('nome').value;
+            let preco = document.getElementById('preco').value;
+            let img = document.getElementById('img').value;
+
+            if(nome && preco) {
+                produtos.push({ nome, preco, img });
+                renderizar();
+                // Limpar campos
+                document.getElementById('nome').value = '';
+                document.getElementById('preco').value = '';
+                document.getElementById('img').value = '';
+                alert("Produto adicionado com sucesso!");
+            } else {
+                alert("Preencha os campos!");
+            }
+        }
+
+        function renderizar() {
+            let vitrine = document.getElementById('vitrine');
+            vitrine.innerHTML = produtos.map(p => `
+                <div class="card">
+                    <img src="${p.img}" width="100" style="border-radius:5px" onerror="this.src='https://via.placeholder.com/100'">
+                    <h3>${p.nome}</h3>
+                    <p>R$ ${p.preco}</p>
+                    <button>Comprar</button>
+                </div>
+            `).join('');
+        }
     </script>
 </body>
 </html>
